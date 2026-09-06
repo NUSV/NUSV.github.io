@@ -93,11 +93,24 @@ a:hover {
   letter-spacing: 0.08em;
 }
 
-.brand-mark-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  object-fit: contain;
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 0 0 1px rgba(7, 11, 20, 0.6), 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand small {
