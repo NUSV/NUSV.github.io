@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syna — Docs | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Syna: an offline-first, end-to-end encrypted LAN messenger. Overview, the problem it solves, highlights and links.">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">N</span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../warehouse.html">Warehouse</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="doc">
+
+      <div class="doc-top">
+        <img src="../assets/img/syna-banner.svg" alt="Syna banner" style="width:100%;height:auto;border-radius:12px;display:block">
+        <h1>Syna</h1>
+        <p class="lede">An offline-first LAN messenger with end-to-end encryption, group chat, an optional self-hosted server — and a built-in shield against device-level spyware.</p>
+        <div class="big-links">
+          <a class="btn btn-primary" href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Download</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Source on GitHub</a>
+        </div>
+      </div>
+
+      <nav class="toc">
+        <b>On this page</b>
+        <ul>
+          <li><a href="#overview">1 &middot; Overview</a></li>
+          <li><a href="#problem">2 &middot; The problem it solves</a></li>
+          <li><a href="#highlights">3 &middot; Highlights</a></li>
+          <li><a href="#links">4 &middot; Links &amp; further reading</a></li>
+        </ul>
+      </nav>
+
+      <section class="docblock" id="overview">
+        <h2><span class="num">01</span> Overview</h2>
+        <p>Syna is an instant messenger built with <strong>Kotlin Multiplatform + Compose Multiplatform</strong>, running on <strong>Android, Windows and macOS</strong> (Linux server supported). It connects people on the same LAN — no central server and no internet connection required.</p>
+        <p>Devices discover each other automatically over UDP (broadcast + multicast, with a manual refresh for troubleshooting), then talk over TCP with messages encrypted end-to-end. Everything stays on your network; when friends are outside it, you can host your own small server and invite them in.</p>
+      </section>
+
+      <section class="docblock" id="problem">
+        <h2><span class="num">02</span> The problem it solves</h2>
+        <p>Mainstream messengers tie you to an account, a company server, and an internet connection — your conversation history, contacts and metadata live on somebody else's machine. On a local network with no internet (a blackout, a school or office LAN, an event, a trip), most of them simply stop working.</p>
+        <p>And on the device itself, modern threats aren't just network sniffers: <strong>spyware, hooking frameworks and screen recorders</strong> can exfiltrate chats even when the network layer is secure.</p>
+        <p>Syna answers both:</p>
+        <ul>
+          <li><strong>No account, no internet, no server</strong> — messages travel directly between devices on the LAN, encrypted with <strong>X25519 + AES-256-GCM</strong>.</li>
+          <li><strong>Host your own server</strong> for friends beyond the LAN (NAT traversal tutorials for frp / ngrok / Tailscale included) — your data on your machine.</li>
+          <li><strong>Defense against device compromise</strong> — see the highlights below.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="highlights">
+        <h2><span class="num">03</span> Highlights</h2>
+
+        <h3>Messaging</h3>
+        <div class="hl">
+          <div class="hl-item"><b>Fully peer-to-peer</b><span>UDP discovery + TCP chat, 3-second heartbeat, offline detection in 15s.</span></div>
+          <div class="hl-item"><b>End-to-end encryption</b><span>X25519 key exchange, AES-256-GCM — read receipts confirm delivery, not just receipt.</span></div>
+          <div class="hl-item"><b>Burn-after-reading</b><span>Messages that erase themselves after viewing.</span></div>
+          <div class="hl-item"><b>Images &amp; files</b><span>Chunked, encrypted transfer with progress bars; images preview inline.</span></div>
+          <div class="hl-item"><b>Groups &amp; replies</b><span>LAN groups, server groups, typing indicators, quote replies, @mentions, message recall.</span></div>
+          <div class="hl-item"><b>Offline-first</b><span>Works with zero infrastructure; the app never phones home.</span></div>
+        </div>
+
+        <h3>The &Diamond;Mirtazapine Shield</h3>
+        <p>Syna's signature security layer: a real-time monitor that assumes the device itself may be hostile. Detection spans root/Magisk/Xposed, Frida and hooking frameworks, emulators, ADB, CA-certificate changes, ARP spoofing, screen capture events and more. Countermeasures include a severity-graded full-screen lock, TOTP + biometric unlock, a self-destruct protocol for critical compromise, honeypot decoy messages, and a watchdog ring of threads that monitor each other.</p>
+        <ul>
+          <li><strong>At rest:</strong> chat history AES-GCM encrypted with keys held in the hardware Keystore (TEE), session keys rotated on every unlock, memory cleared while locked.</li>
+          <li><strong>At run:</strong> NDK native anti-hook layer (syscall-direct I/O), APK signature verification against repackaging, dex hash self-verification.</li>
+          <li><strong>Fully public design:</strong> the threat model and detection matrix are documented in the repository — the protection holds even with source open.</li>
+        </ul>
+
+        <h3>Deployment</h3>
+        <ul>
+          <li>Android APK, Windows &amp; macOS desktop apps, and a <strong>SynaServer</strong> JAR for self-hosting (runs on a Raspberry Pi too).</li>
+          <li>Full bilingual tutorials (EN / 中文) covering setup, LAN chat, private servers, NAT traversal, security model and troubleshooting.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="links">
+        <h2><span class="num">04</span> Links &amp; further reading</h2>
+        <ul>
+          <li><a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Repository</a> — source, issues and releases</li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Releases</a> — Android APK, desktop installers, server JAR</li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_EN.md" target="_blank" rel="noopener">Tutorial (EN)</a> &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">Tutorial (中文)</a></li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/MIRTAZAPINE_SHIELD.md" target="_blank" rel="noopener">Shield design &amp; detection matrix</a></li>
+          <li><a href="https://github.com/NUSV" target="_blank" rel="noopener">NUSV organization</a></li>
+        </ul>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
