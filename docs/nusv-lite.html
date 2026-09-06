@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NUSV LITE — Docs | United Science Vaca (NUSV)</title>
+  <meta name="description" content="NUSV LITE: the official NUSV Android client. Overview, the problem it solves, highlights and links.">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">N</span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../warehouse.html">Warehouse</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="doc">
+
+      <div class="doc-top">
+        <img src="../assets/img/lite-banner.svg" alt="NUSV LITE banner" style="width:100%;height:auto;border-radius:12px;display:block">
+        <h1>NUSV LITE</h1>
+        <p class="lede">The official NUSV Android client — the whole NUSV universe in your pocket: content, 11 games, 60+ tools, widgets, a theme store and a daily check-in points system.</p>
+        <div class="big-links">
+          <a class="btn btn-primary" href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Download APK</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">Source on GitHub</a>
+        </div>
+      </div>
+
+      <nav class="toc">
+        <b>On this page</b>
+        <ul>
+          <li><a href="#overview">1 &middot; Overview</a></li>
+          <li><a href="#problem">2 &middot; The problem it solves</a></li>
+          <li><a href="#highlights">3 &middot; Highlights</a></li>
+          <li><a href="#links">4 &middot; Links &amp; further reading</a></li>
+        </ul>
+      </nav>
+
+      <section class="docblock" id="overview">
+        <h2><span class="num">01</span> Overview</h2>
+        <p>NUSV LITE is the official Android client for the NUSV ecosystem, built in Kotlin with Jetpack Compose. It is one home screen for everything NUSV: browse the latest content across NUSV sites organized by category, kill time with 11 built-in games, get real things done with 60+ tools, and personalize the experience with widgets and themes.</p>
+        <p>The app is also the entry point to the <strong>points system</strong> — daily check-ins and game wins earn points, tying the ecosystem together with a light, playful economy.</p>
+      </section>
+
+      <section class="docblock" id="problem">
+        <h2><span class="num">02</span> The problem it solves</h2>
+        <p>NUSV's content and services are spread across multiple sites and formats, with no single lightweight entry point. A dedicated app solves that in one stroke:</p>
+        <ul>
+          <li><strong>One hub instead of many tabs</strong> — content from every NUSV site is aggregated into one categorized feed, readable offline.</li>
+          <li><strong>An offline companion</strong> — games and tools work with no network at all; content updates are pulled as versioned sync files (see <a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a>), so the app only downloads what changed.</li>
+          <li><strong>Engagement with a reason</strong> — the check-in and points system gives everyday visits a small reward loop.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="highlights">
+        <h2><span class="num">03</span> Highlights</h2>
+
+        <h3>Content &amp; customization</h3>
+        <div class="hl">
+          <div class="hl-item"><b>Content hub</b><span>Latest posts from all NUSV sites, organized by category with color-coded sorting.</span></div>
+          <div class="hl-item"><b>Versioned sync</b><span>Content and docs update over the network as versioned JSON — cheap, incremental and offline-cacheable.</span></div>
+          <div class="hl-item"><b>Widgets</b><span>Home-screen widgets bring NUSV content and shortcuts to your launcher.</span></div>
+          <div class="hl-item"><b>Theme store</b><span>Personalize the whole app — themes are first-class citizens.</span></div>
+        </div>
+
+        <h3>Games</h3>
+        <p>Eleven built-in games — Tic-Tac-Toe, 2048, Minesweeper, Memory Match, Snake, Wordle, Simon Says, Whack-a-Mole, Tetris, <strong>Gomoku (against a threat-aware AI with two difficulty levels)</strong> and Sudoku. Wins earn points and per-game high scores are tracked.</p>
+
+        <h3>Tools</h3>
+        <p>More than 60 utilities in three categories:</p>
+        <ul>
+          <li><strong>Everyday:</strong> dice &amp; coin flips, calculators (tip / BMI / age), unit &amp; currency converters, world clock, stopwatch, countdown, pomodoro, bill splitter, expense tracker, flashlight, battery info, lottery generator.</li>
+          <li><strong>Dev:</strong> JSON formatter, Base64, hash, UUID, epoch / URL / color / case converters, regex tester, Markdown preview, QR generator, text statistics, password generator, text encryption.</li>
+          <li><strong>Creative:</strong> drawing pad, kaomoji keyboard, name generator, random quotes, biorhythm charts, Morse code, metronome, breathing exercise.</li>
+        </ul>
+
+        <h3>Polish</h3>
+        <ul>
+          <li>Game sound effects with haptics, and remote sync for content — details that make a pocket app feel alive.</li>
+          <li>MIT-licensed and dependency-light, easy to build from source with the included scripts.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="links">
+        <h2><span class="num">04</span> Links &amp; further reading</h2>
+        <ul>
+          <li><a href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">Repository</a> — source, issues and releases</li>
+          <li><a href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Releases</a> — download the latest APK</li>
+          <li><a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> — the content sync backend that feeds the app</li>
+          <li><a href="https://github.com/NUSV" target="_blank" rel="noopener">NUSV organization</a></li>
+        </ul>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
