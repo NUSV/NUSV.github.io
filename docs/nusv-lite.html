@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NUSV LITE — Docs | United Science Vaca (NUSV)</title>
-  <meta name="description" content="NUSV LITE: the official NUSV Android client. Overview, the problem it solves, highlights and links.">
+  <title>NUSV LITE — Technical Documentation | United Science Vaca (NUSV)</title>
+  <meta name="description" content="NUSV LITE technical docs: Android architecture, Room database, the versioned content sync pipeline (content.json / docs.json / version.json), deploy script and build instructions.">
   <link rel="icon" type="image/png" href="../assets/img/nusv-logo.png">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
@@ -33,76 +33,136 @@
 
       <div class="doc-top">
         <img src="../assets/img/lite-banner.svg" alt="NUSV LITE banner" style="width:100%;height:auto;border-radius:12px;display:block">
-        <h1>NUSV LITE</h1>
-        <p class="lede">The official NUSV Android client — the whole NUSV universe in your pocket: content, 11 games, 60+ tools, widgets, a theme store and a daily check-in points system.</p>
+        <h1>NUSV LITE — technical documentation</h1>
+        <p class="lede">The official NUSV Android client. Jetpack Compose + Material 3, Room-backed content store, and a versioned sync pipeline that keeps the app's content fresh without app updates.</p>
         <div class="big-links">
-          <a class="btn btn-primary" href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Download APK</a>
-          <a class="btn btn-ghost" href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">Source on GitHub</a>
+          <a class="btn btn-primary" href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">Source on GitHub</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Releases</a>
         </div>
       </div>
 
       <nav class="toc">
         <b>On this page</b>
         <ul>
-          <li><a href="#overview">1 &middot; Overview</a></li>
-          <li><a href="#problem">2 &middot; The problem it solves</a></li>
-          <li><a href="#highlights">3 &middot; Highlights</a></li>
-          <li><a href="#links">4 &middot; Links &amp; further reading</a></li>
+          <li><a href="#stack">01 &middot; Stack &amp; targets</a></li>
+          <li><a href="#architecture">02 &middot; Architecture &amp; code map</a></li>
+          <li><a href="#dataflow">03 &middot; Content pipeline (offline &rarr; sync)</a></li>
+          <li><a href="#schemas">04 &middot; JSON &amp; database schemas</a></li>
+          <li><a href="#features">05 &middot; Modules: content, games, tools</a></li>
+          <li><a href="#deploy">06 &middot; Deploy pipeline</a></li>
+          <li><a href="#build">07 &middot; Building from source</a></li>
+          <li><a href="#links">08 &middot; Further reading</a></li>
         </ul>
       </nav>
 
-      <section class="docblock" id="overview">
-        <h2><span class="num">01</span> Overview</h2>
-        <p>NUSV LITE is the official Android client for the NUSV ecosystem, built in Kotlin with Jetpack Compose. It is one home screen for everything NUSV: browse the latest content across NUSV sites organized by category, kill time with 11 built-in games, get real things done with 60+ tools, and personalize the experience with widgets and themes.</p>
-        <p>The app is also the entry point to the <strong>points system</strong> — daily check-ins and game wins earn points, tying the ecosystem together with a light, playful economy.</p>
+      <section class="docblock" id="stack">
+        <h2><span class="num">01</span> Stack &amp; targets</h2>
+        <table>
+          <tr><th>Item</th><th>Detail</th></tr>
+          <tr><td>Target</td><td>Android only — minSdk 26 (Android 8.0), target/compile SDK 36</td></tr>
+          <tr><td>UI</td><td>Jetpack Compose (BOM 2026.06.00) + Material 3 + material-icons-extended</td></tr>
+          <tr><td>Persistence</td><td>Room 2.8.4 (via KSP) — categories / items / docs tables</td></tr>
+          <tr><td>Network</td><td>OkHttp (content sync, update check)</td></tr>
+          <tr><td>Serialization</td><td>kotlinx.serialization (JSON, ignoreUnknownKeys)</td></tr>
+          <tr><td>Navigation</td><td>androidx.navigation-compose 2.9.8; lifecycle-viewmodel-compose 2.10.0</td></tr>
+          <tr><td>Release build</td><td>R8 minification (isMinifyEnabled) with a custom proguard-rules.pro</td></tr>
+          <tr><td>License</td><td>MIT</td></tr>
+        </table>
       </section>
 
-      <section class="docblock" id="problem">
-        <h2><span class="num">02</span> The problem it solves</h2>
-        <p>NUSV's content and services are spread across multiple sites and formats, with no single lightweight entry point. A dedicated app solves that in one stroke:</p>
-        <ul>
-          <li><strong>One hub instead of many tabs</strong> — content from every NUSV site is aggregated into one categorized feed, readable offline.</li>
-          <li><strong>An offline companion</strong> — games and tools work with no network at all; content updates are pulled as versioned sync files (see <a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a>), so the app only downloads what changed.</li>
-          <li><strong>Engagement with a reason</strong> — the check-in and points system gives everyday visits a small reward loop.</li>
-        </ul>
-      </section>
-
-      <section class="docblock" id="highlights">
-        <h2><span class="num">03</span> Highlights</h2>
-
-        <h3>Content &amp; customization</h3>
+      <section class="docblock" id="architecture">
+        <h2><span class="num">02</span> Architecture &amp; code map</h2>
+        <p>Single <span class="inline">app</span> module with the classic layer split. UI is plain Compose (no ViewModels for the games/tools — state is local to each screen); the content hub goes through Room-backed repositories.</p>
         <div class="hl">
-          <div class="hl-item"><b>Content hub</b><span>Latest posts from all NUSV sites, organized by category with color-coded sorting.</span></div>
-          <div class="hl-item"><b>Versioned sync</b><span>Content and docs update over the network as versioned JSON — cheap, incremental and offline-cacheable.</span></div>
-          <div class="hl-item"><b>Widgets</b><span>Home-screen widgets bring NUSV content and shortcuts to your launcher.</span></div>
-          <div class="hl-item"><b>Theme store</b><span>Personalize the whole app — themes are first-class citizens.</span></div>
+          <div class="hl-item"><b>data/</b><span>AppDatabase (Room), ContentLoader (asset seeding), SyncManager (remote sync + update check)</span></div>
+          <div class="hl-item"><b>model/</b><span>@Serializable JSON DTOs and @Entity tables: ContentJson/ItemJson/CategoryJson, DocsJson/DocJson, UpdateInfo</span></div>
+          <div class="hl-item"><b>repository/</b><span>AppRepository — single access point for DB reads/writes</span></div>
+          <div class="hl-item"><b>ui/navigation</b><span>NusvNavHost — app routes</span></div>
+          <div class="hl-item"><b>ui/screens</b><span>Home, Browse, Discover, Search, Detail, Docs, DocDetail, ThemeShop, Settings, Achievements</span></div>
+          <div class="hl-item"><b>ui/screens/minigames</b><span>11 games incl. Gomoku (threat-aware AI, two difficulties), Tetris, Sudoku, Minesweeper, 2048, Snake, Wordle</span></div>
+          <div class="hl-item"><b>ui/screens/tools</b><span>60+ utilities across Everyday / Dev / Creative categories</span></div>
+          <div class="hl-item"><b>ui/components</b><span>GlassCard, NusvChip — shared visual language</span></div>
         </div>
+      </section>
 
-        <h3>Games</h3>
-        <p>Eleven built-in games — Tic-Tac-Toe, 2048, Minesweeper, Memory Match, Snake, Wordle, Simon Says, Whack-a-Mole, Tetris, <strong>Gomoku (against a threat-aware AI with two difficulty levels)</strong> and Sudoku. Wins earn points and per-game high scores are tracked.</p>
-
-        <h3>Tools</h3>
-        <p>More than 60 utilities in three categories:</p>
+      <section class="docblock" id="dataflow">
+        <h2><span class="num">03</span> Content pipeline (offline &rarr; sync)</h2>
+        <p>Content flows in two stages, so the app is fully usable offline and only downloads what changed:</p>
         <ul>
-          <li><strong>Everyday:</strong> dice &amp; coin flips, calculators (tip / BMI / age), unit &amp; currency converters, world clock, stopwatch, countdown, pomodoro, bill splitter, expense tracker, flashlight, battery info, lottery generator.</li>
-          <li><strong>Dev:</strong> JSON formatter, Base64, hash, UUID, epoch / URL / color / case converters, regex tester, Markdown preview, QR generator, text statistics, password generator, text encryption.</li>
-          <li><strong>Creative:</strong> drawing pad, kaomoji keyboard, name generator, random quotes, biorhythm charts, Morse code, metronome, breathing exercise.</li>
+          <li><strong>Seeding (first launch):</strong> <span class="inline">ContentLoader.loadIfNeeded()</span> reads bundled assets <span class="inline">content.json</span> and <span class="inline">docs.json</span> from the APK and inserts them into Room (skipped if the tables already have rows).</li>
+          <li><strong>Sync (on demand):</strong> <span class="inline">SyncManager.syncAll()</span> fetches the same files from a remote base URL. Each file carries an integer <span class="inline">version</span>; the app stores the last applied version in <span class="inline">SharedPreferences("sync_meta")</span> and only replaces its DB rows when <span class="inline">remote.version &gt; localVersion</span>. The default base URL is <span class="inline">raw.githubusercontent.com/NUSV/nusv-lite-sync/main</span> and can be overridden per-install in settings.</li>
+          <li><strong>Update check:</strong> the same sync URL serves <span class="inline">version.json</span> (<span class="inline">UpdateInfo { latestVersion, downloadUrl, changelog }</span>); the Detail screen shows an update action when the remote version is newer.</li>
         </ul>
+        <p>The versioned replace strategy means sync is destructive but atomic per file: categories/items are wiped and re-inserted in one transaction per successful fetch. Errors (timeouts, HTTP failures) return <span class="inline">SyncResult.ERROR</span> and never touch local data.</p>
+      </section>
 
-        <h3>Polish</h3>
+      <section class="docblock" id="schemas">
+        <h2><span class="num">04</span> JSON &amp; database schemas</h2>
+        <h3>content.json</h3>
+<pre class="doc-code">{
+  "version": 12,                          <span class="c">// bump to trigger a client refresh</span>
+  "updatedAt": "2026-08-01T00:00:00Z",
+  "categories": [{ "id": "news", "name": "News", "color": "#22d3ee" }],
+  "items": [{
+    "id": "post-1",
+    "title": "…", "description": "…", "url": "…",
+    "categoryId": "news",
+    "tags": ["nusv"],
+    "isFeatured": false,
+    "createdAt": "2026-08-01T00:00:00Z"
+  }]
+}</pre>
+        <h3>docs.json</h3>
+<pre class="doc-code">{
+  "version": 3,
+  "updatedAt": "2026-08-01T00:00:00Z",
+  "docs": [{ "id": "d1", "title": "…", "content": "…", "createdAt": "…" }]
+}</pre>
+        <h3>version.json</h3>
+<pre class="doc-code">{
+  "latestVersion": "1.10.0",
+  "downloadUrl": "https://raw.githubusercontent.com/NUSV/nusv-lite-sync/main/NUSV-LITE-v1.10.0-alpha.apk",
+  "changelog": "auto deploy 2026-08-01"
+}</pre>
+        <p>Room mirrors these as three tables — <span class="inline">categories</span>, <span class="inline">items</span>, <span class="inline">docs</span> — with colors converted to <span class="inline">Long</span> and <span class="inline">createdAt</span> to epoch millis; tags are flattened to a comma-joined string.</p>
+      </section>
+
+      <section class="docblock" id="features">
+        <h2><span class="num">05</span> Modules: content, games, tools</h2>
         <ul>
-          <li>Game sound effects with haptics, and remote sync for content — details that make a pocket app feel alive.</li>
-          <li>MIT-licensed and dependency-light, easy to build from source with the included scripts.</li>
+          <li><strong>Content hub:</strong> Browse (categorized), Discover (featured), Search (tags + titles), Detail (deep link + update check), Docs + DocDetail.</li>
+          <li><strong>11 games:</strong> Tic-Tac-Toe, 2048, Minesweeper, Memory Match, Snake, Wordle, Simon Says, Whack-a-Mole, Tetris, Gomoku (vs a threat-aware AI with two difficulty levels) and Sudoku. Wins earn points; per-game high scores are persisted.</li>
+          <li><strong>60+ tools</strong> across Everyday (calculators, converters, timers, world clock), Dev (JSON formatter, Base64, hash, UUID, converters, regex tester, Markdown preview, QR generator, text encryption) and Creative (drawing pad, kaomoji keyboard, biorhythm, Morse, metronome, breathing exercise).</li>
+          <li><strong>Personalization:</strong> ThemeShop (themes), widgets, and a daily check-in points system (see <span class="inline">repository/AppRepository.kt</span>).</li>
         </ul>
+      </section>
+
+      <section class="docblock" id="deploy">
+        <h2><span class="num">06</span> Deploy pipeline</h2>
+        <p><span class="inline">scripts/deploy-sync.sh</span> stages a sync release locally:</p>
+        <ol style="padding-left:22px;color:var(--muted);margin:0 0 14px">
+          <li style="margin-bottom:6px">Builds the debug APK (<span class="inline">./gradlew assembleDebug</span>).</li>
+          <li style="margin-bottom:6px">Copies the latest <span class="inline">content.json</span> / <span class="inline">docs.json</span> from assets and the new APK into <span class="inline">deploy/</span>.</li>
+          <li style="margin-bottom:6px">Generates <span class="inline">version.json</span> from the <span class="inline">versionName</span> in <span class="inline">app/build.gradle.kts</span> (APK name pattern <span class="inline">NUSV-LITE-v{version}-alpha.apk</span>).</li>
+          <li>Commits and pushes <span class="inline">deploy/</span> to the <a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> repository, which the clients poll.</li>
+        </ol>
+        <p>APK releases are attached to <a href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">GitHub Releases</a>; the sync repository itself is content infrastructure, not a download portal.</p>
+      </section>
+
+      <section class="docblock" id="build">
+        <h2><span class="num">07</span> Building from source</h2>
+<pre class="doc-code">./gradlew assembleDebug          <span class="c"># debug APK</span>
+./gradlew assembleRelease        <span class="c"># minified release APK (R8 + proguard-rules.pro)</span></pre>
+        <p>Prerequisites: JDK 17+, Android SDK platform 36. Output APKs land in <span class="inline">app/build/outputs/apk/&lt;flavor&gt;/</span>.</p>
       </section>
 
       <section class="docblock" id="links">
-        <h2><span class="num">04</span> Links &amp; further reading</h2>
+        <h2><span class="num">08</span> Further reading</h2>
         <ul>
-          <li><a href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">Repository</a> — source, issues and releases</li>
-          <li><a href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Releases</a> — download the latest APK</li>
-          <li><a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> — the content sync backend that feeds the app</li>
-          <li><a href="https://github.com/NUSV" target="_blank" rel="noopener">NUSV organization</a></li>
+          <li><a href="https://github.com/NUSV/NUSV-lite/blob/test-orca/README.md" target="_blank" rel="noopener">README</a> — full feature list</li>
+          <li><a href="https://github.com/NUSV/NUSV-lite/blob/test-orca/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
+          <li><a href="https://github.com/NUSV/NUSV-lite/blob/test-orca/scripts/deploy-sync.sh" target="_blank" rel="noopener">deploy-sync.sh</a> — sync release script</li>
+          <li><a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> — the content backend</li>
         </ul>
       </section>
 
