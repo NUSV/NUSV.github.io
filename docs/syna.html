@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Syna — Docs | United Science Vaca (NUSV)</title>
-  <meta name="description" content="Syna: an offline-first, end-to-end encrypted LAN messenger. Overview, the problem it solves, highlights and links.">
+  <title>Syna — Technical Documentation | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Syna technical docs: architecture, networking and crypto internals, the Mirtazapine Shield threat model, server, data model, tests and build instructions.">
   <link rel="icon" type="image/png" href="../assets/img/nusv-logo.png">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
@@ -33,78 +33,155 @@
 
       <div class="doc-top">
         <img src="../assets/img/syna-banner.svg" alt="Syna banner" style="width:100%;height:auto;border-radius:12px;display:block">
-        <h1>Syna</h1>
-        <p class="lede">An offline-first LAN messenger with end-to-end encryption, group chat, an optional self-hosted server — and a built-in shield against device-level spyware.</p>
+        <h1>Syna — technical documentation</h1>
+        <p class="lede">Offline-first LAN messenger (Kotlin Multiplatform + Compose Multiplatform). Android &middot; Windows &middot; macOS, fully peer-to-peer, end-to-end encrypted.</p>
         <div class="big-links">
-          <a class="btn btn-primary" href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Download</a>
-          <a class="btn btn-ghost" href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Source on GitHub</a>
+          <a class="btn btn-primary" href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Source on GitHub</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Releases</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_EN.md" target="_blank" rel="noopener">Tutorial (EN)</a>
         </div>
       </div>
 
       <nav class="toc">
         <b>On this page</b>
         <ul>
-          <li><a href="#overview">1 &middot; Overview</a></li>
-          <li><a href="#problem">2 &middot; The problem it solves</a></li>
-          <li><a href="#highlights">3 &middot; Highlights</a></li>
-          <li><a href="#links">4 &middot; Links &amp; further reading</a></li>
+          <li><a href="#stack">01 &middot; Stack &amp; targets</a></li>
+          <li><a href="#architecture">02 &middot; Architecture &amp; code map</a></li>
+          <li><a href="#networking">03 &middot; Networking &amp; protocol</a></li>
+          <li><a href="#crypto">04 &middot; Crypto &amp; identity</a></li>
+          <li><a href="#shield">05 &middot; The &Diamond;Mirtazapine Shield</a></li>
+          <li><a href="#server">06 &middot; Private server</a></li>
+          <li><a href="#data">07 &middot; Data &amp; persistence</a></li>
+          <li><a href="#tests">08 &middot; Test matrix</a></li>
+          <li><a href="#build">09 &middot; Building from source</a></li>
+          <li><a href="#links">10 &middot; Further reading</a></li>
         </ul>
       </nav>
 
-      <section class="docblock" id="overview">
-        <h2><span class="num">01</span> Overview</h2>
-        <p>Syna is an instant messenger built with <strong>Kotlin Multiplatform + Compose Multiplatform</strong>, running on <strong>Android, Windows and macOS</strong> (Linux server supported). It connects people on the same LAN — no central server and no internet connection required.</p>
-        <p>Devices discover each other automatically over UDP (broadcast + multicast, with a manual refresh for troubleshooting), then talk over TCP with messages encrypted end-to-end. Everything stays on your network; when friends are outside it, you can host your own small server and invite them in.</p>
+      <section class="docblock" id="stack">
+        <h2><span class="num">01</span> Stack &amp; targets</h2>
+        <table>
+          <tr><th>Item</th><th>Detail</th></tr>
+          <tr><td>Language</td><td>Kotlin (Kotlin Multiplatform + Compose Multiplatform)</td></tr>
+          <tr><td>Android</td><td>Android 9+ (API 28). NDK component (<span class="inline">syna_shield.c</span>) for the native anti-hook layer</td></tr>
+          <tr><td>Desktop</td><td>Windows 10+ / macOS / Linux (JVM, Java 17+); release DMG targets Apple Silicon</td></tr>
+          <tr><td>Server</td><td>Headless JVM "fat jar" — runs on Windows / macOS / Linux / Raspberry Pi</td></tr>
+          <tr><td>License</td><td>GPL-3.0-only (SPDX headers on every source file; all runtime dependencies Apache-2.0 / MIT)</td></tr>
+        </table>
       </section>
 
-      <section class="docblock" id="problem">
-        <h2><span class="num">02</span> The problem it solves</h2>
-        <p>Mainstream messengers tie you to an account, a company server, and an internet connection — your conversation history, contacts and metadata live on somebody else's machine. On a local network with no internet (a blackout, a school or office LAN, an event, a trip), most of them simply stop working.</p>
-        <p>And on the device itself, modern threats aren't just network sniffers: <strong>spyware, hooking frameworks and screen recorders</strong> can exfiltrate chats even when the network layer is secure.</p>
-        <p>Syna answers both:</p>
-        <ul>
-          <li><strong>No account, no internet, no server</strong> — messages travel directly between devices on the LAN, encrypted with <strong>X25519 + AES-256-GCM</strong>.</li>
-          <li><strong>Host your own server</strong> for friends beyond the LAN (NAT traversal tutorials for frp / ngrok / Tailscale included) — your data on your machine.</li>
-          <li><strong>Defense against device compromise</strong> — see the highlights below.</li>
-        </ul>
-      </section>
-
-      <section class="docblock" id="highlights">
-        <h2><span class="num">03</span> Highlights</h2>
-
-        <h3>Messaging</h3>
+      <section class="docblock" id="architecture">
+        <h2><span class="num">02</span> Architecture &amp; code map</h2>
+        <p>Single Gradle module <span class="inline">:composeApp</span> with per-platform source sets on top of shared code. Everything transport-, crypto- and shield-related is in <span class="inline">commonMain</span>; platform code only adapts system services (keystores, notifications, file pickers, networking sockets).</p>
         <div class="hl">
-          <div class="hl-item"><b>Fully peer-to-peer</b><span>UDP discovery + TCP chat, 3-second heartbeat, offline detection in 15s.</span></div>
-          <div class="hl-item"><b>End-to-end encryption</b><span>X25519 key exchange, AES-256-GCM — read receipts confirm delivery, not just receipt.</span></div>
-          <div class="hl-item"><b>Burn-after-reading</b><span>Messages that erase themselves after viewing.</span></div>
-          <div class="hl-item"><b>Images &amp; files</b><span>Chunked, encrypted transfer with progress bars; images preview inline.</span></div>
-          <div class="hl-item"><b>Groups &amp; replies</b><span>LAN groups, server groups, typing indicators, quote replies, @mentions, message recall.</span></div>
-          <div class="hl-item"><b>Offline-first</b><span>Works with zero infrastructure; the app never phones home.</span></div>
+          <div class="hl-item"><b>commonMain/net</b><span>SynaEngine (connection state machine), Protocol (framing), Peer, ServerChannel, discovery</span></div>
+          <div class="hl-item"><b>commonMain/crypto</b><span>SynaCrypto (X25519/AES-GCM), IdentityStore contract, KeyPinning</span></div>
+          <div class="hl-item"><b>commonMain/shield</b><span>Shield engine contracts, TOTP (RFC 6238), session &amp; storage key gates, config guard</span></div>
+          <div class="hl-item"><b>commonMain/chat</b><span>ChatStore — conversations, outbox, message lifecycle</span></div>
+          <div class="hl-item"><b>commonMain/ui</b><span>Compose UI: Chats / Contacts / Chat / Settings / ShieldLock screens</span></div>
+          <div class="hl-item"><b>androidMain</b><span>MainActivity, Keystore-backed identity/session/TOTP stores, <span class="inline">cpp/syna_shield.c</span> NDK bridge, AndroidShieldEngine</span></div>
+          <div class="hl-item"><b>desktopMain</b><span>main.kt launcher, Desktop* shield/stores, file transfer, plus the whole <span class="inline">server</span> package (SynaServer, ServerMain, ServerLauncher, ServerUi)</span></div>
         </div>
+      </section>
 
-        <h3>The &Diamond;Mirtazapine Shield</h3>
-        <p>Syna's signature security layer: a real-time monitor that assumes the device itself may be hostile. Detection spans root/Magisk/Xposed, Frida and hooking frameworks, emulators, ADB, CA-certificate changes, ARP spoofing, screen capture events and more. Countermeasures include a severity-graded full-screen lock, TOTP + biometric unlock, a self-destruct protocol for critical compromise, honeypot decoy messages, and a watchdog ring of threads that monitor each other.</p>
+      <section class="docblock" id="networking">
+        <h2><span class="num">03</span> Networking &amp; protocol</h2>
+        <h3>Peer discovery (LAN)</h3>
+        <p>Dual-channel discovery over UDP: <strong>broadcast + multicast</strong> (some routers block broadcast; multicast is the fallback). Every device announces itself every <strong>3 seconds</strong> with a heartbeat; a peer is marked offline after <strong>15 seconds</strong> without heartbeats. A manual refresh button re-broadcasts on demand for troubleshooting. Android 14+ local-network restrictions and proxy tools with TUN mode are explicitly handled — same-machine traffic is routed via loopback, and cross-device traffic can be restored by bypassing the LAN subnet in the proxy.</p>
+        <h3>Transport</h3>
         <ul>
-          <li><strong>At rest:</strong> chat history AES-GCM encrypted with keys held in the hardware Keystore (TEE), session keys rotated on every unlock, memory cleared while locked.</li>
-          <li><strong>At run:</strong> NDK native anti-hook layer (syscall-direct I/O), APK signature verification against repackaging, dex hash self-verification.</li>
-          <li><strong>Fully public design:</strong> the threat model and detection matrix are documented in the repository — the protection holds even with source open.</li>
+          <li>Messages and files travel over <strong>TCP</strong>; encrypted chunks of 64 KB. Low-latency frames (typing, presence) use UDP at 40 KB chunks.</li>
+          <li><strong>ACK-based retransmission</strong>: the outbox only drops frames after a confirmed send failure re-enters the queue — failed sends stay queued for reconnect instead of being marked "sent".</li>
+          <li><strong>Cross-version interop</strong>: new frame fields carry defaults, so old and new clients interoperate on the same LAN.</li>
+          <li>Group chat (LAN mesh) has no central node; offline members simply miss group traffic until they return (the private server adds persistence, see <a href="#server">06</a>).</li>
         </ul>
+      </section>
 
-        <h3>Deployment</h3>
+      <section class="docblock" id="crypto">
+        <h2><span class="num">04</span> Crypto &amp; identity</h2>
         <ul>
-          <li>Android APK, Windows &amp; macOS desktop apps, and a <strong>SynaServer</strong> JAR for self-hosting (runs on a Raspberry Pi too).</li>
-          <li>Full bilingual tutorials (EN / 中文) covering setup, LAN chat, private servers, NAT traversal, security model and troubleshooting.</li>
+          <li><strong>Key exchange:</strong> X25519; session cipher AES-256-GCM.</li>
+          <li><strong>Identity:</strong> per-device long-term key held in the platform keystore — Android: Android Keystore (TEE-backed); desktop: key files with POSIX permissions (NTFS quirks handled).</li>
+          <li><strong>Trust on first use (TOFU)</strong> with key pinning — see <span class="inline">commonMain/shield/KeyPinning.kt</span>; a changed key triggers the shield flow rather than silent acceptance.</li>
+          <li><strong>Forward secrecy:</strong> session keys rotate on every unlock ("process-epoch"), with HMAC-protected in-memory state; message history is encrypted at rest (see <a href="#data">07</a>).</li>
+          <li><strong>Files &amp; images:</strong> chunked encrypted transfer over the same channels, with progress bars.</li>
         </ul>
+      </section>
+
+      <section class="docblock" id="shield">
+        <h2><span class="num">05</span> The &Diamond;Mirtazapine Shield</h2>
+        <p>The shield is a real-time security monitor that assumes the device itself may be hostile. Its threat model, detection matrix and rationale are documented in the repository (<span class="inline">MIRTAZAPINE_SHIELD.md</span>); it is designed to hold even with the source fully public.</p>
+        <h3>Detection (25+ sources, JVM + native dual-channel)</h3>
+        <p>Root / Magisk / Xposed / Zygisk / Shamiko / LSPosed / Riru / EdXposed / TaiChi; Frida injection (paths, ports 27042/27043, <span class="inline">/proc/self/maps</span>, threads, TracerPid); emulators; ADB; MDM takeover; credential changes; VPN/proxy changes; CA-certificate changes and ARP spoofing (LAN MITM); SSID fingerprint; rapid background switching; accessibility abuse; monitoring apps (signature-learning blacklist that catches renamed/repackaged apps); screen capture/recording (API 34+); screen mirroring; SELinux; clock tamper; weak lock; IME changes; USB attach/detach; suspicious executable modules (partition whitelist + non-JIT memfd); system proxy; device identity changes; downgrade attempts; JVM <span class="inline">-javaagent</span> injection; remote-control processes.</p>
+        <h3>Native layer (Android)</h3>
+        <p>NDK C bridge (<span class="inline">syna_shield.c</span>): syscall-direct I/O defeats GOT/PLT/LD_PRELOAD interception; own-code-segment memory-vs-disk hashing plus export-entry self-verification defeat inline hooks; libc entry verification.</p>
+        <h3>Active countermeasures</h3>
+        <ul>
+          <li>Operation-triggered integrity probing on the decrypt path; watchdog ring (3 threads monitoring each other); honeypot data pollution (decoy messages).</li>
+          <li>Severity-graded full-screen lock; TOTP (RFC 6238) two-factor unlock with <span class="inline">otpauth://</span> seed import; biometric unlock (BIOMETRIC_STRONG only).</li>
+          <li>Dual-factor disable — the shield cannot be turned off without biometrics + TOTP; brute-force protection: 5 failures releases the key and triggers the self-destruct protocol, with exponential cooldown.</li>
+          <li>Self-destruct wipes local chats and files on critical compromise; honeypot fake-lock (real key release + triple verification) for injection threats.</li>
+          <li>Heartbeat gate: fail-closed — a stalled detector refuses to decrypt. VersionCode downgrade defense; HMAC-signed settings.</li>
+          <li>APK signature-fingerprint verification (anti-repackaging) and dex hash self-verification at startup.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="server">
+        <h2><span class="num">06</span> Private server</h2>
+        <ul>
+          <li>Headless <span class="inline">syna-server.jar</span> built by <span class="inline">:composeApp:serverFatJar</span>; launch with <span class="inline">java -jar</span> (JRE 17 suffices).</li>
+          <li>Plain TCP listener on port <strong>45880</strong>; join from the app via <strong>Contacts &rarr; Join Server &rarr; address:port + password</strong>. The channel is derived from the shared password.</li>
+          <li>Server groups persist history to <span class="inline">history.jsonl</span> and survive restarts.</li>
+          <li>NAT traversal: map 45880 with any tunnel client — frp (<span class="inline">type = tcp, local_port = 45880</span>), <span class="inline">ngrok tcp 45880</span>, or a Tailscale node IP.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="data">
+        <h2><span class="num">07</span> Data &amp; persistence</h2>
+        <ul>
+          <li>LAN chats persist locally as encrypted JSONL (AES-GCM; Android keys live in the hardware Keystore, files at mode 0600) and survive restarts.</li>
+          <li><strong>Data-level key gate:</strong> the storage key is wrapped by a biometric-authenticated Keystore key — without authentication, newly stored data is unreadable.</li>
+          <li>Memory cleared while locked and after 60 s in background; notifications and clipboard content are suppressed while locked.</li>
+          <li>Audit: hash-chained + AES-GCM encrypted event timeline persisted across restarts.</li>
+          <li>Desktop settings are stored in JVM user preferences (multiple instances under one OS account share one identity).</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="tests">
+        <h2><span class="num">08</span> Test matrix</h2>
+        <p><span class="inline">./gradlew :composeApp:desktopTest</span> runs <strong>88 tests</strong> covering: crypto, protocol, loopback chat, group mesh, burn-after-reading, temp chat, offline outbox, server join + chat + history + burn, ACK retransmission, group admin, file transfer, process-epoch forward secrecy, a 6-engine message storm, and the shield gate &middot; watchdog &middot; honeypot &middot; brute-force &middot; TOTP &middot; TOTP-cancel &middot; TOFU &middot; module whitelist &middot; memfd cases.</p>
+      </section>
+
+      <section class="docblock" id="build">
+        <h2><span class="num">09</span> Building from source</h2>
+        <p>Prerequisites: JDK 17+ and the Android SDK (for the Android target only).</p>
+<pre class="doc-code"><span class="c"># Run the desktop app</span>
+./gradlew :composeApp:run
+
+<span class="c"># Installers</span>
+./gradlew :composeApp:packageDmg    <span class="c"># macOS .dmg</span>
+./gradlew :composeApp:packageMsi    <span class="c"># Windows .msi (Windows + WiX required)</span>
+./gradlew :composeApp:packageDeb    <span class="c"># Linux .deb</span>
+
+<span class="c"># Headless server jar (all platforms)</span>
+./gradlew :composeApp:serverFatJar  <span class="c"># -&gt; build/server/syna-server.jar</span>
+
+<span class="c"># Android</span>
+./gradlew :composeApp:assembleDebug <span class="c"># debug APK</span>
+./gradlew :composeApp:assembleRelease <span class="c"># release APK (needs signing config in local.properties)</span>
+
+<span class="c"># Tests</span>
+./gradlew :composeApp:desktopTest</pre>
+        <p>CI (GitHub Actions, <span class="inline">.github/workflows/build.yml</span>) runs the test suite, builds the Android APK, the server jar and the macOS DMG on every push to <span class="inline">main</span>; tag pushes also publish a GitHub Release with all artifacts. Dependency license audit output lives in <span class="inline">tools/license-audit/</span>.</p>
       </section>
 
       <section class="docblock" id="links">
-        <h2><span class="num">04</span> Links &amp; further reading</h2>
+        <h2><span class="num">10</span> Further reading</h2>
         <ul>
-          <li><a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Repository</a> — source, issues and releases</li>
-          <li><a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Releases</a> — Android APK, desktop installers, server JAR</li>
-          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_EN.md" target="_blank" rel="noopener">Tutorial (EN)</a> &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">Tutorial (中文)</a></li>
           <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/MIRTAZAPINE_SHIELD.md" target="_blank" rel="noopener">Shield design &amp; detection matrix</a></li>
-          <li><a href="https://github.com/NUSV" target="_blank" rel="noopener">NUSV organization</a></li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/SECURITY_AUDIT_REPORT.md" target="_blank" rel="noopener">Security audit report (v1.0.0)</a></li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_EN.md" target="_blank" rel="noopener">Tutorial (EN)</a> &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">Tutorial (中文)</a></li>
+          <li><a href="https://github.com/NUSV/Syna-NUSV/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a> &middot; <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">Repository</a></li>
         </ul>
       </section>
 
