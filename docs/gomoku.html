@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gomoku-NUSV — Docs | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Gomoku-NUSV: a cross-platform Gomoku game built with Kotlin Multiplatform. Overview, the problem it solves, highlights and links.">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">N</span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../warehouse.html">Warehouse</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="doc">
+
+      <div class="doc-top">
+        <img src="../assets/img/gomoku-banner.svg" alt="Gomoku-NUSV banner" style="width:100%;height:auto;border-radius:12px;display:block">
+        <h1>Gomoku-NUSV</h1>
+        <p class="lede">A standalone, cross-platform Gomoku (Five in a Row) game for macOS, Windows, iOS and Android — with on-device AI opponents and zero network dependencies.</p>
+        <div class="big-links">
+          <a class="btn btn-primary" href="https://github.com/NUSV/Gomoku-NUSV/releases" target="_blank" rel="noopener">Download</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">Source on GitHub</a>
+        </div>
+      </div>
+
+      <nav class="toc">
+        <b>On this page</b>
+        <ul>
+          <li><a href="#overview">1 &middot; Overview</a></li>
+          <li><a href="#problem">2 &middot; The problem it solves</a></li>
+          <li><a href="#highlights">3 &middot; Highlights</a></li>
+          <li><a href="#links">4 &middot; Links &amp; further reading</a></li>
+        </ul>
+      </nav>
+
+      <section class="docblock" id="overview">
+        <h2><span class="num">01</span> Overview</h2>
+        <p>Gomoku-NUSV is a board game built with <strong>Kotlin Multiplatform + Compose Multiplatform</strong>, shipping as a native app on four platforms from one codebase. Play against a friend on the same screen, or challenge the built-in AI across three difficulty levels.</p>
+        <p>The game started as a minigame inside <a href="nusv-lite.html">NUSV LITE</a> and grew into its own standalone project — a small showcase of how far the NUSV stack can go on desktop and mobile.</p>
+      </section>
+
+      <section class="docblock" id="problem">
+        <h2><span class="num">02</span> The problem it solves</h2>
+        <ul>
+          <li><strong>Board games without baggage</strong> — no account, no ads, no network connection, no cloud AI. The entire game engine runs on your device, so it works on a plane, in a blackout, or anywhere else.</li>
+          <li><strong>Same code, four platforms</strong> — one Kotlin Multiplatform codebase covers macOS, Windows, iOS and Android, which keeps the project maintainable for a small team (or one person).</li>
+          <li><strong>Serious play on mobile and desktop</strong> — most Gomoku apps are either too simple or mobile-only; this one brings a deep board experience with adjustable AI strength to the desktop too.</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="highlights">
+        <h2><span class="num">03</span> Highlights</h2>
+
+        <h3>Play</h3>
+        <div class="hl">
+          <div class="hl-item"><b>Local two-player</b><span>Two humans, one screen.</span></div>
+          <div class="hl-item"><b>Three AI levels</b><span>Easy (heuristics), Medium (threat search, 4 plies) and Hard (threat search, up to 8 plies on desktop).</span></div>
+          <div class="hl-item"><b>Device-aware AI</b><span>Search depth and time budget adapt to the device — and truncate gracefully when time runs out.</span></div>
+          <div class="hl-item"><b>Optional move timer</b><span>10–300 second countdown; timeout forfeits the game.</span></div>
+          <div class="hl-item"><b>Undo / resign / restart</b><span>Full game control, including undo of both sides' moves against the AI.</span></div>
+          <div class="hl-item"><b>Persistence</b><span>An unfinished game is saved automatically and offers to resume on next launch.</span></div>
+        </div>
+
+        <h3>Depth &amp; feel</h3>
+        <ul>
+          <li><strong>Board sizes</strong> 13×13, 15×15 and 19×19, with ten fully unlocked color themes (wood, deep space, ocean, bamboo, mint, rose, violet, maple, midnight, ink).</li>
+          <li><strong>Board rendering</strong> — gradient stones with highlights and shadows, drop-in animation for the last move, hover preview and a last-move marker.</li>
+          <li><strong>Sci-fi effects</strong> — energy ripples on moves, particle bursts, a hologram scan beam and a neon winning-line trail.</li>
+          <li><strong>Synthesized sound</strong> — place, win, draw and timeout sounds are generated on-device; no audio assets.</li>
+          <li><strong>Statistics</strong> — persistent profile tracking wins, losses, draws, streaks and per-difficulty performance.</li>
+          <li><strong>Power-ups</strong> — an AI hint and +30s time boosts, consumed from your stock (new players start with some).</li>
+        </ul>
+      </section>
+
+      <section class="docblock" id="links">
+        <h2><span class="num">04</span> Links &amp; further reading</h2>
+        <ul>
+          <li><a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">Repository</a> — source, issues and releases</li>
+          <li><a href="https://github.com/NUSV/Gomoku-NUSV/releases" target="_blank" rel="noopener">Releases</a> — installers for macOS / Windows / Linux, plus iOS and Android packages</li>
+          <li><a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/docs/ios-installation.md" target="_blank" rel="noopener">iOS installation guide</a></li>
+          <li><a href="https://github.com/NUSV" target="_blank" rel="noopener">NUSV organization</a></li>
+        </ul>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
