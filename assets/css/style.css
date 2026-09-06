@@ -93,17 +93,11 @@ a:hover {
   letter-spacing: 0.08em;
 }
 
-.brand-mark {
-  width: 30px;
-  height: 30px;
+.brand-mark-img {
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-  color: #060a12;
-  font-weight: 900;
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+  object-fit: contain;
 }
 
 .brand small {
