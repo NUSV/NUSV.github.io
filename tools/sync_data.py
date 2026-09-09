@@ -334,39 +334,48 @@ def md_inline(text, repo_name, branch):
     return text
 
 
-def md_to_html(md, repo_name, branch):
-    """Render a pragmatic README subset to HTML. Returns (html, dropped_first_h1)
-    where dropped_first_h1 indicates the leading "# <repo title>" heading and any
-    immediately following badge row were removed (they duplicate the page head)."""
+def _norm(s):
+    return re.sub(r"[^a-z0-9]", "", (s or "").lower())
+
+
+def md_to_html(md, repo_name, branch, drop_h1_names=None):
+    """Render a pragmatic README subset to HTML.
+
+    If drop_h1_names is given (normalized repo/display names), a leading
+    "# <name>" heading is dropped because the page already shows that title.
+    Any other README heading is preserved."""
     out = []
     lines = md.replace("\r\n", "\n").split("\n")
     i, n = 0, len(lines)
     first_h1_dropped = False
-    pending_h1_line = None
+    drop_set = (
+        {_norm(x) for x in drop_h1_names} if drop_h1_names is not None else None
+    )
 
     while i < n:
         line = lines[i]
 
-        # Drop the very first "# Title" heading of the README.
+        # Optionally drop the very first "# <repo title>" heading and the
+        # badge row that follows it (both duplicate the generated page head).
         m0 = re.match(r"^#\s+(.+?)\s*$", line)
-        if not first_h1_dropped and m0:
-            pending_h1_line = m0.group(1)
+        if m0 and drop_set is not None and _norm(m0.group(1)) in drop_set:
             first_h1_dropped = True
             i += 1
-            # skip empty lines after the h1
             while i < n and lines[i].strip() == "":
                 i += 1
-            # skip the markdown badge lines / centered banner right after h1
-            badge_start = i
-            while i < n and (
-                re.match(r"^\s*(<p align=\"center\">|\[!)", lines[i])
-                or re.match(r"^\s*$", lines[i])
-            ):
-                i += 1
-            # If what follows is clearly a list of links/images (badges row),
-            # keep skipping until a real content line; otherwise rewind.
-            if i > badge_start and i < n:
-                pass
+            # Skip consecutive centered <p> blocks that only contain links or
+            # images (badge rows / banners), plus surrounding blank lines.
+            while i < n:
+                if lines[i].strip() == "":
+                    i += 1
+                    continue
+                if lines[i].strip().startswith('<p align="center">'):
+                    i += 1
+                    while i < n and not lines[i].strip() == "</p>":
+                        i += 1
+                    i += 1
+                    continue
+                break
             continue
 
         if line.startswith("```"):
@@ -396,7 +405,10 @@ def md_to_html(md, repo_name, branch):
             while i < n and lines[i].strip().startswith(">"):
                 quote.append(re.sub(r"^\s*>\s?", "", lines[i], count=1))
                 i += 1
-            inner = md_to_html("\n".join(quote), repo_name, branch)[0]
+            inner = md_to_html(
+                "\n".join(quote), repo_name, branch,
+                drop_h1_names=list(drop_set) if drop_set is not None else None,
+            )[0]
             out.append("<blockquote>%s</blockquote>" % inner)
             continue
 
@@ -603,7 +615,14 @@ def render_page(proj, readme_html, updated_utc):
         top = latest["assets"][:3] if latest["assets"] else []
         alln = len(latest["assets"])
         dl_latest = "".join(dl_row(a, big=True) for a in top)
-        if alln > len(top):
+        if alln == 0:
+            dl_latest = (
+                '<a class="dl-btn muted" href="%s" target="_blank" rel="noopener">'
+                '<span class="dl-label">No downloadable assets</span>'
+                '<span class="dl-sub">open the release page</span></a>'
+                % html.escape(latest["html_url"], quote=True)
+            )
+        elif alln > len(top):
             dl_latest += (
                 '<a class="dl-btn muted" href="%s" target="_blank" rel="noopener">'
                 '<span class="dl-label">All %d assets</span>'
@@ -770,8 +789,6 @@ def discover_projects(token):
         icon_url = discover_icon(name, branch, token, conf.get("icon"))
         screens = get_screenshots(name, branch, token)
         releases = fetch_releases(name, token) or []
-        md = fetch_readme(name, branch, token)
-        readme_html = md_to_html(md, name, branch)[0] if md else None
 
         projects.append(
             {
@@ -827,7 +844,8 @@ def main():
     # -- project pages --
     for proj in projects:
         md = fetch_readme(proj["repo"], proj["branch"], token)
-        readme_html = md_to_html(md, proj["repo"], proj["branch"])[0] if md else None
+        drop_names = {proj["name"], proj["repo"], re.sub(r"-NUSV$", "", proj["repo"], flags=re.I)}
+        readme_html = md_to_html(md, proj["repo"], proj["branch"], drop_names)[0] if md else None
         page = render_page(proj, readme_html, now)
         path = os.path.join(outdir, proj["slug"] + ".html")
         old = ""
@@ -844,9 +862,10 @@ def main():
     for f in os.listdir(outdir):
         if not f.endswith(".html"):
             continue
-        if f[:-5] not in slugs:
+        stem = f[:-5]
+        if stem not in slugs:
             os.remove(os.path.join(outdir, f))
-            changed.append("projects/%s.html (removed)" % f)
+            changed.append("projects/%s (removed)" % stem)
             print("removed stale %s" % f)
 
     # -- listing pages (marker regions) --
