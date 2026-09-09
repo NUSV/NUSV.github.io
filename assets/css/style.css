@@ -678,6 +678,42 @@ a:hover {
   color: var(--cyan);
 }
 
+.gal-title {
+  font-size: 22px;
+  margin: 1.6em 0 0.4em;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.gal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.gal-item {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.gal-item:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  text-decoration: none;
+}
+
+.gal-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0;
+}
+
 /* ---------- Project pages (auto-generated) ---------- */
 
 .pg {
