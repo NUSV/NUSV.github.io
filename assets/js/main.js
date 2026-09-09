@@ -1,17 +1,33 @@
 // United Science Vaca — site scripts
 // i18n note: English is the source language. To add a language later,
-// set window.I18N[lang] and call setLang(lang) (see toggle stub below).
+// set window.I18N[lang] and call setLang(lang) (see toggle below).
 
 (function () {
   "use strict";
 
-  const navMark = document.querySelectorAll(".nav-links a");
-  const current = window.location.pathname.split("/").pop() || "index.html";
+  // Active nav state: exact page, or section prefixes
+  // (projects/ pages belong to Warehouse, docs/ pages belong to Docs).
+  const path = window.location.pathname.split("/").filter(Boolean);
+  const current = path[path.length - 1] || "index.html";
+  const section = path[path.length - 2] || "";
 
-  navMark.forEach(function (a) {
-    if (a.getAttribute("href") === current) a.classList.add("active");
+  const navMap = {
+    "index.html": "index.html",
+    warehouse: "warehouse.html",
+    docs: "docs.html",
+    about: "about.html",
+    "404.html": "index.html",
+    projects: "warehouse.html",
+  };
+
+  const activeHref =
+    navMap[current] || navMap[section] || "index.html";
+
+  document.querySelectorAll(".nav-links a").forEach(function (a) {
+    if (a.getAttribute("href") === activeHref) a.classList.add("active");
   });
 
+  // Card spotlight follows the pointer.
   document.querySelectorAll(".card").forEach(function (card) {
     card.addEventListener("pointermove", function (e) {
       const r = card.getBoundingClientRect();
@@ -20,6 +36,7 @@
     });
   });
 
+  // Reveal-on-scroll.
   const observer = new IntersectionObserver(
     function (entries) {
       entries.forEach(function (entry) {
@@ -42,12 +59,27 @@
 
   window.I18N = {};
 
+  // Floating feedback so the language toggle never feels dead.
+  function toast(message) {
+    const old = document.querySelector(".toast");
+    if (old) old.remove();
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = message;
+    document.body.appendChild(el);
+    setTimeout(function () {
+      el.classList.add("out");
+      setTimeout(function () {
+        el.remove();
+      }, 350);
+    }, 2600);
+  }
+
   window.setLang = function (lang) {
     // English is served inline; translations will be provided as
     // window.I18N[lang] overrides (data-i18n keys) in a future update.
     if (lang !== "en" && !window.I18N[lang]) {
-      const note = document.getElementById("i18n-note");
-      if (note) note.style.display = "block";
+      toast("中文版即将推出 — Chinese translation coming soon");
     }
   };
 
