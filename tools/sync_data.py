@@ -141,19 +141,26 @@ def fetch_readme(proj, token):
 
 
 def resolve_ref(proj, raw):
-    """Resolve a README-relative reference to a GitHub URL."""
+    """Resolve a README-relative reference to a GitHub page URL."""
     raw = raw.strip()
     if raw.startswith(("http://", "https://", "#", "mailto:", "data:")):
         return raw
     raw = raw.lstrip("./")
-    if raw.startswith("http"):
-        return raw
     return "%s/NUSV/%s/%s/%s" % (
         "https://github.com",
         proj["repo"],
         proj["branch"],
         raw,
     )
+
+
+def resolve_raw(proj, raw):
+    """Resolve a README-relative reference to a raw file URL (for images)."""
+    raw = raw.strip()
+    if raw.startswith(("http://", "https://", "data:")):
+        return raw
+    raw = raw.lstrip("./")
+    return "%s/NUSV/%s/%s/%s" % (RAW, proj["repo"], proj["branch"], raw)
 
 
 def md_inline(text, proj):
@@ -165,10 +172,37 @@ def md_inline(text, proj):
         key = "IMGTOK%d" % len(img_tokens)
         img_tokens[key] = (
             '<img src="%s" alt="%s" loading="lazy" referrerpolicy="no-referrer">'
-            % (html.escape(resolve_ref(proj, src), quote=True),
+            % (html.escape(resolve_raw(proj, src), quote=True),
                html.escape(alt or "", quote=True))
         )
         return key
+
+    # Raw HTML <img> tags (e.g. the README banner) must also point at a real,
+    # absolute URL, otherwise they resolve relative to the page (/projects/…).
+    def raw_img(m):
+        tag = m.group(0)
+        attrs = []
+        src = None
+        for am in re.finditer(
+            r"""\b(src|width|height|alt)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""",
+            tag,
+        ):
+            k = am.group(1)
+            val = am.group(2) if am.group(2) is not None else (
+                am.group(3) if am.group(3) is not None else am.group(4)
+            )
+            if k == "src":
+                src = html.escape(resolve_raw(proj, val), quote=True)
+            else:
+                attrs.append('%s="%s"' % (k, html.escape(val, quote=True)))
+        if src is None:
+            return ""
+        return '<img src="%s" loading="lazy" referrerpolicy="no-referrer" %s>' % (
+            src,
+            " ".join(attrs),
+        )
+
+    text = re.sub(r"<img\b[^>]*/?>", raw_img, text)
 
     text = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;([^)]*)&quot;)?\)", img_placeholder, text)
 
@@ -297,7 +331,14 @@ def md_to_html(md, proj):
                 break
             para.append(lines[i])
             i += 1
-        out.append("<p>%s</p>" % md_inline(" ".join(x.strip() for x in para), proj))
+        joined = " ".join(x.strip() for x in para)
+        # A line that is itself a <p>…</p> wrapper (e.g. a banner with a raw
+        # <img>) must not be wrapped again; keep it as a centered block.
+        wrap = re.fullmatch(r"<p\b[^>]*>(.*)</p>", joined, re.S)
+        if wrap:
+            out.append('<div class="readme-img-block">%s</div>' % md_inline(wrap.group(1), proj))
+        else:
+            out.append("<p>%s</p>" % md_inline(joined, proj))
 
     return "\n".join(out)
 
@@ -439,6 +480,8 @@ def render_page(proj, meta, releases, readme_html, updated_utc):
 %s
 
   <main class="wrap">
+    <nav class="pg-back"><a href="../warehouse.html">&#8249; All projects</a></nav>
+
     <article class="pg">
 
       <div class="pg-head">
