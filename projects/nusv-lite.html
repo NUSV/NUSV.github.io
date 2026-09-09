@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NUSV LITE — Downloads &amp; Introduction | United Science Vaca (NUSV)</title>
+  <meta name="description" content="The official NUSV Android client: content hub, 11 built-in games, 60+ tools, widgets, theme store and daily check-in points.">
+  <link rel="icon" type="image/png" href="../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark"><img src="../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../warehouse.html">Warehouse</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="pg">
+
+      <div class="pg-head">
+        <div class="pg-head-main">
+          <span class="pg-icon"><img src="../assets/img/lite-icon.png" alt="NUSV LITE icon" loading="lazy"></span>
+          <h1>NUSV LITE</h1>
+          <p class="lede">The official NUSV Android client: content hub, 11 built-in games, 60+ tools, widgets, theme store and daily check-in points.</p>
+          <div class="meta pg-chips"><span class="chip chip-accent">Android</span><span class="chip">MIT</span><span class="chip">android</span><span class="chip">jetpack-compose</span><span class="chip">kotlin</span><span class="chip">material-design</span><span class="chip">material3</span></div>
+          <div class="btn-row pg-actions">
+            <a class="btn btn-primary" href="#downloads">Download latest</a>
+            <a class="btn btn-ghost" href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">GitHub repository</a>
+            <a class="btn btn-ghost" href="../docs/nusv-lite.html">Technical docs</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pg-grid">
+        <section class="pg-about">
+          <div class="pg-updated">README auto-synced from the repository &middot; 2026-09-09 07:11 UTC</div>
+          <h1>NUSV LITE</h1>
+<p><p align="center"><img src="banner.svg" alt="NUSV LITE" width="100%"></p></p>
+<p><p align="center"> <a href="https://github.com/NUSV/NUSV-lite/releases"><img src="https://img.shields.io/github/v/release/NUSV/NUSV-lite?label=release" alt="Latest release"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/NUSV/NUSV-lite" alt="License"></a> <a href="https://github.com/NUSV/NUSV-lite"><img src="https://img.shields.io/github/stars/NUSV/NUSV-lite" alt="Stars"></a> <a href="https://github.com/NUSV/NUSV-lite"><img src="https://img.shields.io/github/languages/top/NUSV/NUSV-lite?label=language" alt="Language"></a> <img src="https://img.shields.io/badge/platform-Android-brightgreen?logo=android" alt="Platform"> </p></p>
+<p>Official Android client for NUSV, putting the entire NUSV ecosystem in your pocket.</p>
+<h2>Features</h2>
+<ul><li><strong>Content hub</strong>: browse the latest posts across all NUSV sites, organized by category for quick access</li><li><strong>11 built-in games</strong>: Tic-Tac-Toe, 2048, Minesweeper, Memory Match, Snake, Wordle, Simon Says, Whack-a-Mole, Tetris, Gomoku (vs. a threat-aware AI with two difficulty levels), Sudoku — earn points on wins, per-game high scores</li><li><strong>60+ built-in tools</strong>:</li><li><em>Everyday</em>: dice & coin flips, tip / BMI / age calculators, unit & currency converters, world clock, stopwatch, countdown, pomodoro, bill splitter, date difference, expense tracker, quick timer, flashlight, battery info, anniversary countdown, sleep calculator, lottery generator</li><li><em>Dev</em>: JSON formatter, Base64, hash, UUID, epoch & URL & color & case converters, regex tester, Markdown preview, QR code generator, text statistics, lorem ipsum, password generator, text encryption</li><li><em>Creative</em>: drawing pad, kaomoji keyboard, name generator, random quotes, biorhythm charts, Morse code, metronome, breathing exercise</li><li><strong>Points & check-ins</strong>: daily check-in (1–3 pts) with streak rewards, points from games, redeemable in the theme shop</li><li><strong>Theme shop</strong>: color themes unlockable with points, including the <strong>Orca premium theme</strong> (pure black/white UI, ×2 points, 11 exclusive hidden tools) earned through long-term check-ins</li><li><strong>Home-screen widget</strong>: points & check-in streak at a glance, one-tap check-in</li><li><strong>Achievements</strong>: 10 badges covering games, tools, check-ins and points</li><li><strong>Game sound effects</strong>, haptic feedback, remote sync</li><li>中文 / English language switching, dark / light themes, list / 2-column / 3-column layouts</li></ul>
+<h2>Tech Stack</h2>
+<ul><li>Kotlin + Jetpack Compose</li><li>Material 3 design language</li><li>Room local database</li><li>Inspired by Arc / Linear / Vercel</li></ul>
+<h2>Build</h2>
+<pre class="doc-code"># Requires JDK 17
+./gradlew assembleDebug
+# Output: app/build/outputs/apk/debug/app-debug.apk</pre>
+<p>Release APKs live in the <code>release/</code> directory.</p>
+<h2>Documentation</h2>
+<ul><li><a href="https://github.com/NUSV/NUSV-lite/test-orca/CHANGELOG.md">CHANGELOG</a> (complete version history from v1.1.0)</li><li>Mirrored in the in-app "Docs" page</li></ul>
+        </section>
+        <aside class="pg-sidecol" id="downloads">
+          <div class="card pg-side"><div class="side-title">Latest release</div><span class="rel-tag">v1.10.0</span><span class="rel-date">2026-07-31</span><div class="dl-group"><a class="dl-btn big green" href="https://github.com/NUSV/NUSV-lite/releases/download/v1.10.0/NUSV-LITE-v1.10.0-alpha.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">NUSV-LITE-v1.10.0-alpha.apk &middot; 21.5 MB</span></a></div></div><div class="card pg-side"><div class="side-title">Project info</div><div class="pg-info"><span>License</span><b>MIT</b></div><div class="pg-info"><span>Stars</span><b>0</b></div><div class="pg-info"><span>Repository updated</span><b>2026-09-06</b></div><div class="pg-info"><span>Source</span><a href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">github.com/NUSV/NUSV-lite</a></div></div>
+        </aside>
+      </div>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
