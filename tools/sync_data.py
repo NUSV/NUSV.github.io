@@ -501,6 +501,11 @@ def main():
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M")
 
     changed = []
+    stamp_re = re.compile(r'<div class="pg-updated">.*?</div>', re.S)
+
+    def strip_stamp(text):
+        return stamp_re.sub("", text)
+
     for proj in PROJECTS:
         meta = fetch_meta(proj, token)
         releases = fetch_releases(proj, token) or []
@@ -512,7 +517,9 @@ def main():
         if os.path.exists(path):
             with open(path, "r", encoding="utf-8") as f:
                 old = f.read()
-        if old != page:
+        # Ignore the embedded sync timestamp when deciding whether content
+        # really changed, so scheduled runs do not churn empty commits.
+        if strip_stamp(old) != strip_stamp(page):
             with open(path, "w", encoding="utf-8") as f:
                 f.write(page)
             changed.append(proj["slug"])
