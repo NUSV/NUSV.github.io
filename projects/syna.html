@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syna — Downloads &amp; Introduction | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Offline-first LAN messenger with end-to-end encryption, group chat, self-hosted servers and a built-in anti-tamper shield.">
+  <link rel="icon" type="image/png" href="../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark"><img src="../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../warehouse.html">Warehouse</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="pg">
+
+      <div class="pg-head">
+        <div class="pg-head-main">
+          <span class="pg-icon"><img src="../assets/img/syna-icon.png" alt="Syna icon" loading="lazy"></span>
+          <h1>Syna</h1>
+          <p class="lede">Offline-first LAN messenger with end-to-end encryption, group chat, self-hosted servers and a built-in anti-tamper shield.</p>
+          <div class="meta pg-chips"><span class="chip chip-accent">Android</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">macOS</span><span class="chip">GPL-3.0</span><span class="chip">android</span><span class="chip">compose-multiplatform</span><span class="chip">e2ee</span><span class="chip">encryption</span><span class="chip">end-to-end-encryption</span></div>
+          <div class="btn-row pg-actions">
+            <a class="btn btn-primary" href="#downloads">Download latest</a>
+            <a class="btn btn-ghost" href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">GitHub repository</a>
+            <a class="btn btn-ghost" href="../docs/syna.html">Technical docs</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pg-grid">
+        <section class="pg-about">
+          <div class="pg-updated">README auto-synced from the repository &middot; 2026-09-09 07:11 UTC</div>
+          <h1>Syna</h1>
+<p><p align="center"><img src="banner.svg" alt="Syna" width="100%"></p></p>
+<p><p align="center"> <a href="https://github.com/NUSV/Syna-NUSV/actions"><img src="https://img.shields.io/github/actions/workflow/status/NUSV/Syna-NUSV/build.yml?branch=main&label=build&logo=github" alt="Build status"></a> <a href="https://github.com/NUSV/Syna-NUSV/releases"><img src="https://img.shields.io/github/v/release/NUSV/Syna-NUSV?label=release" alt="Latest release"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/NUSV/Syna-NUSV" alt="License"></a> <a href="https://github.com/NUSV/Syna-NUSV"><img src="https://img.shields.io/github/stars/NUSV/Syna-NUSV" alt="Stars"></a> <img src="https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20macOS-blue" alt="Platforms"> </p></p>
+<p><strong>Syna</strong> is a LAN instant messaging app built with <strong>Kotlin Multiplatform + Compose Multiplatform</strong>. It runs on <strong>Android</strong>, <strong>Windows</strong>, and <strong>macOS</strong> with a fully peer-to-peer architecture — no central server, no internet required.</p>
+<blockquote><p>🤖 <strong>AI-generated code notice / AI 生成代码声明</strong>: This project's source code was predominantly generated with the assistance of AI agents (LLM-based coding assistants), then reviewed and tested by humans. Please review code before relying on it in production. 本项目源代码主要由 AI 智能体（大语言模型编程助手）生成，经人工审查与测试后发布。生产环境使用前请自行复核。</p></blockquote>
+<blockquote><p>📖 <strong>New to Syna? Read the tutorial</strong> — quick start, LAN chat, private server setup, NAT traversal (frp/ngrok/Tailscale), security model & troubleshooting. 📖 <strong>初次使用？请看教程</strong> — 快速开始、局域网聊天、私人服务器搭建、内网穿透、安全模型与故障排查。</p>
+<p><strong>English</strong>: <a href="https://github.com/NUSV/Syna-NUSV/main/TUTORIAL_EN.md">TUTORIAL_EN.md</a> · <strong>中文</strong>: <a href="https://github.com/NUSV/Syna-NUSV/main/TUTORIAL_ZH.md">TUTORIAL_ZH.md</a> · <strong>入口</strong>: <a href="https://github.com/NUSV/Syna-NUSV/main/TUTORIAL.md">TUTORIAL.md</a></p></blockquote>
+<h2>Features</h2>
+<ul><li>✅ <strong>Multi-platform</strong>: Android (APK) + Desktop (Windows/macOS share the same JVM build)</li><li>✅ <strong>LAN peer discovery</strong>: UDP broadcast + multicast dual-channel, 3s heartbeat, 15s offline timeout, <strong>manual refresh button</strong> for troubleshooting</li><li>✅ <strong>Custom username</strong>: change it anytime in Settings, broadcast to LAN peers instantly</li><li>✅ <strong>WeChat-style chat</strong>: conversation list (unread badges / timestamps / previews), chat bubbles, ✓✓ read receipts, connection status display</li><li>✅ <strong>Images & files</strong>: chunked encrypted transfer (64KB over TCP / 40KB over UDP) with progress bar, image preview in bubbles, system file picker (Android / desktop)</li><li>✅ <strong>Typing indicator</strong>: live "正在输入…" status in 1:1, LAN groups and server groups</li><li>✅ <strong>Message recall</strong>: long-press your message → recall within 2 minutes, both sides marked</li><li>✅ <strong>Quote reply & @mentions</strong>: long-press → reply with quoted preview; @ member picker in groups</li><li>✅ <strong>◇Mirtazapine Shield</strong>: real-time security monitor & app lock</li><li>📖 <strong>Full design & detection matrix</strong>: <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md">MIRTAZAPINE_SHIELD.md</a> — why the protection holds even with the source fully public</li><li><strong>Detection (25+ sources, JVM + native NDK dual-channel)</strong>: Root (incl. Magisk/Xposed/Zygisk/Shamiko/LSPosed/<strong>Riru/EdXposed/TaiChi</strong>) · Frida injection (paths, ports 27042/27043, /proc/self/maps, threads, <strong>TracerPid</strong>) · emulator · USB debugging/ADB · device-admin takeover (MDM) · credential change · VPN/proxy change · <strong>CA-cert change & ARP spoofing (LAN MITM)</strong> · network fingerprint (SSID) · rapid background switching · accessibility abuse · monitoring apps (incl. <strong>signature-learning blacklist — renamed/repackaged still caught</strong>) · <strong>screen capture/recording events (API 34+)</strong> · screen mirroring · SELinux · clock tamper · weak lock · <strong>IME change · USB attach/detach · suspicious executable module (partition whitelist + non-JIT memfd, name-independent)</strong> · system proxy · device identity · downgrade attempts · JVM <code>-javaagent</code> injection · remote-control processes</li><li><strong>Active countermeasures</strong>: operation-triggered integrity probing on the decrypt path · watchdog self-healing (scanner restart) · honeypot data pollution (decoy messages)</li><li><strong>Response</strong>: full-screen severity-graded lock page · <strong>TOTP two-factor unlock</strong> (biometric + 6-digit dynamic code, RFC 6238, seed via <code>otpauth://</code> import) · <strong>dual-factor disable</strong> (the shield cannot be turned off without biometrics + TOTP) · biometric unlock (<strong>BIOMETRIC_STRONG-only</strong> — no device-credential auto-pass; 5-min expiry, critical re-lock) · <strong>self-destruct protocol</strong> (wipes local chats & files on critical compromise) · <strong>honeypot fake-lock</strong> for injection threats (real key release + triple verification) · brute-force protection (5 fails → key release + self-destruct; exponential unlock cooldown)</li><li><strong>Self-protection</strong>: APK <strong>signature-fingerprint verification</strong> (anti-repackaging) · <strong>dex hash self-verification</strong> · versionCode downgrade defense · HMAC-signed settings (tamper/wipe → force-restore) · in-memory state HMAC · <strong>heartbeat gate (fail-closed: stalled detector → decrypt refused)</strong> · <strong>watchdog ring</strong> (3 threads monitor each other) · <strong>native anti-hook layer (NDK: syscall-direct I/O defeats GOT/PLT/LD_PRELOAD, own-code-segment memory-vs-disk hashing + export-entry self-verification defeat inline hooks, libc entry verification; JVM+native dual-channel)</strong> · disabling requires biometrics · back/ESC key blocking</li><li><strong>Data protection</strong>: chat history <strong>AES-GCM encrypted at rest</strong> (Keystore TEE / 0600 key) · <strong>data-level key gate</strong> (session key wrapped by biometric-authenticated Keystore key — no auth → new data unreadable) · <strong>session-key rotation per unlock</strong> (forward secrecy) · memory cleared while locked & after 60s background · screen-capture protection & <strong>capture-event detection (API 34+)</strong> · clipboard protection · notifications hidden while locked</li><li><strong>Audit</strong>: <strong>hash-chained + AES-GCM encrypted</strong> event timeline persisted across restarts</li><li><strong>Live status panel</strong>: gate freshness · watchdog trips · honeypot state · biometric fail counter · latest audit events</li><li>Honest boundary: device-owner-level monitoring (pre-installed spyware / MDM) and kernel-level rootkits (forged /proc) cannot be seen by an app-layer solution; the fail-closed gate, data-level key gate, native anti-hook and self-destruct are the compensating controls — stated in-app and in <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md#16-honest-boundary-again-plainly">MIRTAZAPINE_SHIELD.md §16</a></li><li>✅ <strong>Chat history persistence</strong>: LAN chats survive restarts — encrypted at rest (AES-GCM, Keystore/0600 key); full state restored (recalls, files, quotes, mentions)</li><li>✅ <strong>Clear local history</strong>: Settings → Storage shows usage and wipes chats & received files</li><li>✅ <strong>Message forwarding</strong>: long-press → forward to any conversation/group</li><li>✅ <strong>Chat polish</strong>: date dividers (今天/昨天/date), unread badge on the Chats tab, <strong>Enter to send</strong> (Shift+Enter for newline), <strong>adjustable message font size</strong> (small/medium/large), <strong>first-launch Shield onboarding wizard</strong> (4 steps, skippable)</li><li>✅ <strong>Desktop tray resident</strong>: close-to-tray keeps receiving messages in the background; <strong>silent update check</strong> via GitHub Releases 10 s after launch</li><li>✅ <strong>System notifications</strong>: Android notification bar / desktop tray popup for new messages</li><li>✅ <strong>Connection mode switching</strong>: Auto / TCP (reliable) / UDP (fast) / Host Hotspot</li><li>✅ <strong>P2P mesh group chat</strong>: create → invite → mesh membership sync (JOIN/LEAVE), <strong>group owner can dissolve the group</strong>, members can leave; <strong>group administration</strong> — kick / mute (1 h, toggleable) / set-admin by creator or admins (permission-checked)</li><li>✅ <strong>Voice messages</strong>: long-press 🎤 record (30 s max) → encrypted transfer → ▶️ playback (Android AMR / desktop WAV)</li><li>✅ <strong>Message delivery ACK</strong>: P2P 1:1 messages are ACKed and retransmitted (3 s ×3) before falling back to the offline queue</li><li>✅ <strong>Message copy with 30 s clipboard auto-clear</strong>; burn-after-reading sends require biometric confirmation</li><li>✅ <strong>Enhanced protection</strong>:</li><li><strong>End-to-end encryption</strong>: X25519 key exchange + HKDF-SHA256 + AES-256-GCM; private keys stay on your device only; <strong>key fingerprinting + TOFU pinning</strong> (P2P MITM defense, key changes rejected) · <strong>process-epoch forward secrecy</strong> (fresh random epoch per start; session keys rotate, old runs stay sealed) · <strong>encrypt-only by default</strong> (no plaintext fallback; keys-missing messages queue and auto-send on key exchange; late-key frames are decrypted on pin, never stored as raw ciphertext) · replay defense</li><li><strong>Burn after reading</strong>: message shows for 8 seconds, then is destroyed on both sides with BURN_ACK confirmation + 60s fallback</li><li><strong>Temporary chat</strong>: conversations auto-purge after a TTL (1h / 24h / 7d) on both devices</li><li>✅ <strong>Dark / light / system theme</strong></li><li>✅ <strong>Contact management</strong>: delete contacts (persistent block, re-discover after unblock), blocked list management in Settings</li><li>✅ <strong>Offline messages</strong>: messages queue locally when the target is offline and are flushed automatically when they come back online</li><li>✅ <strong>Auto-reconnect</strong>: TCP heartbeat keep-alive + on-demand reconnection</li><li>✅ <strong>Private server (Minecraft-style)</strong>: run your own headless chat server on Windows / macOS / Linux, join by <code>IP:port + password</code> from anywhere</li><li>Persistent history on the server (E2E ciphertext only; readable by members online at send time)</li><li>Password-derived AES-GCM channel — <strong>tunnel relays (frp/ngrok) see only ciphertext</strong></li><li><strong>End-to-end encrypted group messages</strong> (X25519) — the server operator cannot read live messages</li><li><strong>Server management</strong>: kick & ban members (persistent blacklist), group announcements, GUI dashboard or headless CLI</li><li>Burn-after-reading messages are purged from the server history too</li><li><strong>NAT traversal</strong>: just map the server port to the public internet with any tunnel tool (frp / ngrok / Tailscale) — the client only needs the public <code>address:port</code></li><li>✅ <strong>CI</strong>: GitHub Actions auto-builds tests, Android APK, server jar and macOS DMG; tag pushes publish a GitHub Release</li></ul>
+<h2>Architecture</h2>
+<pre class="doc-code">composeApp/
+├── src/commonMain/          # Shared UI + domain logic
+│   ├── ui/                  # Chats / Contacts / CreateGroup / Chat / Settings screens
+│   ├── net/                 # SynaEngine, protocol frames, transport abstraction
+│   ├── chat/                # ChatStore (conversations &amp; messages state)
+│   ├── crypto/              # Crypto abstraction (expect)
+│   └── storage/             # Settings persistence
+├── src/jvmShared/           # JVM implementations shared by Android &amp; Desktop
+│   ├── net/                 # java.net transports, UDP discovery, heartbeat
+│   └── crypto/              # X25519 / AES-GCM / HKDF implementation, key files
+├── src/androidMain/         # Android entry, MulticastLock, permissions
+└── src/desktopMain/         # Desktop entry, key directory</pre>
+<p><strong>Wire protocol</strong> (ports: 45877 discovery / per-instance dynamic UDP data port (carried in announcements) / ephemeral TCP; server default 45880):</p>
+<ul><li>Frame: <code>{type, from, to, msgId, ts, body, enc, burn, replyTo, mentions}</code> JSON via kotlinx.serialization</li><li>Frame types: DISCOVERY / HELLO / KEY / REQ_KEY / TEXT / IMAGE / FILE_CHUNK / TYPING / READ / ACK / RECALL / PING / PONG / GROUP_INVITE / GROUP_JOIN / GROUP_LEAVE / GROUP_DISSOLVE / GROUP_KICK / GROUP_MUTE / GROUP_ADMIN / GROUP_MESSAGE / EPHEMERAL_SESSION / ANNOUNCEMENT / BURN_ACK / SRV_HELLO / SRV_AUTH / SRV_AUTH_OK / SRV_LEAVE</li><li>LAN E2E encryption: public key is carried in the HELLO frame on TCP connect; peers reply with their own KEY. Session keys are derived from <code>sorted(peerIds)</code> so both sides always agree.</li><li>Server security model: the server sends a salt in <code>SRV_HELLO</code>; both sides derive an <strong>AES-GCM channel key</strong> from the server password (HKDF-SHA256) — all traffic is authenticated and encrypted, so a <strong>passive relay (frp/ngrok tunnel operator) sees only ciphertext and cannot read anything</strong>.</li><li><strong>Group messages are end-to-end encrypted between members</strong> (X25519 session keys): the server relays one ciphertext copy per member and never possesses the decryption keys — <strong>the server operator cannot read live messages</strong>. The server only persists encrypted frames, so history is readable only by members online at send time (late joiners see the backlog from the moment they join). The password-derived group key remains only as a compatibility fallback for old clients.</li><li>Metadata routing stays visible to the server operator.</li></ul>
+<h2>Private Server (Syna Server)</h2>
+<p>Run your own persistent group chat server on any JVM machine — Windows / macOS / Linux. Two modes for different preferences:</p>
+<p><strong>① CLI (headless)</strong> — perfect for servers / remote machines / systemd:</p>
+<pre class="doc-code">java -jar syna-server.jar -p 45880 -w YourSecretPassword -g &quot;My Group&quot;</pre>
+<p><strong>② Launcher (GUI)</strong> — visual launcher for everyone else:</p>
+<ul><li><strong>macOS / Windows / Linux</strong>: download the <strong>SynaServer launcher app</strong> from <a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">GitHub Releases</a>, double-click to open — no terminal needed.</li><li>Or run the jar directly on a machine with a display:</li></ul>
+<pre class="doc-code">java -jar syna-server.jar            # auto-launches the launcher on desktop; falls back to CLI headless
+java -jar syna-server.jar --launcher # force launcher mode</pre>
+<p>The launcher provides:</p>
+<ul><li><strong>Persistent config</strong> — port / password / group / data dir saved to <code>~/.syna-server/launcher.json</code>, restored on next launch</li><li><strong>One-click start / stop</strong>, live status (port, LAN addresses, member list, history count, scrolling logs)</li><li><strong>Crash auto-restart</strong> — the server is pulled back up 3s after an unexpected exit (manual stop is never restarted)</li><li><strong>Start at login</strong> — macOS LaunchAgent / Linux autostart / Windows Startup folder, toggle in the UI</li><li><strong>Open data folder</strong> button, server moderation (kick/ban/announcements)</li></ul>
+<pre class="doc-code"># options
+#   -p, --port &lt;port&gt;       listen port (default 45880)
+#   -w, --password &lt;pw&gt;     join password (default &quot;syna&quot; — change it!)
+#   -g, --group &lt;name&gt;      group name (default &quot;Syna 私服&quot;)
+#   -d, --data-dir &lt;path&gt;   data dir for persistent history (default ./syna-server-data)
+#       --history &lt;count&gt;   max history messages (default 200)
+#       --ui                launch the graphical dashboard</pre>
+<p>The server persists encrypted message history to <code>history.jsonl</code> and survives restarts.</p>
+<p><strong>Access from the internet (NAT traversal):</strong> the server is a plain TCP listener, so map its port to the public internet with any tunnel client and join via the public address:</p>
+<table><thead><tr><th>Tool</th><th>Command / config</th></tr></thead><tbody><tr><td>frp</td><td><code>[synaserver] type = tcp, local_port = 45880, remote_port = 45880</code></td></tr><tr><td>ngrok</td><td><code>ngrok tcp 45880</code></td></tr><tr><td>Tailscale</td><td>use the node IP directly inside your Tailnet</td></tr></tbody></table>
+<p>In the Syna app: <strong>Contacts → Join Server → enter <code>public-address:port</code> + password</strong> → the server group chat opens with full history.</p>
+<h2>Build & Run</h2>
+<pre class="doc-code"># Desktop (macOS / Windows / Linux)
+./gradlew :composeApp:run
+
+# macOS 安装包 (dmg)
+./gradlew :composeApp:packageDmg
+# Output: composeApp/build/compose/binaries/main/dmg/Syna-1.0.0.dmg
+
+# Windows 安装包 (msi, 需 Windows + WiX) / Linux (deb/rpm)
+./gradlew :composeApp:packageMsi
+./gradlew :composeApp:packageDeb
+
+# Syna server fat jar (headless, all platforms)
+./gradlew :composeApp:serverFatJar
+# Output: composeApp/build/server/syna-server.jar  →  java -jar syna-server.jar
+
+# Android debug APK
+./gradlew :composeApp:assembleDebug
+# Output: composeApp/build/outputs/apk/debug/composeApp-debug.apk
+
+# Android release APK (requires signing config in local.properties)
+./gradlew :composeApp:assembleRelease
+
+# Tests (88: crypto / protocol / loopback chat / group mesh / burn-after-reading / temp chat / offline outbox / server join+chat+history+burn / ACK retransmission / group admin / file transfer / process-epoch forward secrecy / 6-engine message storm / shield gate·watchdog·honeypot·brute-force·TOTP·TOTP-cancel·TOFU·module whitelist·memfd)
+./gradlew :composeApp:desktopTest</pre>
+<h2>Compatibility</h2>
+<ul><li><strong>Android 9+</strong> (API 28) — Shield's credential-change detector runs on API 30+ and is skipped on lower versions without losing any other feature</li><li><strong>Desktop</strong>: Windows 10+/macOS/Linux, <strong>Java 17+</strong> (launcher apps bundle their own runtime); release DMG targets Apple Silicon (x64 buildable with <code>packageDmg</code> on an Intel Mac)</li><li><strong>Windows</strong>: POSIX permission quirks are handled (key files write fine on NTFS)</li><li><strong>Proxies with TUN mode</strong> (Clash/FlClash): same-machine traffic auto-routes via loopback; add your LAN subnet to the bypass list for cross-device flows</li><li><strong>Cross-version protocol</strong>: new frame fields carry defaults; old/new clients interoperate</li></ul>
+<h2>Platform Notes</h2>
+<ul><li><strong>Windows</strong>: allow the app through the firewall on first launch (both the GUI client and the server); an MSI installer can be produced with <code>nativeDistributions</code> (requires Windows + WiX)</li><li><strong>Proxy tools (Clash / FlClash / etc.) with TUN mode</strong>: they can hijack traffic to your own LAN IP (<code>connect</code> succeeds but data never arrives). Syna now auto-routes same-machine traffic through loopback (<code>127.0.0.1</code>); if cross-device traffic is also broken, add your LAN subnet to the proxy's bypass list or turn off TUN mode. / 代理工具（Clash/FlClash 等）开启 TUN 模式时会劫持发往本机局域网 IP 的流量（连接成功但数据不到）。Syna 已自动将本机互连流量走回环地址；若跨设备也不通，请把局域网网段加入代理白名单或关闭 TUN 模式。</li><li><strong>Android 14+</strong>: local network access is restricted; some routers block UDP broadcast (the multicast channel is the fallback)</li><li><strong>Group chat (LAN mesh)</strong>: there is no central node — members who are offline miss group messages; the <strong>private server</strong> fixes this with persistence</li><li><strong>Message persistence</strong>: LAN chats are persisted locally (encrypted JSONL, survives restarts); the private server additionally persists server-group history to disk</li><li><strong>Multiple instances on one machine</strong>: desktop settings are stored in user-level Java preferences (<code>Preferences.userRoot</code>), so multiple instances under the same OS account share one identity</li><li><strong>Debug logging</strong>: <code>[Syna:Engine/Discovery/Send/Outbox/Crypto]</code> prefix on stdout / logcat; server logs <code>[SynaServer]</code></li></ul>
+<h2>Roadmap</h2>
+<ul><li>[ ] LAN message history persistence (SQLDelight)</li><li>[ ] Server TLS certificate support (instead of password-derived channel)</li><li>[ ] Multiple groups per server</li></ul>
+<h2>License / 许可证</h2>
+<p>This project is licensed under the <strong>GNU General Public License v3.0</strong> — see <a href="https://github.com/NUSV/Syna-NUSV/main/LICENSE">LICENSE</a>. The <code>LICENSE</code> file contains the <strong>verbatim, unmodified official GPL-3.0 text</strong> (no additional terms appended).</p>
+<p>本项目使用 <strong>GNU GPL v3.0</strong> 许可证发布，详见 <a href="https://github.com/NUSV/Syna-NUSV/main/LICENSE">LICENSE</a>。<code>LICENSE</code> 文件为<strong>未经修改的 GPL-3.0 官方原文</strong>（未附加任何额外条款）。</p>
+<p><strong>Source headers / 源码版权头</strong>: every source file (Kotlin / Gradle scripts / tools / CI workflow) carries the standard GPL short license header with <code>SPDX-License-Identifier: GPL-3.0-only</code>.</p>
+<p>每个源码文件（Kotlin / Gradle 脚本 / 工具 / CI 工作流）均带有标准 GPL 短版权头与 <code>SPDX-License-Identifier: GPL-3.0-only</code> 标识。</p>
+<p><strong>Dependency license audit / 依赖许可证审计</strong>: all runtime dependencies use permissive licenses (Apache-2.0 / MIT), fully compatible with GPL-3.0 — no copyleft or GPL-incompatible dependencies. Audit report generated from the Gradle dependency cache; see the audit script and report in <code>tools/license-audit/</code>.</p>
+<p>所有运行时依赖均为宽松许可证（Apache-2.0 / MIT），与 GPL-3.0 完全兼容，不存在许可证污染；审计脚本与报告见 <code>tools/license-audit/</code>。</p>
+<p><strong>AI generation / AI 生成声明</strong>: see the notice at the top of this README (the AI-generated-code statement and audit notes live in the docs, <strong>not</strong> in the LICENSE file).</p>
+<p><strong>Assets / 资源</strong>: <code>Syna_logo.png</code> / <code>Syna_logo_2.png</code> are provided by the project owner (current app icon is <code>Syna_logo_2.png</code>, applied to Android launcher & desktop tray). Other assets (icons, documentation) are generated by this project.</p>
+        </section>
+        <aside class="pg-sidecol" id="downloads">
+          <div class="card pg-side"><div class="side-title">Latest release</div><span class="rel-tag">v1.0.0</span><span class="rel-date">2026-08-12</span><div class="dl-group"><a class="dl-btn big muted" href="https://github.com/NUSV/Syna-NUSV/releases/download/v1.0.0/SHA256SUMS.txt" target="_blank" rel="noopener"><span class="dl-label">Download</span><span class="dl-sub">SHA256SUMS.txt &middot; 267 B</span></a><a class="dl-btn big cyan" href="https://github.com/NUSV/Syna-NUSV/releases/download/v1.0.0/Syna-v1.0.0-macos.dmg" target="_blank" rel="noopener"><span class="dl-label">macOS (.dmg)</span><span class="dl-sub">Syna-v1.0.0-macos.dmg &middot; 64.4 MB</span></a><a class="dl-btn big green" href="https://github.com/NUSV/Syna-NUSV/releases/download/v1.0.0/Syna-v1.0.0-release.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">Syna-v1.0.0-release.apk &middot; 21.4 MB</span></a><a class="dl-btn muted" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v1.0.0" target="_blank" rel="noopener"><span class="dl-label">All 4 assets</span><span class="dl-sub">open the release page</span></a></div></div><div class="card pg-side"><div class="side-title">Recent versions</div><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.9" target="_blank" rel="noopener"><span class="rel-tag">v0.9.9</span><span class="rel-date">2026-08-11</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.8" target="_blank" rel="noopener"><span class="rel-tag">v0.9.8</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.7" target="_blank" rel="noopener"><span class="rel-tag">v0.9.7</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.6" target="_blank" rel="noopener"><span class="rel-tag">v0.9.6</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.5" target="_blank" rel="noopener"><span class="rel-tag">v0.9.5</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.4" target="_blank" rel="noopener"><span class="rel-tag">v0.9.4</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Syna-NUSV/releases/tag/v0.9.3" target="_blank" rel="noopener"><span class="rel-tag">v0.9.3</span><span class="rel-date">2026-08-11</span><span class="rel-assets">5 assets</span></a></div><div class="card pg-side"><div class="side-title">Project info</div><div class="pg-info"><span>License</span><b>GPL-3.0</b></div><div class="pg-info"><span>Stars</span><b>2</b></div><div class="pg-info"><span>Repository updated</span><b>2026-09-06</b></div><div class="pg-info"><span>Source</span><a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">github.com/NUSV/Syna-NUSV</a></div></div>
+        </aside>
+      </div>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
