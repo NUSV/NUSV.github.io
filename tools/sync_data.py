@@ -254,6 +254,19 @@ def fetch_readme(repo_name, branch, token):
         raise
 
 
+def get_mirror_manifest(token):
+    """Manifest produced by NUSV/downloads (latest-release mirror)."""
+    data = http_json(
+        "%s/repos/%s/downloads/contents/downloads.json" % (API, ORG), token
+    )
+    if not data or not data.get("content"):
+        return {}
+    try:
+        return json.loads(__import__("base64").b64decode(data["content"]).decode("utf-8"))
+    except Exception:
+        return {}
+
+
 # --------------------------------------------------------------------------
 # Markdown subset renderer
 # --------------------------------------------------------------------------
@@ -597,17 +610,19 @@ def render_page(proj, readme_html, updated_utc):
         chips.append('<span class="chip">%s</span>' % html.escape(t))
 
     latest = proj["releases"][0] if proj["releases"] else None
+    mirrored = proj.get("mirror") or {}
 
     def dl_row(asset, big=False):
         label, kind = PLATFORM_BY_EXT.get(
             os.path.splitext(asset["name"].lower())[1], ("Download", "muted")
         )
         dl = ("%d downloads" % asset["count"]) if asset.get("count") else human_size(asset["size"])
+        href = mirrored.get(asset["name"]) or asset["url"]
         return (
             '<a class="dl-btn%s %s" href="%s" target="_blank" rel="noopener">'
             '<span class="dl-label">%s</span>'
             '<span class="dl-sub">%s &middot; %s</span></a>'
-            % (" big" if big else "", kind, html.escape(asset["url"], quote=True),
+            % (" big" if big else "", kind, html.escape(href, quote=True),
                html.escape(label), html.escape(asset["name"]), dl)
         )
 
@@ -649,11 +664,17 @@ def render_page(proj, readme_html, updated_utc):
         )
 
     sidebar = []
+    mirror_note = ""
+    if mirrored:
+        mirror_note = (
+            '<div class="mirror-note">Mirrored on nusv.github.io '
+            "&mdash; no VPN required.</div>"
+        )
     sidebar.append(
         '<div class="card pg-side">'
         '<div class="side-title">Latest release</div>'
-        '%s<div class="dl-group">%s</div></div>'
-        % (head_sub, dl_latest)
+        '%s<div class="dl-group">%s%s</div></div>'
+        % (head_sub, dl_latest, mirror_note)
     )
     if rel_items:
         sidebar.append(
@@ -837,6 +858,25 @@ def main():
         sys.exit(1)
     if not projects:
         print("WARNING: no repositories carry topic '%s' — nothing generated" % PROJECT_TOPIC)
+
+    # Attach mirrored download URLs (NUSV/downloads) when the mirror is
+    # current for the project's latest release.
+    manifest = get_mirror_manifest(token)
+    mirror_repos = (manifest or {}).get("repos") or {}
+    for proj in projects:
+        proj["mirror"] = {}
+        entry = mirror_repos.get(proj["repo"])
+        if (
+            entry
+            and proj["releases"]
+            and entry.get("tag") == proj["releases"][0]["tag"]
+        ):
+            proj["mirror"] = {
+                a["name"]: a.get("mirror")
+                for a in entry.get("assets", [])
+                if a.get("mirror")
+            }
+            print("mirror matched for %s (%d asset(s))" % (proj["repo"], len(proj["mirror"])))
 
     changed = []
     slugs = {p["slug"] for p in projects}
