@@ -45,6 +45,15 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 Removing the topic removes the project from the website on the next sync. Infrastructure repositories (`.github`, `NUSV.github.io`, `nusv-lite-sync`, forks) never carry the topic, so they stay off the listings automatically.
 
+## Download mirror (no VPN needed)
+
+GitHub release downloads are slow or blocked in some regions. The sibling repository [**NUSV/downloads**](https://github.com/NUSV/downloads) mirrors the **latest release assets** of every project and serves them via GitHub Pages:
+
+- `https://nusv.github.io/downloads/` — human-readable listing
+- `https://nusv.github.io/downloads/downloads.json` — machine-readable manifest
+
+The mirror refreshes every 6 hours (orphan-commit + force-push keeps its history at one snapshot). `tools/sync_data.py` reads the manifest and points project-page download buttons at the mirror whenever it matches the current latest release; otherwise buttons fall back to GitHub. Assets that are missing from the mirror always remain available on each project's GitHub Releases page.
+
 ## Pages
 
 | File | Purpose |
