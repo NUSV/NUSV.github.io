@@ -45,6 +45,15 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 Removing the topic removes the project from the website on the next sync. Infrastructure repositories (`.github`, `NUSV.github.io`, `nusv-lite-sync`, forks) never carry the topic, so they stay off the listings automatically.
 
+## Mirrored documents
+
+Besides release binaries, the important **documents** of every project are mirrored as site pages too, so they stay readable where GitHub is slow or blocked:
+
+- Root-level `*.md` files (except `README.md`, which is already the project page) and everything under `docs/**/*.md` are rendered to `/docs/<project>/<doc>.html` with the site's own styling, plus a link to the original on GitHub.
+- Links inside rendered READMEs to mirrored documents are rewritten to the local pages.
+- Images referenced by mirrored content are downloaded to `assets/mirror/<repo>/…` and served from the site (only the header icons today, but the pipeline handles any image).
+- `docs.html` gains a generated "Mirrored documents" index; project pages gain a "Documents" sidebar card.
+
 ## Download mirror (no VPN needed)
 
 GitHub release downloads are slow or blocked in some regions. The sibling repository [**NUSV/downloads**](https://github.com/NUSV/downloads) mirrors the **latest release assets** of every project and serves them via GitHub Pages:
