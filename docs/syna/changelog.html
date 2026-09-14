@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — Syna | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Changelog — mirrored from the Syna-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/syna.html">&#8249; Syna</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Syna-NUSV/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
+        <h1>Changelog</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">NUSV/Syna-NUSV</a> &middot; <code>CHANGELOG.md</code> &middot; synced 2026-09-14 14:20 UTC &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/CHANGELOG.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p>All notable changes to <strong>Syna</strong> — LAN instant messenger (Kotlin Multiplatform + Compose Multiplatform, GPL-3.0). Android · Windows · macOS, fully peer-to-peer, no internet required.</p>
+<p>Format: <code>version — date — summary</code>. Releases: <a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">GitHub Releases</a></p>
+<hr>
+<h2>[1.0.1] — 2026-08-12 — Desktop unlock password (macOS focus)</h2>
+<h3>Added</h3>
+<ul><li><strong>Desktop unlock password</strong> (macOS / Windows / Linux): the desktop lock screen previously unlocked with a single click (JVM has no unified biometric API — the lock was UI-only). You can now set a real first-factor password in Settings → Shield; PBKDF2-HMAC-SHA256 (210k iterations, 16-byte salt, constant-time comparison), stored encrypted with atomic writes, wiped on self-destruct. Works standalone or stacked with TOTP as a second factor. Wrong passwords count toward brute-force protection; no recovery by design (documented on the lock screen)</li></ul>
+<h3>Tests</h3>
+<ul><li>91 (added desktop password round-trip, controller unlock/brute-force, password+TOTP stacking)</li></ul>
+<h2>[1.0.0] — 2026-08-12 — Stable: full code review & license audit pass</h2>
+<h3>Stability & correctness (19 issues fixed, verified by a full code review)</h3>
+<ul><li><strong>Outbox no longer drops failed sends</strong>: TCP send failures rethrow into the flush loop, so frames stay queued for reconnect instead of being marked "sent" and lost</li><li><strong>Server recall ownership check fixed</strong>: looked up the wrong field (recall frame's own id) — any member could forge recalls; now validated by target message id + sender + group</li><li><strong>Encrypt-only made complete</strong>: mesh group text and 1:1 file transfer no longer fall back to plaintext (queue / wait for key instead); receiver drops plaintext message frames in encrypt-only mode (LAN injection defense)</li><li><strong>Mesh group file chunks now go to the correct member</strong> (member-index misalignment after keyless-member filtering)</li><li><strong>App upgrades no longer trigger self-destruct</strong>: the dex baseline is rewritten on versionCode change (previously any update tripped SHIELD_TAMPERED → data wipe)</li><li><strong>Session-key rotation hardened</strong>: atomic blob writes (crash no longer makes all data undecryptable); the migration key is released only after a successful rewrite</li><li><strong>Biometric system errors (LOCKOUT/TIMEOUT…) no longer count toward brute-force self-destruct</strong></li><li><strong>Late-key frames decrypted on pin, epoch recorded only after successful key pin</strong> (replay-poisoning of the session epoch closed)</li><li><strong>Deduped retransmissions re-ACKed</strong> (no more stuck SENT/outbox), FILE_CHUNK cross-frame bounds validated, replay window extended to group frames, burn sweep marks cleaned, server group BURN_ACK purge fixed, member public keys validated on the server, server crash auto-restart unblocked, audit-log truncation keeps the hash chain intact, suspicious-module whitelist uses exact names (no <code>evil-linker.so</code> bypass), TOTP waiting screen gained a cancel button (unlock cancel → LOCKED, disable cancel → ARMED, never counts as brute force)</li><li><strong>Atomic writes everywhere</strong>: key pins, master key, identity files; plaintext tmp fallback removed (fail-closed)</li><li><strong>First-launch wizard persisted</strong>; self-destruct also wipes the outbox cache; update checker ignores pre-release tags</li></ul>
+<h3>License & legal</h3>
+<ul><li><strong>Full license audit</strong>: all ~140 runtime dependencies are Apache-2.0 / MIT, all GPL-3.0-compatible — no contamination</li><li><strong>Dependency vulnerability check (OSV)</strong>: 0 known vulnerabilities on all direct dependencies</li><li><strong>Copyright headers</strong>: 100% of source files carry the GPL-3.0 SPDX header (94 files); keystore/password confirmed never committed</li><li>Full audit report: <code>docs/REVISION_AND_LICENSE_AUDIT_v1.0.0.md</code> (English, detailed)</li></ul>
+<h3>Tests</h3>
+<ul><li>88 (added TOTP cancel flow tests)</li></ul>
+<h2>[0.9.9] — 2026-08-11 — RC: forward secrecy, encrypt-only default, storm-tested, UX polish</h2>
+<h3>Security</h3>
+<ul><li><strong>Forward secrecy (process epoch)</strong>: each process start derives a fresh random epoch; session keys are</li></ul>
+<p>derived with <code>base|min(epoch)|max(epoch)</code> — restarting the app rotates all session keys, so a stolen session key cannot decrypt traffic from a previous run; epoch is carried in every encrypted frame</p>
+<ul><li><strong>Double-try decrypt</strong> (new epoch formula → legacy fixed formula fallback): both sides stay symmetric</li></ul>
+<p>regardless of key-exchange ordering (works with older peers that don't carry epochs)</p>
+<ul><li><strong>Encrypt-only is now the default</strong> (<code>e2eOnlyEnabled = true</code>): if the peer key isn't ready yet, messages</li></ul>
+<p>queue instead of falling back to plaintext; queued messages auto-send when the key arrives</p>
+<ul><li><strong>No more plaintext fallback in group chats</strong> (LAN mesh + server groups): missing member keys → queue +</li></ul>
+<p>key exchange request; member copies are skipped instead of sent in the clear</p>
+<ul><li><strong>Undecryptable frames are never stored as raw ciphertext</strong>: if the key frame arrives late (UDP</li></ul>
+<p>reordering), the ciphertext is held in a bounded pending queue and decrypted the moment the key is pinned</p>
+<h3>Stability</h3>
+<ul><li><strong>Outbox cap</strong> (500 frames per peer, drops oldest) — no unbounded memory growth for permanently-offline peers</li><li><strong>6-engine message storm stress test</strong> (86 automated desktop tests total, incl. the storm)</li></ul>
+<h3>UX</h3>
+<ul><li><strong>Enter to send</strong> in the chat input box (IME action <code>Send</code>); Shift+Enter for newline</li><li><strong>First-launch Shield wizard</strong>: 4-step onboarding (biometrics / TOTP / usage / boundaries), skippable</li><li><strong>Message font size setting</strong> (small / medium / large) applied to chat bubbles</li></ul>
+<h3>Tooling</h3>
+<ul><li><strong>Update checker</strong>: silent GitHub Releases check 10 s after launch; only network egress in the app</li></ul>
+<p>(the codebase was audited — no backdoors, no hidden endpoints)</p>
+<ul><li><strong>FAQ_ZH.md</strong>; CI gains a <code>dependency-audit</code> job (osv-scanner, non-blocking)</li></ul>
+<h3>Tests</h3>
+<ul><li>86</li></ul>
+<h2>[0.9.8] — 2026-08-10 — JIT false-positive fix, strong-only unlock, signature-learning detection</h2>
+<h3>Fixed</h3>
+<ul><li><strong>ART JIT memfd whitelist</strong> (<code>memfd:jit-cache</code>, <code>memfd:jit-zygote-cache</code>) — no more</li></ul>
+<p>lock-on-enable for stock devices; non-JIT executable memfd mappings still flagged (multi-dimensional, name-independent)</p>
+<ul><li><strong>Unlock hardening</strong>: biometric prompt requires BIOMETRIC_STRONG only (device-credential</li></ul>
+<p>window can no longer auto-pass)</p>
+<ul><li><strong>Monitor detection</strong>: package-fragment list expanded; <strong>signature-learning blacklist</strong></li></ul>
+<p>— renamed/repackaged monitoring apps are caught by certificate hash; case-insensitive name matching</p>
+<h3>Tests</h3>
+<ul><li>84</li></ul>
+<h2>[0.9.7] — 2026-08-10 — Full review fix release (3rd audit pass)</h2>
+<h3>Critical</h3>
+<ul><li>Shield-off data lockout fixed (native heartbeat check only when armed)</li><li>Audit-write failure recursion → deferred one-shot escalation</li><li>TCP heartbeat no longer kills new connections (PONG baseline)</li><li>Locked-state disk wipe prevented (memory-wiped flag blocks all writes; purge</li></ul>
+<p>conditional; rewrite re-verifies)</p>
+<ul><li>Group-file O(N²) fan-out + REQ_KEY storm fixed (per-member direct send; no REQ_KEY</li></ul>
+<p>on foreign ciphertext)</p>
+<ul><li>Failed-message resend works (send-copy persisted, localPath stored, mime derived)</li><li>dex hashing <strong>actually</strong> removed from the light scan (3rd attempt; previous two</li></ul>
+<p>silently failed)</p>
+<h3>Medium</h3>
+<ul><li>serverGroupId stored (disconnect FAILED works); audit truncation re-seals chain;</li></ul>
+<p>stealth survives username refresh; BRUTE_FORCE cleared on unlock; self-destruct wipes audit-seen/device baselines; native heartbeat /dev/urandom + monotonic clock; UDP file over TCP; server membership-event & BURN_ACK( receiver) auth; empty-from only for PING; client server-channel read timeout; load synchronized; tmp cleanup; preview rebuild on reload; residual emoji removed; group frames in replay guard; audit never falls back to plaintext</p>
+<h3>Tests</h3>
+<ul><li>83</li></ul>
+<h2>[0.9.6] — 2026-08-10 — Shield self-protection hardening</h2>
+<h3>Added</h3>
+<ul><li><strong>Native heartbeat slot</strong> (JVM-hook immune): decrypt path verifies both the JVM and</li></ul>
+<p>native heartbeat; hooking JVM <code>beat()</code> can't fake freshness</p>
+<ul><li><strong>Scanner self-healing</strong>: a scan-round exception no longer kills the detection loop</li><li><strong>Audit-write failure detection</strong>: 5 consecutive failed audit writes →</li></ul>
+<p>SHIELD_TAMPERED (storage made read-only/filled)</p>
+<ul><li><strong>Reinstall guard</strong>: device-identity change checked independently of Shield state;</li></ul>
+<p>reinstall with Shield off → notify to re-enable</p>
+<h3>Tests</h3>
+<ul><li>83</li></ul>
+<h2>[0.9.5] — 2026-08-10 — Image preview, message resend, power-saving discovery, Shield additions</h2>
+<h3>UX</h3>
+<ul><li>Full-screen image preview (tap bubble → fullscreen → tap to close)</li><li>Resend failed messages (long-press → 重发; burn re-send requires biometric)</li><li>Voice playback state on the bubble (播放中 / tap to stop)</li></ul>
+<h3>Power saving</h3>
+<ul><li>Discovery broadcast adapts: 10 fast announcements → 3× slower; incoming/manual refresh resets</li></ul>
+<h3>Shield</h3>
+<ul><li>DEVICE_CHANGED (LOW): ANDROID_ID vs encrypted baseline (reinstall / backup-restore)</li><li>Audit-integrity check: audit log deleted/emptied → SHIELD_TAMPERED (审计日志被清除)</li><li>Decrypt-path probe every 6th decrypt; dex hashing finally moved to the heavy scan</li></ul>
+<h3>Tests</h3>
+<ul><li>83</li></ul>
+<h2>[0.9.4] — 2026-08-10 — Material Icons, Voice Duration, UI Polish</h2>
+<h3>Changed</h3>
+<ul><li>Material icons for send / refresh / play / lock markers (semantic badges stay text: 焚/群主/管理员/禁言/指纹/录音/图片/文件)</li><li>Voice duration transmitted (FileChunk.durationMs) and shown on the bubble (语音 12秒); filename carries seconds for cross-version display</li><li>Fixed duplicate "刷新 刷新" label</li></ul>
+<h3>Tests</h3>
+<ul><li>82</li></ul>
+<h2>[0.9.3] — 2026-08-10 — Lock-bypass fix, 2FA enable fix, no-emoji UI, proxy detection</h2>
+<h3>Security fixes</h3>
+<ul><li><strong>Lock bypass closed</strong>: clearing a threat while LOCKED no longer auto-returns to</li></ul>
+<p>ARMED (previously the app silently unlocked without biometrics when the locking threat disappeared); locked state persists until real verification</p>
+<ul><li>2FA enable: stale/corrupt seed files cleared before re-enable; failure now shows a</li></ul>
+<p>notice instead of a dead switch</p>
+<ul><li>No-biometrics devices: unlock taps show a clear notice, never count toward</li></ul>
+<p>self-destruct</p>
+<h3>Changed</h3>
+<ul><li>All emoji removed from the UI (text replacements: 焚/图片/文件/锁/群主/管理员/禁言/播放/录音)</li><li>Detection: system HTTP proxy (PROXY_SET, LOW advisory) with proxy address detail</li></ul>
+<h3>Tests</h3>
+<ul><li>82</li></ul>
+<h2>[0.9.2] — 2026-08-10 — Group-file encryption, stealth mode, module details</h2>
+<h3>Added</h3>
+<ul><li><strong>Group file transfer E2E-encrypted per member</strong> (one ciphertext copy per member,</li></ul>
+<p>mesh + server groups; receivers only process decryptable copies) — last plaintext transfer path closed</p>
+<ul><li><strong>Stealth mode</strong> (Settings): stop broadcasting presence (still discover others,</li></ul>
+<p>manual refresh still finds you)</p>
+<ul><li><strong>Group member key fingerprints</strong> shown in the administration dialog</li><li>Suspicious-module detection now reports the <strong>actual module paths</strong> on the lock</li></ul>
+<p>screen and in the audit log</p>
+<h3>Fixed</h3>
+<ul><li>Suspicious-module whitelist switched to <strong>partition prefixes</strong> (<code>/system</code> <code>/apex</code></li></ul>
+<p><code>/vendor</code> <code>/product</code> <code>/system_ext</code> <code>/odm</code> <code>/data/app</code> <code>/data/user</code>) — vendor ROM libraries no longer false-trigger "可疑可执行模块" on first enable</p>
+<ul><li><strong>Mesh-group file sends silently failed</strong> (misdetected as server-group disconnect) —</li></ul>
+<p>real fix + regression test</p>
+<h3>Tests</h3>
+<ul><li>81 (new: partition whitelist, anonymous-module detection, encrypted group-file</li></ul>
+<p>round-trip, stealth announce/stop)</p>
+<h2>[0.9.1] — 2026-08-10 — Stabilization (full audit pass)</h2>
+<h3>Fixes (full code audit — see SECURITY_AUDIT_REPORT.md)</h3>
+<ul><li><strong>2FA lockout eliminated</strong> — TOTP seed / key pins / audit / fail-counter now use the</li></ul>
+<p>master Keystore key (previously session-key encryption made them undecryptable while locked → permanent lockout)</p>
+<ul><li>Honeypot decoy no longer overwrites real history; burn 60 s TTL fallback actually</li></ul>
+<p>works (marker was never written); server-history replay no longer dropped</p>
+<ul><li>Mesh group file transfer fixed (misdetected as server-group disconnect); ACK</li></ul>
+<p>retransmission fixed (counter reset → infinite retransmission; TEXT now ACK/retried)</p>
+<ul><li>UDP: key exchange uses the real UDP port; 40 KB chunks in UDP mode</li><li>History-wipe race closed (debounced rewrite vs memory release); burn-purge persists</li><li>No-biometrics devices no longer count taps as brute-force; interrupted disable flow</li></ul>
+<p>can't turn the Shield off; WATCHDOG_TRIP auto-clears on heartbeat recovery</p>
+<ul><li>Self-destruct order fixed (audit wiped after event, Shield disabled, key pins & voice</li></ul>
+<p>cache wiped); screen-capture unregister fixed</p>
+<ul><li>Group-admin privilege escalation closed (creator protected)</li><li>Server: zombie-session timeout, kick-all-sessions, server-identity spoofing rejected,</li></ul>
+<p>BURN_ACK/RECALL ownership checks, locked history snapshot, immediate burn sweep</p>
+<ul><li>Burn-send verification failure keeps input; Shield-disabled devices send normally</li></ul>
+<h3>Added</h3>
+<ul><li>New project logo <code>Syna_logo_2.png</code> (Android launcher all densities + desktop tray)</li><li><code>SECURITY_AUDIT_REPORT.md</code> (code review + license audit)</li><li>License audit: CLEAN — 100% Apache-2.0 deps, no copyleft, all in-tree code original</li></ul>
+<h2>[0.9.0] — 2026-08-10 — Encrypted file transfer, voice messages, re-auth</h2>
+<h3>Added</h3>
+<ul><li><strong>File transfer E2E encryption</strong> (1:1 FILE_CHUNK payloads encrypted; group files documented)</li><li><strong>Voice messages</strong>: long-press 🎤 record (30 s max), encrypted file channel, ▶️ playback; Android AMR-NB / desktop WAV; one-time recording permission</li><li><strong>Sensitive-operation re-auth</strong>: burn-after-reading sends require biometric confirmation</li><li><strong>Clipboard short TTL</strong>: copy action with 30 s auto-clear</li><li><strong>Server</strong>: slow-client isolation (bounded per-session send queue), burn-history 1 h TTL</li></ul>
+<h2>[0.8.2] — 2026-08-10 — ACK/retransmission, group administration, no-export policy</h2>
+<h3>Added</h3>
+<ul><li><strong>Message-level ACK & retransmission</strong> (P2P 1:1; 3 s retry ×3 → offline queue)</li><li><strong>Group administration</strong>: kick / mute (1 h, toggleable) / set-admin; receiver-side</li></ul>
+<p>permission checks (forged frames ignored); 👑 ⭐ 🔇 badges</p>
+<ul><li><strong>No-export policy</strong>: <code>android:allowBackup=false</code>; no backup/export features by design</li><li>Server kick identity fixed (serverId vs groupId — kick notifications were dropped)</li></ul>
+<h2>[0.8.1] — 2026-08-10 — Key pinning (TOFU), encrypt-only mode, replay defense</h2>
+<h3>Added</h3>
+<ul><li><strong>TOFU key pinning</strong>: public keys pinned on first use (encrypted at rest); fingerprint</li></ul>
+<p>badge in chat header + full fingerprint for out-of-band verification; key changes rejected → <code>KEY_CHANGED</code> lock; "信任此密钥" re-pin</p>
+<ul><li><strong>Encrypt-only session mode</strong> (refuse plaintext fallback)</li><li><strong>Replay defense</strong>: 10-minute window on real-time frames</li></ul>
+<h2>[0.8.0] — 2026-08-10 — Deep self-destruct (anti-forensics)</h2>
+<h3>Added</h3>
+<ul><li><code>SecureWipe</code>: 2-pass random overwrite + fsync on all sensitive files (chat history</li></ul>
+<p>incl. <code>.tmp</code>, received files, audit log, TOTP seed, session blob, baselines, crash log)</p>
+<ul><li><strong>Keystore/TEE storage-key destruction</strong> — recovered ciphertext permanently</li></ul>
+<p>undecryptable; desktop key file overwritten</p>
+<ul><li>Audit self-wipe order (event written, then audit file wiped)</li></ul>
+<h2>[0.7.9] — 2026-08-10 — Active crash defense & permission self-check</h2>
+<h3>Added</h3>
+<ul><li>Native <code>SIGABRT</code> on high-confidence signals (ptrace attach / code or libc hooked) —</li></ul>
+<p>no stable debugging window; audit written best-effort before crash</p>
+<ul><li>Usage-access grant targets Syna (<code>EXTRA_APP_PACKAGE</code>); full permission self-check on</li></ul>
+<p>every launch</p>
+<h2>[0.7.8] — 2026-08-10 — Expanded detection & active countermeasures</h2>
+<h3>Added</h3>
+<ul><li>Riru / EdXposed / TaiChi + SELinux process-domain in root detection</li><li>IME change / USB attach-detach / suspicious executable module advisories (all LOW)</li><li><strong>Decrypt-path integrity probing</strong> (every ~8th decrypt); <strong>watchdog self-healing</strong></li></ul>
+<p>(scanner restart); <strong>honeypot data pollution</strong> (decoy messages)</p>
+<h2>[0.7.7] — 2026-08-10 — All client bugs fixed</h2>
+<h3>Fixed</h3>
+<ul><li>TCP failure → offline queue (no silent UDP fallback loss); bidirectional heartbeat</li></ul>
+<p>(PONG reply + 3-cycle timeout); burn-message TTL fallback with BURN_ACK</p>
+<ul><li>Server-group disconnect awareness (FAILED status + notification); READ receipts via</li></ul>
+<p>server channel; discovery resilience; announcement buffering</p>
+<ul><li>Quote-bar rendering; image decode off main thread; EDT file dialogs; username-change</li></ul>
+<p>discovery restart; duplicate-name file suffixes; CA user-cert-only; mirroring both directions; exact process matching; watchdog alive semantics; AWT listener cleanup</p>
+<h2>[0.7.6] — 2026-08-10 — Review second pass</h2>
+<h3>Fixed</h3>
+<ul><li>Shield lifecycle on dispose; desktop key quarantine (<code>.corrupt</code>); captureAuth TOCTOU;</li></ul>
+<p>native maps buffers 64K/128K; outbox flush mutex; receipt/key-frame send guards; inbound TCP read timeout (90 s); sendText empty guard</p>
+<h2>[0.7.5] — 2026-08-10 — Full security review fix release</h2>
+<h3>Fixed</h3>
+<ul><li>2FA bypass closed (no unlock while awaiting code; clearThreat can't skip it);</li></ul>
+<p>session-key capture moved after TOTP verification; biometric fail double-count; server relay <code>from</code> forgery; BURN_ACK/RECALL sender validation; FILE_CHUNK bounds + pipeline isolation; TOTP-enable failure guard; DEBUG_MODE downgraded to HIGH; honeypot streak no longer reset; watchdog one-shot trip + restart reset</p>
+<ul><li><strong>Chat persistence wired</strong> (was never injected — chats never survived restarts);</li></ul>
+<p>unlock-time rotation order fixed; atomic writes (tmp+rename); CAS StateFlow updates; UDP receive buffer 64 KB; server hardening; macOS close-to-tray fix; tray icon; AWAITING_TOTP code screen visible; version alignment</p>
+<h2>[0.7.4] — 2026-08-10 — Rotation, unkillable shield, injection traces</h2>
+<h3>Added</h3>
+<ul><li>Session-key rotation per unlock (forward secrecy); dual-factor disable (biometrics +</li></ul>
+<p>TOTP — attacker can't turn the shield off); anonymous rwx segment detection (bit2); AWAITING_TOTP lock-screen rendering fix</p>
+<h2>[0.7.3] — 2026-08-10 — Native anti-hook</h2>
+<h3>Added</h3>
+<ul><li>syscall-direct I/O (GOT/PLT/LD_PRELOAD dead); own-code-segment memory-vs-disk hashing</li></ul>
+<p>(inline-hook detection); export-entry self-verification; libc entry verification; integrity bitmask → SHIELD_TAMPERED / FRIDA_DETECTED</p>
+<h2>[0.7.2] — 2026-08-10 — Native anti-debug (NDK)</h2>
+<h3>Added</h3>
+<ul><li><code>libsyna_shield.so</code> (C, GPL-3.0, 4 ABIs): TracerPid/maps/threads read in C;</li></ul>
+<p>JVM + native dual-channel verification; graceful fallback</p>
+<h2>[0.7.1] — 2026-08-10 — Data-level key gate</h2>
+<h3>Added</h3>
+<ul><li>Session-key layer wrapped by a biometric-authenticated Keystore key (300 s window) —</li></ul>
+<p>no auth event → newly written data unreadable; lock invalidates session; master-key fallback for history (smooth upgrade)</p>
+<h2>[0.7.0] — 2026-08-10 — TOTP two-factor unlock</h2>
+<h3>Added</h3>
+<ul><li>RFC 6238 dual verification (biometric + 6-digit code); <code>otpauth://</code> seed import;</li></ul>
+<p>wrong codes feed the brute-force pipeline (cooldown + self-destruct)</p>
+<h2>[0.6.9] — 2026-08-10 — Picker crash fix</h2>
+<h3>Fixed</h3>
+<ul><li>Gallery/file picker crash on all real devices (androidx.activity requestCode ≥ 65536</li></ul>
+<p>vs platform 16-bit limit) — fixed requestCode <code>startActivityForResult</code> path</p>
+<h2>[0.6.8] — 2026-08-09 — Network & screen attack surface</h2>
+<h3>Added</h3>
+<ul><li>Screen capture/recording events (API 34); mirroring change detection; CA-cert & ARP</li></ul>
+<p>spoofing detection; SSID fingerprint; Zygisk/Shamiko/LSPosed; SELinux; scan jitter; background memory wipe (60 s); unlock cooldown backoff; downgrade defense</p>
+<h2>[0.6.7] — 2026-08-09 — Open-source-proof hardening</h2>
+<h3>Added</h3>
+<ul><li>Heartbeat gate (fail-closed decrypt); watchdog ring (3 threads); honeypot fake-lock;</li></ul>
+<p>brute-force protection; dex self-verification; key release on lock; live status panel</p>
+<h2>[0.6.6] — 2026-08-09 — Shield upgrade</h2>
+<h3>Added</h3>
+<ul><li>Single master switch (one tap enables everything); clock-tamper & weak-lock</li></ul>
+<p>advisories; Frida port 27043; emulator test-keys; audit encryption at rest</p>
+<h2>[0.6.5] — 2026-08-08 — Shield single-switch & chat polish</h2>
+<h3>Added / Fixed</h3>
+<ul><li>Quote-preview rework (visible on phone, no overlap on desktop); phone gallery sending</li></ul>
+<p>(permission-free); Shield single switch + ◇ title; usage-access guidance (foreground-app sensing); scan cadence split (light 3 s / heavy 15 s)</p>
+<h2>[0.6.4] — 2026-08-08 — Lock screen redesign</h2>
+<h3>Fixed</h3>
+<ul><li>File-picker click crash defense; crash log dual-write (Download/Syna); lock screen</li></ul>
+<p>redesign (pure black / red ◇ / white)</p>
+<h2>[0.6.3] — 2026-08-08 — Debug-build compatibility</h2>
+<h3>Fixed</h3>
+<ul><li>Debug builds skip signature verification; global crash log for startup debugging</li></ul>
+<h2>[0.6.2] — 2026-08-08 — Compatibility fix</h2>
+<h3>Fixed</h3>
+<ul><li>Android API 30 credential-detector guard (crash prevention on older devices), no</li></ul>
+<p>feature loss</p>
+<h2>[0.6.1] — 2026-08-08 — Shield hardening (P0/P1)</h2>
+<h3>Fixed</h3>
+<ul><li>REQ_KEY response no longer throttled (UDP key self-heal restored); audit hash-chain</li></ul>
+<p>parse fix; decrypt-failure frames no longer stored; disable cancels auto-relock; file-assembler sweep (10 min); Android biometric unlock fixed (FragmentActivity); audit persistence synchronized — 6 bugs, 4 regression tests</p>
+<h2>[0.6.0] — 2026-08-08 — Version unification</h2>
+<h2>[0.5.0] — 2026-08-08 — Shield first release & version unification</h2>
+<h3>Added (since 0.4.0)</h3>
+<ul><li><strong>◇Mirtazapine Shield</strong> (first release): ARMED/LOCKED/UNLOCKED state machine,</li></ul>
+<p>biometric unlock; Android engine — Root / emulator / USB-debug / VPN change / background switch / accessibility abuse / monitoring apps; screen-capture protection (FLAG_SECURE); desktop engine — idle auto-lock (10 min); full-screen lock page; capability-boundary statement</p>
+<ul><li>Shield hardening: HMAC-signed settings (tamper → force-restore); disable requires</li></ul>
+<p>biometrics; 5-min unlock expiry; back-key blocking; threat severity grading; self-destruct protocol; chat-storage AES-GCM encryption (Keystore TEE / 0600 key); memory wipe while locked; Frida detection; audit persistence; clipboard protection</p>
+<ul><li>Server group E2E (per-member X25519 ciphertext, server sees only ciphertext)</li><li>Message search + forward + date dividers + unread badge + tray resident</li></ul>
+<p><em>(search removed in 0.4.0)</em></p>
+<h2>[0.4.0] — 2026-08-08 — Search removed, version unification</h2>
+<h3>Changed</h3>
+<ul><li>Message search removed (as requested); version strings unified to 0.4.0</li></ul>
+<h2>[0.3.1] — 2026-08-08 — Server launcher app</h2>
+<h3>Added</h3>
+<ul><li>Standalone launcher app via jpackage (macOS .app / Windows / Linux app-image),</li></ul>
+<p>Gradle task <code>launcherAppImage</code></p>
+<h2>[0.3.0] — 2026-08-07 — Version unification & tutorials</h2>
+<h3>Added</h3>
+<ul><li>Tutorial split into pure-English (TUTORIAL_EN.md) and pure-Chinese (TUTORIAL_ZH.md)</li></ul>
+<p>versions with entry page; server version unified; server dual-mode (CLI headless + <code>--ui</code> GUI with live status / members / history / logs)</p>
+<h2>[0.2.0] — 2026-08-06 — Private server</h2>
+<h3>Added</h3>
+<ul><li><strong>Syna Server</strong> headless server (Win/macOS/Linux fat jar): TCP listening, password</li></ul>
+<p>auth, group relay, history persistence (<code>history.jsonl</code>), burn-after-reading server purge, member online/offline broadcast</p>
+<ul><li>Client join (IP:port + password, group-key encryption, history replay, disconnect</li></ul>
+<p>detection)</p>
+<ul><li>NAT traversal via frp / ngrok / Tailscale port mapping</li><li>Fixed serverId init-order NPE (identity lost on restart)</li></ul>
+<h2>[0.1.0] — 2026-08-06 — Initial release</h2>
+<h3>Added</h3>
+<ul><li>Kotlin Multiplatform + Compose Multiplatform project (Android / Windows / macOS)</li><li><strong>LAN peer discovery</strong>: UDP broadcast + multicast dual-channel, 3 s heartbeat,</li></ul>
+<p>15 s offline timeout, manual refresh</p>
+<ul><li><strong>E2E encryption</strong>: X25519 key exchange + HKDF-SHA256 + AES-256-GCM; per-peer</li></ul>
+<p>session keys; REQ_KEY self-heal</p>
+<ul><li><strong>1:1 chat</strong>: conversation list (unread badges / timestamps / previews), bubbles,</li></ul>
+<p>✓✓ read receipts, connection status</p>
+<ul><li><strong>P2P mesh group chat</strong>: create → invite → membership sync (JOIN/LEAVE), owner</li></ul>
+<p>dissolve, member leave</p>
+<ul><li><strong>Burn after reading</strong>: 8 s display, destroyed on both sides (BURN_ACK + 60 s</li></ul>
+<p>fallback)</p>
+<ul><li><strong>Temporary chat</strong>: auto-purge after TTL (1 h / 24 h / 7 d)</li><li>Connection modes: Auto / TCP / UDP / Host Hotspot; custom username; offline message</li></ul>
+<p>queue; typing indicator; message recall (2 min); quote reply & @mentions; image/file transfer (64 KB chunks, progress, ≤4 MB image preview); system notifications; dark/light theme; contact management (block / unblock); chat history persistence (JSONL, encrypted later); clear local history; proxy-TUN loopback normalization; Windows/macOS/Linux support</p>
+<hr>
+<h2>License</h2>
+<p>Syna is licensed under <strong>GPL-3.0-only</strong>. All dependencies are Apache-2.0 (compatible); no copyleft dependencies; all in-tree code is original. See <code>LICENSE</code> and <code>SECURITY_AUDIT_REPORT.md</code>.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
