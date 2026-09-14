@@ -37,6 +37,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.request
 import urllib.error
 
@@ -53,26 +54,31 @@ INDEX_FEATURED = os.path.join(
 WAREHOUSE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "warehouse.html"
 )
+DOCS_INDEX = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs.html"
+)
 
 FEAT_START = "<!-- FEATURED-GRID:start -->"
 FEAT_END = "<!-- FEATURED-GRID:end -->"
 WH_START = "<!-- WAREHOUSE-GRID:start -->"
 WH_END = "<!-- WAREHOUSE-GRID:end -->"
+MIRRORED_START = "<!-- MIRRORED-DOCS:start -->"
+MIRRORED_END = "<!-- MIRRORED-DOCS:end -->"
 
 # Icon names to look for in the repo root (lower-cased, prefix match).
 ICON_PREFIXES = ("logo", "icon")
 
-NAV = """  <header class="nav">
+NAV_TMPL = """  <header class="nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="../index.html">
-        <span class="brand-mark"><img src="../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+      <a class="brand" href="{p}index.html">
+        <span class="brand-mark"><img src="{p}assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="../index.html">Home</a>
-        <a href="../warehouse.html">Warehouse</a>
-        <a href="../docs.html">Docs</a>
-        <a href="../about.html">About</a>
+        <a href="{p}index.html">Home</a>
+        <a href="{p}warehouse.html">Warehouse</a>
+        <a href="{p}docs.html">Docs</a>
+        <a href="{p}about.html">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -80,16 +86,38 @@ NAV = """  <header class="nav">
     </div>
   </header>"""
 
-FOOTER = """  <footer class="footer">
+FOOTER_TMPL = """  <footer class="footer">
     <div class="wrap footer-inner">
       <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="{p}warehouse.html">Warehouse</a> &middot; <a href="{p}docs.html">Docs</a></span>
     </div>
   </footer>"""
 
 
+def nav(prefix=""):
+    return NAV_TMPL.replace("{p}", prefix)
+
+
+def footer(prefix=""):
+    return FOOTER_TMPL.replace("{p}", prefix)
+
+
 class HttpError(Exception):
     pass
+
+
+def _urlopen(req, timeout=30, attempts=4):
+    """urlopen with retries for flaky networks (RemoteDisconnected etc.)."""
+    last = None
+    for k in range(attempts):
+        try:
+            return urllib.request.urlopen(req, timeout=timeout)
+        except urllib.error.HTTPError:
+            raise
+        except Exception as e:  # noqa: BLE001 - transient network errors
+            last = e
+            time.sleep(1.5 * (k + 1))
+    raise last
 
 
 def http_json(url, token):
@@ -99,7 +127,7 @@ def http_json(url, token):
     req.add_header("Accept", "application/vnd.github+json")
     req.add_header("User-Agent", "nusv-site-sync")
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with _urlopen(req) as r:
             return json.loads(r.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         if e.code in (404,):
@@ -113,7 +141,7 @@ def http_text(url, token):
         req.add_header("Authorization", "Bearer " + token)
     req.add_header("User-Agent", "nusv-site-sync")
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with _urlopen(req) as r:
             return r.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         if e.code in (404, 403):
@@ -174,15 +202,24 @@ def get_root_files(repo_name, branch, token):
     return [f["name"] for f in data] if data else []
 
 
+_TREE_CACHE = {}
+
+
+def get_tree(repo_name, branch, token):
+    key = (repo_name, branch)
+    if key not in _TREE_CACHE:
+        data = http_json(
+            "%s/repos/%s/%s/git/trees/%s?recursive=1" % (API, ORG, repo_name, branch),
+            token,
+        )
+        _TREE_CACHE[key] = data.get("tree", []) if data else []
+    return _TREE_CACHE[key]
+
+
 def get_screenshots(repo_name, branch, token):
     """Find screenshots anywhere under a known folder name."""
-    data = http_json(
-        "%s/repos/%s/%s/git/trees/%s?recursive=1" % (API, ORG, repo_name, branch), token
-    )
-    if not data:
-        return []
     out = []
-    for t in data.get("tree", []):
+    for t in get_tree(repo_name, branch, token):
         p = t.get("path", "")
         if not p.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")):
             continue
@@ -191,6 +228,91 @@ def get_screenshots(repo_name, branch, token):
             out.append(p)
     out.sort()
     return out
+
+
+def get_doc_paths(repo_name, branch, token):
+    """Important documents to mirror: root *.md (except README) + docs/**/*.md."""
+    out = []
+    for t in get_tree(repo_name, branch, token):
+        if t.get("type") != "blob":
+            continue
+        p = t.get("path", "")
+        if not p.lower().endswith(".md"):
+            continue
+        if "/" not in p:
+            if p.lower() == "readme.md":
+                continue
+            out.append(p)
+        elif p.lower().startswith("docs/"):
+            out.append(p)
+    out.sort(key=lambda x: (0 if "/" not in x else 1, x.lower()))
+    return out
+
+
+def slugify(text):
+    s = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+    return s or "doc"
+
+
+def prettify_name(path):
+    base = re.sub(r"\.md$", "", os.path.basename(path), flags=re.I)
+    return base.replace("_", " ").replace("-", " ").strip()
+
+
+def extract_h1(md):
+    m = re.search(r"^#\s+(.+?)\s*$", md, re.M)
+    return m.group(1).strip() if m else None
+
+
+IMG_RE = re.compile(
+    r'src="(https://raw\.githubusercontent\.com/NUSV/([^/"]+)/([^/"]+)/([^"]+))"'
+)
+_IMG_CACHE = {}
+_IMG_TOTAL = [0]
+IMG_MAX_FILE = 8 * 1024 * 1024
+IMG_MAX_TOTAL = 120 * 1024 * 1024
+
+
+def localize_images(text, token, root):
+    """Download referenced raw.githubusercontent images into
+    assets/mirror/<repo>/<path> and rewrite src to site-root paths.
+
+    Keeps the remote URL when a download fails or exceeds the caps, so the
+    page still works (just without the mirror benefit for that image)."""
+
+    def repl(m):
+        url, repo, branch, path = m.group(1), m.group(2), m.group(3), m.group(4)
+        if url in _IMG_CACHE:
+            return 'src="%s"' % _IMG_CACHE[url]
+        rel = os.path.join("assets", "mirror", repo, path)
+        dest = os.path.join(root, rel)
+        local = "/" + rel.replace(os.sep, "/")
+        if os.path.exists(dest):
+            _IMG_CACHE[url] = local
+            return 'src="%s"' % local
+        if _IMG_TOTAL[0] > IMG_MAX_TOTAL:
+            return m.group(0)
+        try:
+            req = urllib.request.Request(url)
+            if token:
+                req.add_header("Authorization", "Bearer " + token)
+            req.add_header("User-Agent", "nusv-site-sync")
+            with _urlopen(req, timeout=60) as r:
+                data = r.read(IMG_MAX_FILE + 1)
+            if len(data) > IMG_MAX_FILE:
+                print("  img too large, kept remote: %s" % url)
+                return m.group(0)
+        except Exception as e:  # noqa: BLE001
+            print("  img failed, kept remote: %s (%s)" % (url, e))
+            return m.group(0)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, "wb") as f:
+            f.write(data)
+        _IMG_TOTAL[0] += len(data)
+        _IMG_CACHE[url] = local
+        return 'src="%s"' % local
+
+    return IMG_RE.sub(repl, text)
 
 
 def discover_icon(repo_name, branch, token, override=None):
@@ -246,7 +368,7 @@ def fetch_readme(repo_name, branch, token):
         req.add_header("Authorization", "Bearer " + token)
     req.add_header("User-Agent", "nusv-site-sync")
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with _urlopen(req) as r:
             return r.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         if e.code in (404, 403):
@@ -255,9 +377,12 @@ def fetch_readme(repo_name, branch, token):
 
 
 def get_mirror_manifest(token):
-    """Manifest produced by NUSV/downloads (latest-release mirror)."""
+    """Manifest produced by NUSV/downloads (latest-release mirror).
+
+    The manifest is published on the `mirror` branch (the workflow keeps the
+    pipeline on `main` and force-pushes snapshots to `mirror`)."""
     data = http_json(
-        "%s/repos/%s/downloads/contents/downloads.json" % (API, ORG), token
+        "%s/repos/%s/downloads/contents/downloads.json?ref=mirror" % (API, ORG), token
     )
     if not data or not data.get("content"):
         return {}
@@ -287,7 +412,7 @@ def resolve_raw(repo_name, branch, raw):
     return "%s/%s/%s/%s/%s" % (RAW, ORG, repo_name, branch, raw)
 
 
-def md_inline(text, repo_name, branch):
+def md_inline(text, repo_name, branch, link_map=None):
     img_tokens = {}
 
     def img_placeholder(m):
@@ -333,6 +458,16 @@ def md_inline(text, repo_name, branch):
 
     def link(m):
         lab, dst = m.group(1), m.group(2)
+        key = dst.lstrip("./")
+        if (
+            link_map
+            and not dst.startswith(("http", "#", "mailto:"))
+            and key in link_map
+        ):
+            return '<a href="%s">%s</a>' % (
+                html.escape(link_map[key], quote=True),
+                lab,
+            )
         target = ' target="_blank" rel="noopener"' if dst.startswith("http") else ""
         return '<a href="%s"%s>%s</a>' % (
             html.escape(resolve_ref(repo_name, branch, dst), quote=True),
@@ -351,7 +486,7 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]", "", (s or "").lower())
 
 
-def md_to_html(md, repo_name, branch, drop_h1_names=None):
+def md_to_html(md, repo_name, branch, drop_h1_names=None, link_map=None):
     """Render a pragmatic README subset to HTML.
 
     If drop_h1_names is given (normalized repo/display names), a leading
@@ -364,6 +499,9 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
     drop_set = (
         {_norm(x) for x in drop_h1_names} if drop_h1_names is not None else None
     )
+
+    def inline(t):
+        return md_inline(t, repo_name, branch, link_map)
 
     while i < n:
         line = lines[i]
@@ -404,7 +542,7 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
         m = re.match(r"^(#{1,6})\s+(.*)$", line)
         if m:
             lvl = len(m.group(1))
-            out.append("<h%d>%s</h%d>" % (lvl, md_inline(m.group(2), repo_name, branch), lvl))
+            out.append("<h%d>%s</h%d>" % (lvl, inline(m.group(2)), lvl))
             i += 1
             continue
 
@@ -421,6 +559,7 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
             inner = md_to_html(
                 "\n".join(quote), repo_name, branch,
                 drop_h1_names=list(drop_set) if drop_set is not None else None,
+                link_map=link_map,
             )[0]
             out.append("<blockquote>%s</blockquote>" % inner)
             continue
@@ -446,7 +585,7 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
                 "<%s>%s</%s>"
                 % (
                     tag,
-                    "".join("<li>%s</li>" % md_inline(it, repo_name, branch) for it in items),
+                    "".join("<li>%s</li>" % inline(it) for it in items),
                     tag,
                 )
             )
@@ -461,17 +600,17 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
                 head = [c.strip() for c in rows[0].strip("|").split("|")]
                 body = rows[2:]
                 tbl = ["<table><thead><tr>"]
-                tbl.extend("<th>%s</th>" % md_inline(c, repo_name, branch) for c in head)
+                tbl.extend("<th>%s</th>" % inline(c) for c in head)
                 tbl.append("</tr></thead><tbody>")
                 for r in body:
                     cells = [c.strip() for c in r.strip("|").split("|")]
                     tbl.append("<tr>")
-                    tbl.extend("<td>%s</td>" % md_inline(c, repo_name, branch) for c in cells)
+                    tbl.extend("<td>%s</td>" % inline(c) for c in cells)
                     tbl.append("</tr>")
                 tbl.append("</tbody></table>")
                 out.append("".join(tbl))
                 continue
-            out.append(md_inline(line, repo_name, branch))
+            out.append(inline(line))
             i += 1
             continue
 
@@ -488,9 +627,9 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None):
         joined = " ".join(x.strip() for x in para)
         wrap = re.fullmatch(r"<p\b[^>]*>(.*)</p>", joined, re.S)
         if wrap:
-            out.append('<div class="readme-img-block">%s</div>' % md_inline(wrap.group(1), repo_name, branch))
+            out.append('<div class="readme-img-block">%s</div>' % inline(wrap.group(1)))
         else:
-            out.append("<p>%s</p>" % md_inline(joined, repo_name, branch))
+            out.append("<p>%s</p>" % inline(joined))
 
     return "\n".join(out), first_h1_dropped
 
@@ -584,6 +723,31 @@ def warehouse_section(projects):
     return "\n".join(card_markup(p, "warehouse") for p in projects)
 
 
+def mirrored_docs_section(projects):
+    """Cards for the docs.html hub: mirrored documents per project."""
+    cards = []
+    for p in projects:
+        docs = p.get("doc_pages") or []
+        if not docs:
+            continue
+        items = "".join(
+            '<li><a href="%s">%s</a></li>'
+            % (html.escape(d["local"], quote=True), html.escape(d["title"]))
+            for d in docs
+        )
+        icon = p["icon_url"] or p["fallback_icon"]
+        cards.append(
+            '<div class="card reveal">\n'
+            '          <span class="card-icon"><img src="%s" alt="%s icon" loading="lazy"></span>\n'
+            "          <h3>%s</h3>\n"
+            '          <ul class="doc-list">%s</ul>\n'
+            "        </div>"
+            % (html.escape(icon, quote=True), html.escape(p["name"]),
+               html.escape(p["name"]), items)
+        )
+    return "\n".join(cards)
+
+
 def replace_markers(path, start_marker, end_marker, content):
     with open(path, "r", encoding="utf-8") as f:
         src = f.read()
@@ -667,7 +831,7 @@ def render_page(proj, readme_html, updated_utc):
     mirror_note = ""
     if mirrored:
         mirror_note = (
-            '<div class="mirror-note">Mirrored on nusv.github.io '
+            '<div class="mirror-note"><a href="/downloads/">Mirrored on nusv.github.io</a> '
             "&mdash; no VPN required.</div>"
         )
     sidebar.append(
@@ -690,6 +854,17 @@ def render_page(proj, readme_html, updated_utc):
                 % (html.escape(repo_url, quote=True), html.escape(proj["repo"])))
     sidebar.append('<div class="card pg-side"><div class="side-title">Project info</div>%s</div>'
                    % "".join(info))
+    doc_pages = proj.get("doc_pages") or []
+    if doc_pages:
+        links = "".join(
+            '<a class="rel-item" href="%s"><span class="rel-tag">%s</span></a>'
+            % (html.escape(d["local"], quote=True), html.escape(d["title"]))
+            for d in doc_pages
+        )
+        sidebar.append(
+            '<div class="card pg-side"><div class="side-title">Documents</div>%s</div>'
+            % links
+        )
 
     # Screenshot gallery (optional, convention-based).
     gal = ""
@@ -768,7 +943,7 @@ def render_page(proj, readme_html, updated_utc):
         html.escape(name),
         html.escape(tagline[:150], quote=True),
         html.escape(icon, quote=True),
-        NAV,
+        nav("../"),
         html.escape(icon, quote=True), html.escape(name), html.escape(name),
         html.escape(tagline),
         "".join(chips),
@@ -777,13 +952,65 @@ def render_page(proj, readme_html, updated_utc):
         readme_html or "<p><em>No README yet — check the repository for details.</em></p>",
         gal,
         "".join(sidebar),
-        FOOTER,
+        footer("../"),
     )
 
 
-# --------------------------------------------------------------------------
-# Discovery + main
-# --------------------------------------------------------------------------
+def render_doc_page(proj, doc, updated_utc):
+    """A mirrored markdown document rendered as a site page."""
+    icon = proj["icon_url"] or proj["fallback_icon"]
+    original = "%s/blob/%s/%s" % (proj["repo_url"], proj["branch"], doc["path"])
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>%s — %s | United Science Vaca (NUSV)</title>
+  <meta name="description" content="%s — mirrored from the %s repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+%s
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/%s.html">&#8249; %s</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="%s" alt="%s icon" loading="lazy"></span>
+        <h1>%s</h1>
+        <p class="mdoc-meta">Mirrored from <a href="%s" target="_blank" rel="noopener">%s/%s</a> &middot; <code>%s</code> &middot; synced %s UTC &middot; <a href="%s" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        %s
+      </section>
+    </article>
+  </main>
+
+%s
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
+""" % (
+        html.escape(doc["title"]), html.escape(proj["name"]),
+        html.escape(doc["title"]), html.escape(proj["repo"]),
+        nav("../../"),
+        proj["slug"], html.escape(proj["name"]),
+        html.escape(icon, quote=True), html.escape(proj["name"]),
+        html.escape(doc["title"]),
+        html.escape(proj["repo_url"], quote=True), ORG, html.escape(proj["repo"]),
+        html.escape(doc["path"]),
+        updated_utc,
+        html.escape(original, quote=True),
+        doc["body"],
+        footer("../../"),
+    )
+
+
+
 
 def discover_projects(token):
     repos = list_org_repos(token) or []
@@ -809,6 +1036,7 @@ def discover_projects(token):
         license_txt = ((r.get("license") or {}) or {}).get("spdx_id")
         icon_url = discover_icon(name, branch, token, conf.get("icon"))
         screens = get_screenshots(name, branch, token)
+        doc_files = get_doc_paths(name, branch, token)
         releases = fetch_releases(name, token) or []
 
         projects.append(
@@ -828,6 +1056,7 @@ def discover_projects(token):
                 "branch": branch,
                 "releases": releases,
                 "screenshots": screens,
+                "doc_files": doc_files,
                 "stars": r.get("stargazers_count", 0),
                 "pushed_at": r.get("pushed_at", ""),
                 "topics": conf.get("topics", []),
@@ -848,9 +1077,11 @@ def main():
     os.makedirs(outdir, exist_ok=True)
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M")
     stamp_re = re.compile(r'<div class="pg-updated">.*?</div>', re.S)
+    mdoc_stamp_re = re.compile(r"synced \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC")
 
     def strip_stamp(t):
-        return stamp_re.sub("", t)
+        t = stamp_re.sub("", t)
+        return mdoc_stamp_re.sub("synced UTC", t)
 
     projects = discover_projects(token)
     if projects is None:
@@ -881,12 +1112,63 @@ def main():
     changed = []
     slugs = {p["slug"] for p in projects}
 
+    # -- mirrored documents (important .md files rendered as site pages) --
+    docs_root = os.path.join(root, "docs")
+    os.makedirs(docs_root, exist_ok=True)
+    generated_docs = set()
+
+    for proj in projects:
+        doc_pages = []
+        used_slugs = set()
+        link_map = {}
+        for path in proj.get("doc_files") or []:
+            raw = http_text(resolve_raw(proj["repo"], proj["branch"], path), token)
+            if raw is None:
+                print("  doc missing: %s/%s" % (proj["repo"], path))
+                continue
+            title = extract_h1(raw) or prettify_name(path)
+            base_slug = slugify(re.sub(r"\.md$", "", os.path.basename(path), flags=re.I))
+            slug = base_slug
+            n = 2
+            while slug in used_slugs:
+                slug = "%s-%d" % (base_slug, n)
+                n += 1
+            used_slugs.add(slug)
+            body = md_to_html(raw, proj["repo"], proj["branch"], drop_h1_names=[title])[0]
+            local = "/docs/%s/%s.html" % (proj["slug"], slug)
+            link_map[path] = local
+            doc = {"path": path, "title": title, "slug": slug, "local": local, "body": body}
+            doc_pages.append(doc)
+            rel = os.path.join("docs", proj["slug"], slug + ".html")
+            generated_docs.add(rel)
+            page_html = localize_images(render_doc_page(proj, doc, now), token, root)
+            dest = os.path.join(root, rel)
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            old = ""
+            if os.path.exists(dest):
+                with open(dest, "r", encoding="utf-8") as f:
+                    old = f.read()
+            if strip_stamp(old) != strip_stamp(page_html):
+                with open(dest, "w", encoding="utf-8") as f:
+                    f.write(page_html)
+                changed.append(rel)
+            print("  doc %s -> %s" % (path, local))
+        proj["doc_pages"] = doc_pages
+        proj["link_map"] = link_map
+
     # -- project pages --
     for proj in projects:
         md = fetch_readme(proj["repo"], proj["branch"], token)
         drop_names = {proj["name"], proj["repo"], re.sub(r"-NUSV$", "", proj["repo"], flags=re.I)}
-        readme_html = md_to_html(md, proj["repo"], proj["branch"], drop_names)[0] if md else None
-        page = render_page(proj, readme_html, now)
+        readme_html = (
+            md_to_html(
+                md, proj["repo"], proj["branch"], drop_names,
+                link_map=proj.get("link_map") or None,
+            )[0]
+            if md
+            else None
+        )
+        page = localize_images(render_page(proj, readme_html, now), token, root)
         path = os.path.join(outdir, proj["slug"] + ".html")
         old = ""
         if os.path.exists(path):
@@ -908,6 +1190,20 @@ def main():
             changed.append("projects/%s (removed)" % stem)
             print("removed stale %s" % f)
 
+    # -- remove stale mirrored doc pages (docs/<slug>/ directories) --
+    for entry in os.listdir(docs_root):
+        d = os.path.join(docs_root, entry)
+        if not os.path.isdir(d):
+            continue
+        for f in os.listdir(d):
+            rel = os.path.join("docs", entry, f)
+            if rel not in generated_docs:
+                os.remove(os.path.join(d, f))
+                changed.append(rel + " (removed)")
+                print("removed stale %s" % rel)
+        if not os.listdir(d):
+            os.rmdir(d)
+
     # -- listing pages (marker regions) --
     def patch_file(path, start, end, section):
         try:
@@ -922,8 +1218,18 @@ def main():
                 f.write(patched)
             changed.append(os.path.basename(path))
 
-    patch_file(INDEX_FEATURED, FEAT_START, FEAT_END, featured_section(projects))
-    patch_file(WAREHOUSE, WH_START, WH_END, warehouse_section(projects))
+    patch_file(
+        INDEX_FEATURED, FEAT_START, FEAT_END,
+        localize_images(featured_section(projects), token, root),
+    )
+    patch_file(
+        WAREHOUSE, WH_START, WH_END,
+        localize_images(warehouse_section(projects), token, root),
+    )
+    patch_file(
+        DOCS_INDEX, MIRRORED_START, MIRRORED_END,
+        localize_images(mirrored_docs_section(projects), token, root),
+    )
 
     print("changed: %s" % (", ".join(changed) if changed else "none"))
     sys.exit(0)
