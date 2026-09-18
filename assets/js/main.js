@@ -65,6 +65,7 @@
   const orig = new Map();
 
   function fill(value, el) {
+    if (value == null) return "";
     const args = el.dataset.i18nArgs;
     if (args === undefined) return value;
     return value
@@ -78,14 +79,14 @@
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       if (!orig.has(el)) orig.set(el, el.innerHTML);
-      const val = d && d[el.dataset.i18n];
+      const val = d ? d[el.dataset.i18n] : undefined;
       el.innerHTML = val !== undefined ? fill(val, el) : orig.get(el);
     });
 
     const html = document.documentElement;
     if (html.dataset.i18nTitle) {
       if (!orig.has(html)) orig.set(html, document.title);
-      const val = d && d[html.dataset.i18nTitle];
+      const val = d ? d[html.dataset.i18nTitle] : undefined;
       document.title = val !== undefined ? fill(val, html) : orig.get(html);
     }
 
