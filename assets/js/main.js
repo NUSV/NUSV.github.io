@@ -1,12 +1,14 @@
 // United Science Vaca — site scripts
-// i18n note: English is the source language. To add a language later,
-// set window.I18N[lang] and call setLang(lang) (see toggle below).
+// i18n: English is served inline as the source language; assets/js/i18n.js
+// carries the translations. Elements opt in with data-i18n="key"; the page
+// <html> tag can carry data-i18n-title="key" (+ data-i18n-args) to translate
+// document.title. Placeholders {n} / {name} / {doc} are filled from
+// data-i18n-args.
 
 (function () {
   "use strict";
 
-  // Active nav state: exact page, or section prefixes
-  // (projects/ pages belong to Warehouse, docs/ pages belong to Docs).
+  // ---- active nav state ----
   const path = window.location.pathname.split("/").filter(Boolean);
   const current = path[path.length - 1] || "index.html";
   const section = path[path.length - 2] || "";
@@ -18,16 +20,16 @@
     about: "about.html",
     "404.html": "index.html",
     projects: "warehouse.html",
+    mirror: "docs.html",
   };
 
-  const activeHref =
-    navMap[current] || navMap[section] || "index.html";
+  const activeHref = navMap[current] || navMap[section] || "index.html";
 
   document.querySelectorAll(".nav-links a").forEach(function (a) {
     if (a.getAttribute("href") === activeHref) a.classList.add("active");
   });
 
-  // Card spotlight follows the pointer.
+  // ---- card spotlight ----
   document.querySelectorAll(".card").forEach(function (card) {
     card.addEventListener("pointermove", function (e) {
       const r = card.getBoundingClientRect();
@@ -36,7 +38,7 @@
     });
   });
 
-  // Reveal-on-scroll.
+  // ---- reveal on scroll ----
   const observer = new IntersectionObserver(
     function (entries) {
       entries.forEach(function (entry) {
@@ -57,38 +59,68 @@
     el.textContent = new Date().getFullYear();
   });
 
-  window.I18N = {};
+  // ---- i18n ----
+  const I18N = window.I18N || {};
+  const STORE_KEY = "nusv-lang";
+  const orig = new Map();
 
-  // Floating feedback so the language toggle never feels dead.
-  function toast(message) {
-    const old = document.querySelector(".toast");
-    if (old) old.remove();
-    const el = document.createElement("div");
-    el.className = "toast";
-    el.textContent = message;
-    document.body.appendChild(el);
-    setTimeout(function () {
-      el.classList.add("out");
-      setTimeout(function () {
-        el.remove();
-      }, 350);
-    }, 2600);
+  function fill(value, el) {
+    const args = el.dataset.i18nArgs;
+    if (args === undefined) return value;
+    return value
+      .replace(/\{n\}/g, args)
+      .replace(/\{name\}/g, args)
+      .replace(/\{doc\}/g, args);
+  }
+
+  function applyLang(lang) {
+    const d = I18N[lang] || null;
+
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      if (!orig.has(el)) orig.set(el, el.innerHTML);
+      const val = d && d[el.dataset.i18n];
+      el.innerHTML = val !== undefined ? fill(val, el) : orig.get(el);
+    });
+
+    const html = document.documentElement;
+    if (html.dataset.i18nTitle) {
+      if (!orig.has(html)) orig.set(html, document.title);
+      const val = d && d[html.dataset.i18nTitle];
+      document.title = val !== undefined ? fill(val, html) : orig.get(html);
+    }
+
+    html.lang = lang === "zh" ? "zh-CN" : "en";
+
+    const toggle = document.getElementById("lang-toggle");
+    if (toggle) {
+      toggle.dataset.lang = lang;
+      toggle.textContent = lang === "zh" ? "EN" : "中文";
+      toggle.title = lang === "zh" ? "Switch to English" : "切换到中文";
+    }
   }
 
   window.setLang = function (lang) {
-    // English is served inline; translations will be provided as
-    // window.I18N[lang] overrides (data-i18n keys) in a future update.
-    if (lang !== "en" && !window.I18N[lang]) {
-      toast("中文版即将推出 — Chinese translation coming soon");
+    const next = lang === "zh" ? "zh" : "en";
+    applyLang(next);
+    try {
+      localStorage.setItem(STORE_KEY, next);
+    } catch (e) {
+      /* storage unavailable (private mode) — ignore */
     }
   };
+
+  let saved = null;
+  try {
+    saved = localStorage.getItem(STORE_KEY);
+  } catch (e) {
+    saved = null;
+  }
+  applyLang(saved === "zh" ? "zh" : "en");
 
   const toggle = document.getElementById("lang-toggle");
   if (toggle) {
     toggle.addEventListener("click", function () {
-      const next = toggle.dataset.lang === "zh" ? "en" : "zh";
-      toggle.dataset.lang = next;
-      setLang(next);
+      window.setLang(toggle.dataset.lang === "zh" ? "en" : "zh");
     });
   }
 })();
