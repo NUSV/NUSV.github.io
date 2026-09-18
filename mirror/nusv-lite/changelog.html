@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — NUSV LITE | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Changelog — mirrored from the NUSV-lite repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/nusv-lite.html">&#8249; NUSV LITE</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/NUSV-lite/logo.png" alt="NUSV LITE icon" loading="lazy"></span>
+        <h1>Changelog</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/NUSV-lite" target="_blank" rel="noopener">NUSV/NUSV-lite</a> &middot; <code>CHANGELOG.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/NUSV-lite/blob/test-orca/CHANGELOG.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <blockquote><p>Mirrored in the in-app "Docs" page.</p></blockquote>
+<h2>v1.10.0 (2026-07-31)</h2>
+<ul><li><strong>New games ×3</strong>:</li><li>Tetris: 10×20 board, 7 classic tetrominoes, rotate / soft drop / hard drop, speed levels, line-clear scoring with high score</li><li>Gomoku: 15×15 board vs AI; threat-aware AI (always blocks open threes, kills open fours), 8-ply search + threat extension, Beginner / Ultimate difficulties, +100 points on win</li><li>Sudoku: auto-generated puzzles, Easy / Medium / Hard, check & erase, +40 points on completion</li><li><strong>New tools ×3</strong>: Anniversary (countdown to important dates), Sleep Calculator (90-minute cycle recommendations), Lottery Gen (5+2 lucky picks)</li><li><strong>Home-screen widget</strong>: shows points & check-in streak, one-tap check-in from the desktop</li><li><strong>Achievements</strong>: 10 achievement badges (games / tools / check-ins / points / Orca), progress viewable in Settings</li><li><strong>Game sound effects</strong>: new sound system (action / success / error / victory), toggle in Settings</li><li><strong>Gomoku difficulties</strong>: Beginner (win +20) / Ultimate (win +100, lose +2)</li><li><strong>Theme shop expansion</strong>: 12 new color themes, 50 points each</li><li><strong>Matrix rain rewrite</strong>: Canvas-based trailing rain (bright head + fading tail + random reset)</li><li><strong>Theme state fix</strong>: switching themes no longer leaves multiple "In use" states</li><li><strong>Whack-a-Mole stability rewrite</strong>: no animations/emoji dependencies, full exception protection</li><li><strong>Sleep Calculator fix</strong>: fixed crash (missing format string arguments)</li><li><strong>Pre-release full audit fixes</strong>:</li><li>Gomoku AI strengthened: 8-ply search + threat extension, 6:0 vs Beginner AI</li><li>Gomoku: AI stuck after restart fixed</li><li>Wordle: physical keyboard input fixed</li><li>Whack-a-Mole: leaving the game mid-round no longer grants rewards</li><li>Snake: rapid direction changes no longer reverse the snake</li><li>Sudoku: puzzle generation / difficulty switching state fixed; high-score formatting fixed</li><li>World Clock: whole-screen freeze fixed; city cards now show country names in both languages</li><li>Biorhythm: date offset fixed (no longer serves stale cached data)</li><li>Anniversary: cross-timezone day-count offset fixed</li><li>Scientific Calculator: large numbers now shown in scientific notation</li><li>Morse Code: space mapping fixed both ways; Interval Timer timing fixed; Kaomoji corrupted characters fixed</li><li><strong>Full i18n pass</strong>: all hardcoded UI strings (Home / Browse / Search / Detail / Docs / Settings / Theme Shop / World Clock / Tetris) now switch between Chinese and English</li><li>Version bumped to 1.10.0 (73 tools total)</li></ul>
+<h2>v1.9.0 (2026-07-30)</h2>
+<ul><li><strong>Orca premium theme</strong>: all-new pure black/white premium theme system</li><li>Unlock eligibility with a 7-day check-in streak (10,000 points required)</li><li>Forces dark mode when active, pure black background + pure white accents</li><li>Cards switch to black with white borders</li><li>Double points (×2) from all games and check-ins</li><li>Home title shows "NUSV Orca"</li><li>Unlocks 11 exclusive hidden tools: Matrix Rain, Secret Vault, Clipboard History, Habit Tracker, Text Encrypt, Speed Reader, Color Picker, Password Checker, Text Diff, CSS Gradient, Quick Notes</li><li><strong>Flashlight tool</strong>: toggle pure white / background color, simulates a flashlight</li><li><strong>Battery info tool</strong>: charge level, charging state, temperature, voltage</li><li><strong>Quick Timer tool</strong>: 1/3/5/10-minute presets, start/pause/reset</li><li><strong>Full zh/en translation pass</strong>: Chinese & English titles/descriptions for every tool</li><li>Deep code refactor and stability improvements</li><li>Version bumped to 1.9.0 (67 tools total)</li></ul>
+<h2>v1.8.0 (2026-07-30)</h2>
+<ul><li><strong>Earn points from games</strong>: all 8 games award points for winning/finishing</li><li>Tic-Tac-Toe: +3 win / +1 draw</li><li>2048: total score / 100 (min 1)</li><li>Minesweeper: +5 on win</li><li>Memory Match: +5 on completion</li><li>Snake: +1 per food</li><li>Wordle: +5 on correct guess</li><li>Simon Says: +1 per round</li><li>Whack-a-Mole: +1 per 2 moles</li><li><strong>Game high scores</strong>: new GameStatsManager, best scores tracked per game, shown in-game as Best</li><li><strong>Check-in streak</strong>: consecutive-day tracking, +5 bonus after 7 consecutive days</li><li><strong>Theme shop</strong>: shows check-in streak (🔥 flame icon + streak reward hint)</li><li><strong>Game animation fixes</strong>: dice roll, coin flip, magic 8-ball shake now animate correctly</li><li><strong>Morse Code fix</strong>: removed non-standard <code>#</code> mapping conflicting with <code>@</code></li><li><strong>Wordle dictionary expansion</strong>: 56 → 540+ common 5-letter words</li><li><strong>Wordle keyboard position</strong>: added 96dp bottom padding to avoid navigation bar overlap</li><li><strong>Memory Match freeze fix</strong>: game no longer gets stuck after two mismatched flips</li><li>Version bumped to 1.8.0 (47 tools total)</li></ul>
+<h2>v1.7.1 (2026-07-30)</h2>
+<ul><li>Fixed multiple bugs introduced in 1.7.0</li><li>Wordle dictionary expanded from 56 to 540+ common words</li><li>Wordle keyboard bottom padding to avoid navigation bar overlap</li><li>Fixed Memory Match freeze after two mismatched flips</li><li>Version bumped to 1.7.1</li></ul>
+<h2>v1.7.0 (2026-07-30)</h2>
+<ul><li>4 new games: Snake (Canvas body gradient + pulsing food), Wordle (virtual keyboard + letter state colors), Simon Says (4 glowing buttons), Whack-a-Mole (30-second challenge)</li><li>Game effects: TicTacToe spring placement + win pulse, Memory Match card pop-in + match highlight, Snake food particle rotation</li><li>All games fully integrated with the language switching system (zh/en)</li><li>Added 6 missing haptic feedback triggers</li><li>Result sharing: random quotes, QR content, name generator, scientific calculator</li><li>Discover layout switching (list / 2-col / 3-col grid)</li><li>Discover search keyword highlighting (matched text becomes theme-colored + bold)</li><li>More themes / theme shop fully localized</li><li>Recent tools capped at 5, sorted by recency left-to-right</li><li>Dark mode home card color fixes</li><li>Version bumped to 1.7.0 (47 tools total)</li></ul>
+<h2>v1.6.5 (2026-07-30)</h2>
+<ul><li>Discover switched to list layout (replacing the grid)</li><li>Recent tools capped at 5, newest on the left</li><li>More themes / theme shop fully localized</li><li>5 missing haptic feedback triggers added</li><li>Dark mode home card color fixes</li><li>Version bumped to 1.6.5</li><li>Settings layout switching (list / 2-col / 3-col grid)</li><li>Discover search keyword highlighting</li><li>Result sharing: random quotes, QR content, name generator, scientific calculator</li><li>4 new games: Snake, Wordle, Simon Says, Whack-a-Mole</li><li>Game effects: TicTacToe spring animation + win pulse, Memory Match card pop-in, Snake food particles</li></ul>
+<h2>v1.6.0 (2026-07-30)</h2>
+<ul><li>Daily check-in system (1-3 random points, once per day)</li><li>Theme shop (10 color themes, 10 points each)</li><li>Settings "More Themes" entry</li><li>Discover search box (real-time name/description filtering)</li><li>Home recent tools row</li><li>App Shortcuts (long-press launcher icon: QR / Drawing Pad / Dice / Calculator)</li><li>Light mode featured cards switched to purple</li></ul>
+<h2>v1.5.0 (2026-07-30)</h2>
+<ul><li>6 new advanced tools:</li><li>Scientific Calculator (trig / log / parentheses / history)</li><li>Drawing Pad (freehand / colors / brushes / undo / save)</li><li>Markdown live preview (edit / preview / split)</li><li>Biorhythm (physical / emotional / intellectual curves)</li><li>Metronome (BPM / time signature / tap tempo / vibration)</li><li>Morse Code (text ↔ morse / vibration playback / copy)</li><li>4 new generative tools:</li><li>QR Code Generator (ZXing encoding / save to gallery)</li><li>Kaomoji Keyboard (8 categories, 300+ faces / search / one-tap copy)</li><li>Random Quotes (60 quotes / category filter / copy)</li><li>Name Generator (fantasy / Japanese / English / sci-fi / Chinese)</li><li>Drawing Pad heavily enhanced: spray / marker / rainbow / calligraphy brushes, eraser, opacity slider, square brush, hue picker</li><li>Discover recommendation ordering by usage frequency</li><li>Tool count from 33 → 43</li><li>Bug fixes and performance improvements</li></ul>
+<h2>v1.4.0 (2026-07-30)</h2>
+<ul><li>Language switching system (中文 / English)</li><li>Discover category filter (All / Games / Utilities / Dev Tools / Other)</li><li>Mini-app tool animations (dice bounce, coin spin, password fade, stopwatch pulse)</li><li>Bug fixes: Settings scrolling, language switch not taking effect</li></ul>
+<h2>v1.3.0 (2026-07-29)</h2>
+<ul><li>Settings page: theme switching, haptic feedback toggle, sync button</li><li>33 mini-app tools:</li><li>Mini games: Dice, Coin Flip, Magic 8-Ball, Rock-Paper-Scissors, Slot Machine</li><li>Everyday: Tip Calculator, BMI Calculator, Random Number, Unit Converter, Stopwatch, Countdown Timer, Text Statistics, Age Calculator, Password Generator, Percentage, Base Converter, Bill Splitter, Date Difference</li><li>Productivity: Pomodoro, Decision Maker, Palindrome Checker, Todo List, JSON Formatter, Base64 Tool, Color Converter, UUID Generator, Hash Generator, Epoch Converter, URL Tool, Case Converter, Regex Tester, Lorem Ipsum, Breathing Exercise</li><li>Page transition animations + scalePress feedback</li><li>Splash screen</li></ul>
+<h2>v1.2.0 (2026-07-29)</h2>
+<ul><li>Discover page (Mini-app grid layout)</li><li>Remote sync framework (SyncManager)</li><li>HapticPrefs haptic feedback system</li></ul>
+<h2>v1.1.0 (2026-07-29)</h2>
+<ul><li>Docs page + Markdown rendering</li><li>Tab navigation between pages</li></ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
