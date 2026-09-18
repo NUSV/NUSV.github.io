@@ -35,14 +35,14 @@
       <div class="doc-top">
         <span class="pg-icon"><img src="/assets/mirror/Syna-NUSV/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
         <h1>Syna 使用教程（中文）</h1>
-        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">NUSV/Syna-NUSV</a> &middot; <code>TUTORIAL_ZH.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">original on GitHub</a></p>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">NUSV/Syna-NUSV</a> &middot; <code>TUTORIAL_ZH.md</code> &middot; synced 2026-09-18 16:26 UTC &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">original on GitHub</a></p>
       </div>
       <section class="pg-about mdoc-body">
         <p>分步指南：局域网聊天、私人服务器、远程接入（内网穿透）、安全模型与故障排查。</p>
-<p><strong>English version?</strong> → <a href="https://github.com/NUSV/Syna-NUSV/main/TUTORIAL_EN.md">English Tutorial</a></p>
+<p><strong>English version?</strong> → <a href="/mirror/syna/tutorial-en.html">English Tutorial</a></p>
 <hr>
 <h2>目录</h2>
-<ul><li><a href="#1-快速开始">快速开始</a></li><li><a href="#2-局域网功能">局域网功能</a></li><li><a href="#3-私人服务器">私人服务器</a></li><li><a href="#4-实体机搭建教程">实体机搭建教程</a></li><li><a href="#5-远程接入内网穿透">远程接入（内网穿透）</a></li><li><a href="#6-安全模型">安全模型</a></li><li><a href="#7-故障排查">故障排查</a></li><li><a href="#8-构建与分发">构建与分发</a></li><li><a href="#更多资源">更多资源</a></li></ul>
+<ul><li><a href="#1-快速开始" target="_blank" rel="noopener">快速开始</a></li><li><a href="#2-局域网功能" target="_blank" rel="noopener">局域网功能</a></li><li><a href="#3-私人服务器" target="_blank" rel="noopener">私人服务器</a></li><li><a href="#4-实体机搭建教程" target="_blank" rel="noopener">实体机搭建教程</a></li><li><a href="#5-远程接入内网穿透" target="_blank" rel="noopener">远程接入（内网穿透）</a></li><li><a href="#6-安全模型" target="_blank" rel="noopener">安全模型</a></li><li><a href="#7-故障排查" target="_blank" rel="noopener">故障排查</a></li><li><a href="#8-构建与分发" target="_blank" rel="noopener">构建与分发</a></li><li><a href="#更多资源" target="_blank" rel="noopener">更多资源</a></li></ul>
 <hr>
 <h2>1. 快速开始</h2>
 <p><strong>环境要求</strong></p>
@@ -64,10 +64,10 @@ adb install composeApp/build/outputs/apk/debug/composeApp-debug.apk</pre>
 <hr>
 <h2>2.5 ◇Mirtazapine Shield</h2>
 <h3>中文</h3>
-<p>内置的实时安全监测与应用锁（旗舰功能 ◇Mirtazapine Shield）。详细介绍见 <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md">MIRTAZAPINE_SHIELD.md</a>（含检测矩阵、响应链、开源下仍有效的安全设计）。</p>
+<p>内置的实时安全监测与应用锁（旗舰功能 ◇Mirtazapine Shield）。详细介绍见 <a href="/mirror/syna/mirtazapine-shield.html">MIRTAZAPINE_SHIELD.md</a>（含检测矩阵、响应链、开源下仍有效的安全设计）。</p>
 <ul><li><strong>开启</strong>：设置 → ◇Mirtazapine Shield → 打开（关闭需生物识别验证）。开启即一键全开全部防护。</li><li><strong>检测范围</strong>：Root（含 Magisk 隐藏 root、Xposed、Zygisk/Shamiko/LSPosed/Riru/EdXposed/TaiChi）、Frida 注入（路径/端口 27042+27043/内存映射/线程/TracerPid，<strong>JVM 与 native（NDK）双通道</strong>）、模拟器（含 test-keys）、USB 调试/ADB、SELinux、设备管理接管（MDM）、凭据变更、VPN/代理变更、<strong>用户 CA 证书新增与 ARP 欺骗（局域网中间人）</strong>、网络指纹（SSID 变化）、系统代理、设备身份变化、后台快速切换、无障碍滥用、监控类应用（安装+前台，<strong>签名学习黑名单——改名/换包依然命中</strong>）、<strong>屏幕录制/截屏事件（Android 14+）</strong>、投屏变化、时钟跳变、弱锁屏、输入法/USB 变化、<strong>可疑可执行模块（分区白名单 + 非 JIT memfd，不依赖名字）</strong>、降级安装、JVM agent、远程控制进程。</li><li><strong>检测到威胁时</strong>：应用锁定到全屏护盾页并列出威胁（含具体模块/代理等明细）；需<strong>生物识别（仅强生物识别，设备凭据窗口无效）+ （可选）TOTP 动态码第二因子</strong>解锁。解锁 5 分钟后自动再锁；严重级威胁 30 秒内未消除将再次锁定；注入类威胁进入假锁模式（密钥真实释放，需连续多次验证）。<strong>关闭护盾同样需要生物识别 + TOTP 双因子</strong>——攻击者无法关闭已开启的护盾。</li><li><strong>数据级密钥门禁</strong>：聊天数据由"会话密钥"加密，会话密钥经<strong>生物识别认证绑定</strong>的 Keystore 密钥包裹——<strong>没有生物识别认证，新写入的数据不可解</strong>（设备丢失/被攻陷时数据级防护，不依赖检测）；锁定即释放内存会话密钥；<strong>每次解锁轮换会话密钥</strong>（前向安全：旧内存 dump 快速失效）。</li><li><strong>自毁协议（可选）</strong>：设置中开启后，严重级破解信号（Root/调试/凭据/设备管理/暴力尝试）会立即销毁本地聊天记录与接收文件，并清除剪贴板与通知。</li><li><strong>自保护</strong>：APK 签名指纹校验（重打包触发锁定）；dex 哈希自校验；版本降级防护；设置 HMAC 签名（篡改/清除即强制恢复）；内存状态 HMAC；<strong>心跳门禁（fail-closed：检测线程停滞 → 拒绝解密）</strong>；<strong>看门狗环形哨兵</strong>（3 线程互盯）；<strong>native 反 hook 层（NDK）</strong>：检测 I/O 全部 syscall 直通（GOT/PLT/LD_PRELOAD hook 失效）、自身代码段内存-磁盘哈希比对 + 导出函数入口自校验（inline hook 检测函数本身也命中）、libc 关键函数入口校验（JVM+native 双通道）；防截屏与截屏事件检测；剪贴板/通知保护；哈希链 + AES-GCM 加密审计日志；暴力防护（失败上限+指数冷却）；后台 60 秒自动擦除内存明文。</li><li><strong>实时状态面板</strong>：设置页展示门禁新鲜度、看门狗状态、假锁模式、生物识别失败计数与最近审计事件。</li><li><strong>能力边界</strong>：设备所有者级监控（系统预装/企业 MDM）与内核级 rootkit（伪造 /proc 数据）无法被应用层检测；补偿控制为 fail-closed 门禁、数据级密钥门禁、native 反 hook 与自毁协议——详见 <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md#16-honest-boundary-again-plainly">MIRTAZAPINE_SHIELD.md §16</a>。全开源（GPL-3.0）下防护依然有效。</li></ul>
 <h3>English</h3>
-<p>A real-time security monitor and app lock built into the client. Full design & detection matrix: <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md">MIRTAZAPINE_SHIELD.md</a>.</p>
+<p>A real-time security monitor and app lock built into the client. Full design & detection matrix: <a href="/mirror/syna/mirtazapine-shield.html">MIRTAZAPINE_SHIELD.md</a>.</p>
 <ul><li><strong>Enable</strong>: Settings → ◇Mirtazapine Shield → toggle on (disabling requires biometric verification). One switch enables every protection.</li><li><strong>What it detects</strong>: Root (incl. Magisk hidden root, Xposed, Zygisk/Shamiko/LSPosed), Frida injection (paths, ports 27042+27043, memory maps, threads, TracerPid — <strong>JVM + native (NDK) dual-channel</strong>), emulator (incl. test-keys), USB debugging/ADB, SELinux, device-admin takeover (MDM), credential changes, VPN/proxy changes, <strong>user CA additions & ARP spoofing (LAN MITM)</strong>, network fingerprint (SSID change), rapid background switching, accessibility abuse, monitoring apps (installed + foreground), <strong>screen capture/recording events (Android 14+)</strong>, mirroring changes, clock tampering, weak lock screen, downgrade attempts, JVM agents, remote-control processes.</li><li><strong>When a threat is detected</strong>: full-screen shield page listing the threat(s); unlock requires <strong>biometrics + (optional) TOTP second factor</strong>. Unlock expires after 5 minutes; critical threats re-lock after 30s; injection threats engage a honeypot fake-lock (real key release, repeated verification).</li><li><strong>Data-level key gate</strong>: chat data is encrypted with a session key wrapped by a <strong>biometric-authenticated Keystore key</strong> — without an authentication event, newly written data is unreadable (data-level protection on device loss/compromise, independent of detection); locking releases the in-memory session key.</li><li><strong>Self-destruct protocol (optional)</strong>: a critical compromise signal wipes local chats & received files immediately and clears clipboard & notifications.</li><li><strong>Self-protection</strong>: APK signature verification (anti-repackaging), dex hash self-verification, downgrade defense, HMAC-signed settings, in-memory state HMAC, <strong>fail-closed heartbeat gate</strong>, <strong>watchdog ring</strong> (3 threads), screen-capture protection & capture-event detection, clipboard/notification protection, hash-chained + AES-GCM audit log, brute-force protection (fail limit + exponential cooldown), 60s background memory wipe.</li><li><strong>Live status panel</strong>: gate freshness, watchdog trips, honeypot state, biometric fail counter, latest audit events.</li><li><strong>Honest boundary</strong>: system-level pre-installed monitoring / MDM (device-owner privileges) cannot be detected by an app — the Shield provides the strongest app-layer protection, and it stays effective under full disclosure (GPL-3.0).</li></ul>
 <h2>3. 私人服务器</h2>
 <p>私人服务器就是由你自己架设的持久化群聊——类似 Minecraft 服务器。知道 <code>IP:端口 + 密码</code> 的人都能加入，即使所有人离线，历史也保存在服务器上。</p>
@@ -82,7 +82,7 @@ java -jar syna-server.jar --launcher # 强制启动器模式</pre>
 <p><strong>2. 所有参数</strong></p>
 <table><thead><tr><th>参数</th><th>说明</th><th>默认值</th></tr></thead><tbody><tr><td><code>-p, --port</code></td><td>监听端口</td><td>45880</td></tr><tr><td><code>-w, --password</code></td><td>连接密码</td><td><code>syna</code>（请务必修改！）</td></tr><tr><td><code>-g, --group</code></td><td>群名称</td><td><code>Syna 私服</code></td></tr><tr><td><code>-d, --data-dir</code></td><td>数据目录（历史持久化于此）</td><td><code>./syna-server-data</code></td></tr><tr><td><code>--history</code></td><td>历史消息条数上限</td><td>200</td></tr><tr><td><code>--ui</code></td><td>启动图形界面</td><td>—</td></tr></tbody></table>
 <p><strong>3. 客户端加入服务器</strong></p>
-<ol><li>应用中：<strong>联系人 → 加入服务器</strong>。</li><li>输入服务器地址（<code>IP:端口</code>——局域网 IP、公网 IP 或穿透域名均可）、密码，点击<strong>加入服务器</strong>。</li><li>自动进入服务器群聊，并拉取完整历史记录。标题栏显示 🖥 与连接状态。</li><li>服务器在路由器后面时，参考<a href="#5-远程接入内网穿透">第 5 节</a>远程接入。</li></ol>
+<ol><li>应用中：<strong>联系人 → 加入服务器</strong>。</li><li>输入服务器地址（<code>IP:端口</code>——局域网 IP、公网 IP 或穿透域名均可）、密码，点击<strong>加入服务器</strong>。</li><li>自动进入服务器群聊，并拉取完整历史记录。标题栏显示 🖥 与连接状态。</li><li>服务器在路由器后面时，参考<a href="#5-远程接入内网穿透" target="_blank" rel="noopener">第 5 节</a>远程接入。</li></ol>
 <p><strong>4. 数据与持久化</strong></p>
 <ul><li>历史以群密钥加密后存储在数据目录的 <code>history.jsonl</code> 中。</li><li>服务器重启后身份（<code>server-id</code>）与全部历史均保留。</li><li>阅后即焚消息焚毁时，服务器历史中的记录也会同步清除。</li><li>撤回的消息在历史中保持"已撤回"标记，后加入者看到的会话状态一致。</li></ul>
 <p><strong>5. 服务器管理（图形界面模式）</strong></p>
@@ -95,7 +95,7 @@ java -jar syna-server.jar --launcher # 强制启动器模式</pre>
 <ul><li>一台实体机（Windows / macOS / Linux 均可，下面分系统讲）。树莓派 3B+ 及以上也行。</li><li>Java 17（只要 JRE 运行时即可，不需要完整 JDK）。</li><li>服务器程序：到 <a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">GitHub Releases</a> 下载 <code>Syna-server-v0.3.0.jar</code>。</li><li>（可选）路由器管理员密码——用于端口转发，见下文"路由器端口转发"。</li></ul>
 <p><strong>每个系统通用的四步公式</strong></p>
 <ol><li>安装 Java 17</li><li>把 <code>syna-server.jar</code> 放到固定文件夹</li><li>用你的密码和群名启动它</li><li>放行防火墙端口（可选：配置开机自启）</li></ol>
-<p>之后，局域网内任何人用 <code>你的内网IP:45880</code> + 密码 即可加入。外面的朋友要连，请看<a href="#5-远程接入内网穿透">第 5 节</a>。</p>
+<p>之后，局域网内任何人用 <code>你的内网IP:45880</code> + 密码 即可加入。外面的朋友要连，请看<a href="#5-远程接入内网穿透" target="_blank" rel="noopener">第 5 节</a>。</p>
 <hr>
 <h4>Windows（最主流，跟着点鼠标即可）</h4>
 <p><strong>第 1 步 — 安装 Java 17</strong></p>
@@ -208,7 +208,7 @@ systemctl status syna-server                     # 绿色 active 即成功</pre>
 <blockquote><p>日常管理：<code>sudo systemctl restart syna-server</code> 重启 / <code>stop</code> 停止 / <code>journalctl -u syna-server -f</code> 实时看日志。</p></blockquote>
 <hr>
 <h4>路由器端口转发（想公网直连时）</h4>
-<blockquote><p>用 frp/ngrok/Tailscale（见<a href="#5-远程接入内网穿透">第 5 节</a>）的话<strong>跳过这里</strong>。只有想让别人直接连你家公网 IP 才需要。</p></blockquote>
+<blockquote><p>用 frp/ngrok/Tailscale（见<a href="#5-远程接入内网穿透" target="_blank" rel="noopener">第 5 节</a>）的话<strong>跳过这里</strong>。只有想让别人直接连你家公网 IP 才需要。</p></blockquote>
 <ol><li>浏览器打开路由器管理页（通常是 <code>192.168.1.1</code> 或 <code>192.168.0.1</code>，路由器背面标签上有），登录。</li><li>找 <strong>端口转发 / 虚拟服务器 / Port Forwarding / NAT 设置</strong>（不同品牌叫法不同，一般在"高级设置"里）。</li><li>添加规则：</li></ol>
 <ul><li>外部端口: <code>45880</code></li><li>内部 IP: 服务器的内网 IP（如 <code>192.168.1.100</code>）</li><li>内部端口: <code>45880</code></li><li>协议: <code>TCP</code></li><li>保存，部分路由器需要重启才生效。</li></ul>
 <ol><li>公网访问：打开 <a href="https://ip.sb" target="_blank" rel="noopener">ip.sb</a> 查你家的<strong>公网 IP</strong>，别人用 <code>公网IP:45880</code> + 密码 加入。</li></ol>
