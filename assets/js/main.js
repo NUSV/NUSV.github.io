@@ -108,6 +108,14 @@
     } catch (e) {
       /* storage unavailable (private mode) — ignore */
     }
+    try {
+      const url = new URL(window.location.href);
+      if (next === "en") url.searchParams.delete("lang");
+      else url.searchParams.set("lang", next);
+      history.replaceState(null, "", url);
+    } catch (e) {
+      /* history unavailable — ignore */
+    }
   };
 
   let saved = null;
@@ -116,7 +124,21 @@
   } catch (e) {
     saved = null;
   }
-  applyLang(saved === "zh" ? "zh" : "en");
+
+  let fromUrl = null;
+  try {
+    fromUrl = new URLSearchParams(window.location.search).get("lang");
+  } catch (e) {
+    fromUrl = null;
+  }
+
+  const initial =
+    fromUrl === "zh" || fromUrl === "en"
+      ? fromUrl
+      : saved === "zh"
+        ? "zh"
+        : "en";
+  applyLang(initial);
 
   const toggle = document.getElementById("lang-toggle");
   if (toggle) {
