@@ -382,8 +382,20 @@ def fetch_releases(repo_name, token):
     return out
 
 
-def fetch_readme(repo_name, branch, token):
-    url = "%s/%s/%s/%s/README.md" % (RAW, ORG, repo_name, branch)
+def fetch_repo_text(repo_name, branch, path, token):
+    """Fetch a text file from a repo, preferring the contents API (fresh,
+    not CDN-cached) and falling back to raw for files over the API's
+    1 MB inline limit."""
+    data = http_json(
+        "%s/repos/%s/%s/contents/%s?ref=%s" % (API, ORG, repo_name, path, branch),
+        token,
+    )
+    if data and data.get("content"):
+        try:
+            return __import__("base64").b64decode(data["content"]).decode("utf-8")
+        except Exception:
+            pass
+    url = "%s/%s/%s/%s/%s" % (RAW, ORG, repo_name, branch, path)
     req = urllib.request.Request(url)
     if token:
         req.add_header("Authorization", "Bearer " + token)
@@ -395,6 +407,10 @@ def fetch_readme(repo_name, branch, token):
         if e.code in (404, 403):
             return None
         raise
+
+
+def fetch_readme(repo_name, branch, token):
+    return fetch_repo_text(repo_name, branch, "README.md", token)
 
 
 def get_mirror_manifest(token):
@@ -1194,7 +1210,7 @@ def main():
 
         # pass 2: fetch and render
         for path, slug, local in plan:
-            raw = http_text(resolve_raw(proj["repo"], proj["branch"], path), token)
+            raw = fetch_repo_text(proj["repo"], proj["branch"], path, token)
             if raw is None:
                 print("  doc missing: %s/%s" % (proj["repo"], path))
                 continue
