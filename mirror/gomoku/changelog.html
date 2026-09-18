@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — Gomoku-NUSV | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Changelog — mirrored from the Gomoku-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/gomoku.html">&#8249; Gomoku-NUSV</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Gomoku-NUSV/logo2.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
+        <h1>Changelog</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">NUSV/Gomoku-NUSV</a> &middot; <code>CHANGELOG.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/CHANGELOG.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p>All notable changes to Gomoku-NUSV are documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/" target="_blank" rel="noopener">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" target="_blank" rel="noopener">Semantic Versioning</a>.</p>
+<h2>[1.6.4] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知</h2>
+<blockquote><p><strong>EN — Updates reset the local save (by design).</strong> Every app version starts fresh: after installing a new version, the old save is not kept and the game starts as a new player. To carry your progress over:</p>
+<ol><li><strong>Before updating</strong>: Settings → Save backup → Export, and keep the text.</li><li><strong>After updating</strong>: Settings → Save backup → paste the text into the import</li></ol>
+<p>box (or copy it and press Import) — it is checksum-verified and restored.</p>
+<p>Known historical issue: v1.3.0 had a save-encryption round-trip defect (fixed in v1.3.1).</p>
+<p><strong>中文 — 更新会重置本地存档（设计如此）。</strong> 每个版本号是一次全新开始：安装新版本后，旧存档不会被保留，游戏会以新玩家状态启动。 想延续存档进度：</p>
+<ol><li><strong>更新前</strong>：设置 → 存档备份 → 导出存档，保存导出的文本。</li><li><strong>更新后</strong>：设置 → 存档备份 → 将文本粘贴到输入框（或复制后点"导入存档"），校验通过即恢复。</li></ol>
+<p>历史已知问题：v1.3.0 曾存在存档加密往返缺陷（v1.3.1 已修复）。</p></blockquote>
+<h2>[1.4.6-compatibility] - 2026-08-01</h2>
+<h3>Added</h3>
+<ul><li><strong>Android Automotive (车机) variant</strong> — a dedicated <code>automotive</code> product flavor:</li></ul>
+<p>landscape-locked, declares <code>android.hardware.type.automotive</code>, separate package (<code>com.gomoku.nusv.automotive</code>). Installable on Android Automotive OS and most domestic car head units via sideload/car app stores. Suited for parked use / front-seat passenger and rear-seat entertainment.</p>
+<ul><li><strong>iOS support</strong> — the app now builds for iPhone/iPad (arm64 device and arm64</li></ul>
+<p>simulator; Xcode project in <code>iosApp/</code>). All game logic, AI, saves and UI are shared; iOS-specific code covers dates (NSDate), settings (NSUserDefaults via multiplatform-settings) and the ComposeUIViewController entry point. Sound is currently muted on iOS (AudioToolbox integration planned).</p>
+<ul><li><strong>Windows support (compatibility edition)</strong> — the desktop target now builds a</li></ul>
+<p>Windows <code>.msi</code> installer (<code>./gradlew :composeApp:packageMsi</code>, built on Windows) alongside macOS and Android. All game logic, AI, saves and UI are shared; the desktop code uses only cross-platform JVM APIs (audio via javax.sound, dates via java.time), so the Windows build needs no code changes.</p>
+<ul><li><strong>Linux support</strong> — a <code>.deb</code> installer is produced by the **Linux Installer</li></ul>
+<p>Builder** workflow (<code>.github/workflows/linux-build.yml</code>, built on an Ubuntu runner). All game logic, AI, saves and UI are shared with the other platforms.</p>
+<ul><li>Desktop window opens with an OS-aware startup log; layout adapts from 700 px</li></ul>
+<p>wide up to large screens (responsive columns, wrapping chip groups, compact headers) for consistent experience across macOS / Windows / Android at any DPI.</p>
+<h3>[1.6.4] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知（重要）</h2>
+<ul><li><strong>EN</strong>: Updating to 1.4.6-compatibility resets the local save (new-player</li></ul>
+<p>state). To keep progress: export your save before updating and import it after. The Windows installer must be built on a Windows machine (jpackage cannot cross-build .msi from macOS).</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。Windows 安装包需在 Windows 机器上构建（macOS 无法交叉打包 .msi）。</li></ul>
+<h2>[1.4.6] - 2026-08-01</h2>
+<h3>Fixed</h3>
+<ul><li><strong>Bogus timeout forfeit on an empty board</strong> — the move timer ran everywhere,</li></ul>
+<p>so staying on the Home screen (or starting a game without moving) for longer than the per-move limit silently forfeited the game (e.g. a brand-new install suddenly showing 1 loss). The timeout countdown now starts only after the first stone is placed.</p>
+<ul><li>Removed the leftover hardcoded Chinese accessibility label on the board canvas.</li></ul>
+<h3>Added</h3>
+<ul><li><strong>Reset Save button in Settings</strong> with a two-step confirmation dialog:</li></ul>
+<p>first confirmation, then a second "cannot be undone" confirmation. It restores the game to a fresh state (stats, points, power-ups, sign-in, tasks).</p>
+<h3>[1.6.4] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知（重要）</h2>
+<ul><li><strong>EN</strong>: Updating to 1.4.6 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.4.5] - 2026-08-01</h2>
+<h3>Changed</h3>
+<ul><li>The shop is renamed to <strong>积分商店 / Shop</strong> (it sells both decorations and</li></ul>
+<p>power-ups, so "Decoration Shop" no longer fit).</p>
+<h3>Fixed</h3>
+<ul><li><strong>Daily-task rewards were awarded twice</strong> — <code>onEvent</code> already adds the reward</li></ul>
+<p>to the score, and callers added it again, doubling every task reward. Fixed in game end and both power-up paths.</p>
+<ul><li><strong>Power-up stock was not persisted</strong> — consuming a hint/time boost updated the</li></ul>
+<p>in-memory stock but never saved it; a restart restored the old stock. Both power-up uses now save immediately.</p>
+<ul><li><strong>Effects master switch was not persisted</strong> — the toggle now survives restarts.</li><li>The shop no longer shows a decoration as "in use" when the imported save</li></ul>
+<p>references an unowned item.</p>
+<ul><li>Removed dead per-effect toggle code.</li></ul>
+<h3>[1.6.4] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知（重要）</h2>
+<ul><li><strong>EN</strong>: Updating to 1.4.5 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.4.4] - 2026-08-01</h2>
+<h3>Changed</h3>
+<ul><li><strong>Updates reset the save (intended)</strong> — each app version starts fresh. When a</li></ul>
+<p>save from another version is detected, it is reset to a new-player state and old unfinished games are cleared. To keep progress, export the save before updating and import it afterwards.</p>
+<ul><li>Saves now record the app version they belong to; imported saves are tagged with</li></ul>
+<p>the current version so they are never reset again.</p>
+<ul><li>Legacy plain-text profile keys from 1.3.x are cleaned up after loading.</li></ul>
+<h3>[1.6.4] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知（重要）</h2>
+<ul><li><strong>EN</strong>: Updating to 1.4.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after. Users coming from 1.4.3 should back up in advance.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前先在 设置 → 存档备份 → 导出存档；更新后导入即可恢复。从 1.4.3 升级的用户请注意提前备份。</li></ul>
+<h2>[1.4.3] - 2026-08-01</h2>
+<h3>Added</h3>
+<ul><li><strong>Import via text box</strong> — the Settings page now has a paste field for save</li></ul>
+<p>data; import works by pasting the exported JSON into the field (clipboard import remains available as a shortcut).</p>
+<ul><li><strong>Purchasable power-ups</strong> — hints and time boosts are now stock-based:</li><li>New players start with 3 hints and 5 time boosts (migration included).</li><li>Each use consumes one from the stock; the in-game buttons show remaining</li></ul>
+<p>stock and disable when empty.</p>
+<ul><li>The shop sells hints (100 pts each) and time boosts (80 pts each) in packs</li></ul>
+<p>of 1 / 5 / 10, giving points a direct gameplay use.</p>
+<h3>[1.6.4] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
+<p>warning.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.4 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.3] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Sound master switch</strong> — a Sound toggle in Settings (persisted) turns all</li></ul>
+<p>game sounds (place, win, draw, timeout) on or off.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.3 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.2] - 2026-08-04</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li><strong>Board size is now synchronized between opponents.</strong> The host's board size</li></ul>
+<p>(13 / 15 / 19) is sent in the Start message and the joiner adopts it before the game begins, so both sides play on an identical board (previously each side kept its own setting, desyncing moves and win detection).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.1] - 2026-08-04</h2>
+<h3>Fixed (LAN battle — usability)</h3>
+<ul><li><strong>Room discovery could fail on some machines</strong>: <code>InetAddress.getLocalHost()</code></li></ul>
+<p>triggered a slow DNS reverse lookup (seconds), expiring the scan window before a single packet was sent. Scanning now enumerates NIC subnets directly (no DNS) and computes its deadline after setup, so scans always work.</p>
+<ul><li><strong>Leftover stones from a previous game</strong>: the board is now cleared when a LAN</li></ul>
+<p>session connects, so every LAN game starts fresh (previously a finished PVP game could carry over).</p>
+<ul><li><strong>AI could play in LAN games</strong>: if the last mode was vs-AI, the AI might move</li></ul>
+<p>automatically during a LAN battle. LAN sessions now force two-player mode.</p>
+<ul><li><strong>Bogus "opponent disconnected" after leaving</strong>: manually leaving a LAN</li></ul>
+<p>session no longer shows a disconnect notice.</p>
+<ul><li>Faster timeouts: host wait 20 s → 12 s, join connect 10 s → 8 s.</li><li>Rewrote the scan implementation cleanly and added a full-flow integration</li></ul>
+<p>test (discovery → connect → Start/Move/Undo/Resign over the wire).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.0-S] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Dedicated LAN page flow</strong> — LAN battle now has its own screens:</li></ul>
+<p>Home → Multiplayer (LAN / same-screen) → LAN mode select (create room with a custom name, or scan & join) → <strong>waiting lobby</strong> (host sees the room name / IP and waits for the opponent; the joiner waits for the host) → game starts when the host presses <strong>Start Game</strong>.</p>
+<ul><li>Leaving the game page ends the LAN session automatically; an explicit</li></ul>
+<p><strong>Leave LAN</strong> button is available during play.</p>
+<ul><li>Lobby states: host waiting for opponent, opponent joined (start enabled),</li></ul>
+<p>joiner waiting for host start; disconnect notice.</p>
+<h3>Fixed</h3>
+<ul><li>Lobby now appears immediately after creating a room (previously the mode</li></ul>
+<p>select stayed visible until the opponent connected).</p>
+<ul><li>LAN games no longer accept moves before the host starts the game.</li></ul>
+<h3>Compatibility</h3>
+<ul><li>Full-platform verification in one pass: Android (phone + automotive builds),</li></ul>
+<p>macOS dmg, iOS device + simulator (both Kotlin targets and Xcode builds succeeded), Windows/Linux via Actions builders, full desktop test suite green.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.6.0-S resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.3-super] - 2026-08-03</h2>
+<h3>Fixed (stability)</h3>
+<ul><li><strong>Critical</strong>: incoming LAN messages were handled on the socket read thread and</li></ul>
+<p>mutated Compose state off the main thread — this could crash or corrupt the UI. All LAN callbacks now dispatch to the main thread.</p>
+<ul><li><strong>Critical</strong>: Android was missing the <code>INTERNET</code> / network-state permissions,</li></ul>
+<p>so LAN play failed on Android. Permissions added to the manifest.</p>
+<ul><li><strong>iOS build regression</strong>: <code>lanHostIp()</code> used <code>java.net</code> in common code, which</li></ul>
+<p>broke the iOS target. It is now an expect/actual (JVM implementation moved to desktop/android, iOS returns empty).</p>
+<ul><li>Stale LAN scans no longer update the room list after leaving/stopping LAN</li></ul>
+<p>(scan generation guard).</p>
+<h3>Compatibility</h3>
+<ul><li>Verified builds for all platforms in one pass: Android (phone + automotive),</li></ul>
+<p>macOS dmg, Windows/Linux via Actions builders, iOS device + simulator (Xcode build succeeded), and the full desktop test suite (all green).</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.3-super resets the local save (new-player state). To</li></ul>
+<p>keep progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.2] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN room discovery</strong> — no more typing IP addresses:</li><li>Create a room with a custom <strong>room name</strong>; the host broadcasts it over UDP.</li><li>Join by pressing <strong>Scan for rooms</strong>: the app finds every room on the local</li></ul>
+<p>network (name + IP) and joins with one tap.</p>
+<ul><li>UDP broadcast fallback notice if the discovery port is busy (IP join still</li></ul>
+<p>available internally).</p>
+<ul><li>LAN IP display now prefers the routed LAN address over loopback.</li></ul>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.2 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.1] - 2026-08-03</h2>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>LAN games are no longer persisted — resuming a LAN save made no sense (the</li></ul>
+<p>opponent would be stuck) and could leave the board unplayable.</p>
+<ul><li>Hints and time boosts could be used on the opponent's turn in LAN mode; they</li></ul>
+<p>are now restricted to your own turn, like regular play.</p>
+<ul><li>A timeout forfeit in LAN mode is now sent to the opponent (as a resign), so</li></ul>
+<p>both sides end the game instead of the remote board hanging.</p>
+<ul><li>Disconnect notice is now visible after leaving the LAN panel, with a hint to</li></ul>
+<p>re-create/join; host wait timeout reduced from 60 s to 20 s for snappier cancel/retry.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.1 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.5.0] - 2026-08-03</h2>
+<h3>Added</h3>
+<ul><li><strong>LAN (local network) battle</strong> — play against another device on the same WiFi</li></ul>
+<p>network, no internet required:</p>
+<ul><li>Host a room (TCP port 45678) and wait for the opponent, or join by entering</li></ul>
+<p>the host's IP address.</p>
+<ul><li>Host plays Black, joiner plays White; moves, undo, restart and resign are</li></ul>
+<p>synchronized over a line-based JSON protocol.</p>
+<ul><li>Connection status, host IP display (routed address with network-interface</li></ul>
+<p>fallback), disconnect detection with a draw settlement.</p>
+<ul><li>Works on Android and all desktop platforms; iOS shows an unsupported notice</li></ul>
+<p>(socket adapter planned for a later version).</p>
+<ul><li><strong>LAN protocol tests</strong> — message round-trips (JSON discriminator) and a real</li></ul>
+<p>loopback host/client socket exchange test.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.5.0 resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>Upgrade Notes / 升级须知</h2>
+<ul><li><strong>EN</strong>: Every new app version starts fresh — old saves are not kept. To carry</li></ul>
+<p>progress over: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 每个新版本号都会以新玩家状态开始，旧存档不保留。想延续进度：更新前 设置 → 存档备份 → 导出存档，更新后导入。</li></ul>
+<h2>[1.4.2] - 2026-08-01</h2>
+<h3>Fixed</h3>
+<ul><li>Result dialog congratulated the wrong side in two-player mode (it always showed</li></ul>
+<p>the opponent of the last mover). It now names the actual winner.</p>
+<ul><li>The low-performance notice auto-dismissed too slowly (4 s); reduced to 2.5 s.</li><li>The Achievements and Stats buttons in the in-game settings panel did nothing</li></ul>
+<p>(leftover dialog wiring). They now navigate to the dedicated pages.</p>
+<ul><li>Removed the obsolete in-game stats dialog and its unused controller state.</li></ul>
+<h3>Changed</h3>
+<ul><li>In-app version now reads from a single constant (<code>APP_VERSION</code>), shown as</li></ul>
+<p>Gomoku-NUSV 1.4.2 in Settings.</p>
+<h2>[1.4.1] - 2026-08-01</h2>
+<h3>Changed</h3>
+<ul><li><strong>Much stronger AI</strong> — the engine was rebuilt around threat-space search</li></ul>
+<p>(inspired by the NUSV-Lite Gomoku mini app):</p>
+<ul><li>Forced moves are detected and expanded first: immediate win, blocking an</li></ul>
+<p>immediate opponent win, creating an open four, and intelligently blocking an opponent's open four (choosing the point that leaves the fewest remaining threats).</p>
+<ul><li>When a forced move exists, only it is searched — the same budget now reaches</li></ul>
+<p>far deeper lines (VCF-style continuation past the depth limit).</p>
+<ul><li>Incremental evaluation (delta evaluation on the affected lines) keeps search</li></ul>
+<p>fast on low-end phones.</p>
+<ul><li>Refined line scoring (open vs. blocked two/three/four gradients).</li><li>Easy mode also wins/blocks immediate threats before playing greedily.</li><li>Search depths: Medium 3→4, Hard 6→8 on desktop; mobile caps raised to 6 plies</li></ul>
+<p>(was 4) with the existing 3-second budget.</p>
+<h3>Notes</h3>
+<ul><li>Medium on phones now uses the same threat-space search as Hard, making it a</li></ul>
+<p>reasonable challenge; Hard is substantially stronger.</p>
+<h2>[1.4.0] - 2026-08-01</h2>
+<h3>Added</h3>
+<ul><li><strong>Points economy (engagement)</strong> — every game now awards points (win +100 with</li></ul>
+<p>streak bonuses, draw +30, loss +10) that are spent in the decoration shop.</p>
+<ul><li><strong>Daily sign-in</strong> — sign in every day for a growing streak bonus (50 base,</li></ul>
+<p>+10 per consecutive day, capped at 10), with streak and total counters.</p>
+<ul><li><strong>Daily tasks</strong> — three random tasks per day (play a game, win a game, win vs</li></ul>
+<p>AI, use a power-up) with point rewards; progress is tracked and persisted.</p>
+<ul><li><strong>Decoration shop</strong> — spend points on cosmetic upgrades that do not affect</li></ul>
+<p>gameplay: effect particle colors (golden / amethyst), stone glow (golden / azure), and a dual-neon win line. Purchases and equipped choices persist and sync via save export/import.</p>
+<ul><li><strong>Effects master switch</strong> — a single toggle in Settings turns all board</li></ul>
+<p>effects on or off.</p>
+<ul><li>Stats page now shows points, sign-in totals/streak, and completed daily tasks.</li></ul>
+<h3>Changed</h3>
+<ul><li>Settings theme grid now flows automatically (1-3 columns) on any screen width.</li><li>Home page cards and mode buttons adapt to narrow screens.</li></ul>
+<h2>[1.3.2] - 2026-08-01</h2>
+<h3>Fixed</h3>
+<ul><li><strong>Board invisible on phones (narrow screens)</strong> — the settings panel took all</li></ul>
+<p>available height in the portrait layout, squeezing the board to zero. The board now gets up to 55% of the height and the panel is capped at 45% with internal scrolling.</p>
+<ul><li>Content now respects the system bars (safe-drawing insets) on Android.</li></ul>
+<h2>[1.3.1] - 2026-08-01</h2>
+<h3>Fixed</h3>
+<ul><li><strong>Save encryption round-trip bug (critical)</strong> — the base64 encoder produced wrong</li></ul>
+<p>characters whenever the payload length was not a multiple of 3, so encrypted saves could not be decrypted and profiles were reset. All save data now round-trips correctly; tamper checks still work.</p>
+<ul><li>White player's winning line was not highlighted (highlight always checked black).</li><li>Undo could leave the game stuck on the AI's turn when the player played White.</li><li>The move timer was not restarted after Restart, so timeout forfeits stopped</li></ul>
+<p>working after the first game.</p>
+<ul><li>The move timer ran while the "resume game" dialog was shown.</li><li>Tic-Tac-Toe: in two-player mode the board did not refresh after a move, and in</li></ul>
+<p>vs-AI mode an AI win counted as a player win.</p>
+<ul><li>Undo now also clears the hint marker.</li></ul>
+<h2>[1.3.0] - 2026-08-01</h2>
+<h3>Added</h3>
+<ul><li><strong>Multi-page app</strong> — a proper navigation structure instead of a single board</li></ul>
+<p>screen: Home (title card, mode selection, entries), Game, Tic-Tac-Toe minigame, Achievements, Stats, Titles, and Settings pages with fade transitions.</p>
+<ul><li><strong>Save encryption</strong> — local saves are stored obfuscated with a rolling XOR</li></ul>
+<p>cipher and an integrity checksum, so editing the save file by hand no longer works (legacy plain-text saves still load).</p>
+<ul><li><strong>Save export / import</strong> — export copies a versioned JSON (with public checksum)</li></ul>
+<p>to the clipboard; import validates and restores it. Works across macOS and Android, enabling cross-device save sync.</p>
+<ul><li><strong>Power-ups</strong> — during a Gomoku game: a Hint power-up (AI recommends the best</li></ul>
+<p>move, highlighted on the board, once per game) and a +30 s time boost (twice per game).</p>
+<ul><li><strong>Title system</strong> — eight rank titles earned from stats (first win, 3-streak,</li></ul>
+<p>10/25/50 wins, 100 games, 10 Hard wins, Gomoku Master), shown on the Home page and in a dedicated Titles page.</p>
+<ul><li><strong>Four new themes</strong> — Violet Night, Maple Glow, Midnight Galaxy, and Ink Wash</li></ul>
+<p>(10 themes total).</p>
+<ul><li><strong>Detailed statistics</strong> — total play time, fastest win, longest game, and theme</li></ul>
+<p>usage counts, in addition to win rate, streaks, and per-difficulty wins.</p>
+<ul><li><strong>Tic-Tac-Toe minigame</strong> — play vs AI or two-player on the same screen, with its</li></ul>
+<p>own win counter.</p>
+<h3>Changed</h3>
+<ul><li>All sci-fi effects are now permanently enabled (per-effect switches removed).</li><li>The app opens on a Home page instead of directly on the board.</li></ul>
+<h2>[1.2.0] - 2026-08-01</h2>
+<h3>Changed</h3>
+<ul><li><strong>Score and coin systems removed.</strong> All themes and effects are now unlocked from</li></ul>
+<p>the start — full customization with zero grind. The theme and effect shops were removed; every board style and sci-fi effect is available directly in the settings panel.</p>
+<ul><li>Achievements are now pure collectibles (no coin rewards).</li><li>The statistics dialog no longer shows score or owned-theme counters.</li></ul>
+<h2>[Unreleased]</h2>
+<h3>Added</h3>
+<ul><li><strong>Language switching</strong> — Simplified Chinese and English, switchable in the</li></ul>
+<p>settings panel and persisted per device. All UI strings, settlement breakdowns, achievements, effects and theme descriptions are localized.</p>
+<ul><li><strong>Sci-fi board effects</strong> — four animated effects, unlocked with coins and toggled</li></ul>
+<p>per effect in the settings panel:</p>
+<ul><li>Energy Ripple: expanding energy rings on every stone placement *(free, enabled</li></ul>
+<p>by default for new players)*</p>
+<ul><li>Particle Starfield: star-particle bursts on placement and along the winning line</li><li>Hologram Sweep: a periodic scanning beam sweeping across the board</li><li>Neon Trail: flowing neon energy along the winning line</li><li><strong>Coin economy</strong> — wins award 50 coins, draws 10; coins are spent in the theme</li></ul>
+<p>and effect shops.</p>
+<ul><li><strong>Achievement system</strong> — seven achievements (first win, win counts, win streaks,</li></ul>
+<p>Hard-mode wins, games played, draws) granting coin rewards; unlocked achievements are shown in a dedicated dialog and pop up as an animated toast.</p>
+<ul><li><strong>Statistics dialog</strong> — win rate, streaks, totals, and per-difficulty win bars.</li><li><strong>Theme shop</strong> — three new purchasable themes (Bamboo, Mint, Rose) alongside the</li></ul>
+<p>three built-in free ones.</p>
+<ul><li>Victory line highlighting on the board (gradient stroke over the winning stones).</li><li>Theme crossfade animation when switching boards.</li></ul>
+<h3>Changed</h3>
+<ul><li>The low-performance AI notice now follows the active theme (surface colors and</li></ul>
+<p>accent border) and uses a minimal layout.</p>
+<ul><li>Effect coordinates are density-aware, so particle positions stay accurate on</li></ul>
+<p>high-density Android screens.</p>
+<ul><li>Chip groups wrap onto multiple lines when localized text is long (FlowRow), and</li></ul>
+<p>the header compacts on narrow screens.</p>
+<h3>Fixed</h3>
+<ul><li>AI search no longer mutates the displayed board: the engine now works on a</li></ul>
+<p>private copy, so no temporary stones flash on the board while the AI is thinking.</p>
+<ul><li><code>GomokuAI.bestMove</code> guarantees the input board is left unchanged even when the</li></ul>
+<p>search hits its time budget.</p>
+<h2>[1.0.0] - 2026-08-01</h2>
+<p>First public release.</p>
+<h3>Added</h3>
+<ul><li>Cross-platform game engine and UI for macOS and Android built with Kotlin</li></ul>
+<p>Multiplatform and Compose Multiplatform.</p>
+<ul><li>Local two-player mode and player-versus-AI mode with black/white side selection.</li><li>Three AI difficulty levels (Easy / Medium / Hard) backed by a self-contained</li></ul>
+<p>minimax engine with alpha-beta pruning, iterative deepening, and deterministic move ordering.</p>
+<ul><li>Platform-aware AI budgets: search depth and per-move time limit are capped</li></ul>
+<p>independently for desktop and mobile; when the budget is exceeded the search is truncated and a performance notice is displayed.</p>
+<ul><li>Optional per-move countdown timer (10–300 seconds) with timeout forfeit.</li><li>Undo (both sides in AI mode), resign with confirmation, and restart.</li><li>Automatic persistence of unfinished games with a resume dialog on startup.</li><li>Persistent player profile: score, wins, losses, draws, win streak, and best</li></ul>
+<p>streak; scoring includes win base, streak bonus, and time bonus.</p>
+<ul><li>Board sizes 13×13, 15×15, and 19×19 with star points.</li><li>Three color themes (wood, deep space, ocean) with persisted selection.</li><li>Board rendering with gradient stones, last-move marker, drop-in animation, and</li></ul>
+<p>hover preview.</p>
+<ul><li>On-device synthesized sound effects (place, win, draw, timeout).</li><li>Accessibility: the board exposes a semantic click action.</li><li>macOS packaging with a custom application icon injected into the <code>.app</code> bundle;</li></ul>
+<p>Android launcher icons (legacy densities and adaptive icon).</p>
+<ul><li>Unit tests covering win detection, AI tactics (win completion, block of a</li></ul>
+<p>four-in-a-row), AI self-play performance, and search benchmarks.</p>
+<h3>Notes</h3>
+<ul><li>macOS builds target the JVM desktop runtime and do not require Xcode.</li><li>Android builds target API 26 and above.</li></ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
