@@ -79,13 +79,17 @@ The mirror refreshes every 6 hours (orphan-commit + force-push keeps its history
 
 No build step for the hand-written pages: edit the HTML directly; styling lives in `assets/css/style.css`, scripts in `assets/js/main.js`, brand assets in `assets/img/`. Push to `main` — GitHub Pages deploys automatically.
 
-## Adding a language (i18n)
+## Languages (i18n)
 
-The site is English-first by design. To add translations later:
+English is the source language and is served inline. A Chinese translation ships in [`assets/js/i18n.js`](assets/js/i18n.js); the **EN / 中文** toggle in the navigation applies it client-side and remembers the choice via `localStorage`.
 
-1. Give elements a `data-i18n` key.
-2. Define overrides as `window.I18N["zh"] = { key: "值" }` in `assets/js/main.js`.
-3. Call `setLang("zh")` (the language toggle already calls `setLang`).
+- Mark an element with `data-i18n="key"` — the dictionary value replaces its inner HTML.
+- Placeholders `{n}` / `{name}` / `{doc}` are filled from `data-i18n-args`.
+- `data-i18n-title` (plus args) on the `<html>` tag translates `document.title`.
+- Generated pages (project pages, mirrored documents, listing grids) emit the same attributes from `tools/sync_data.py`, so new projects get the toggle for free.
+- Mirrored repository documents and the hand-written technical docs stay in their original language; translated documents (e.g. Syna's Chinese tutorial) are mirrored as separate pages.
+
+To add another language: add a dictionary under `window.I18N` in `assets/js/i18n.js` and extend the toggle cycle in `assets/js/main.js`.
 
 English is served inline so the site remains fully readable without JavaScript.
 
