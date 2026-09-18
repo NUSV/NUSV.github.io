@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="title.docs">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="warehouse.html">Warehouse</a>
-        <a href="docs.html">Docs</a>
-        <a href="about.html">About</a>
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="warehouse.html" data-i18n="nav.warehouse">Warehouse</a>
+        <a href="docs.html" data-i18n="nav.docs">Docs</a>
+        <a href="about.html" data-i18n="nav.about">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -31,9 +31,9 @@
   <main>
     <section class="pagehead">
       <div class="wrap">
-        <p class="section-kicker">Docs</p>
-        <h1>Project guides</h1>
-        <p>Every project page follows the same structure: a short overview, the problem it solves, its highlights — and where to go from here.</p>
+        <p class="section-kicker" data-i18n="docs.kicker">Docs</p>
+        <h1 data-i18n="docs.h1">Project guides</h1>
+        <p data-i18n="docs.lead">Every project page follows the same structure: a short overview, the problem it solves, its highlights — and where to go from here.</p>
       </div>
     </section>
 
@@ -45,21 +45,21 @@
             <span class="card-icon"><img src="assets/img/syna-icon.png" alt="Syna icon" loading="lazy"></span>
             <h3>Syna — the messenger</h3>
             <p class="tagline">Architecture, protocol, crypto &amp; the Shield — deep technical documentation.</p>
-            <div class="meta"><span class="chip chip-accent">Read the guide</span></div>
+            <div class="meta"><span class="chip chip-accent" data-i18n="card.read_guide">Read the guide</span></div>
           </a>
 
           <a class="card reveal" href="docs/nusv-lite.html" style="color:inherit">
             <span class="card-icon"><img src="assets/img/lite-icon.png" alt="NUSV LITE icon" loading="lazy"></span>
             <h3>NUSV LITE — the client</h3>
             <p class="tagline">Architecture, sync pipeline, data schemas &amp; the content backend — deep technical documentation.</p>
-            <div class="meta"><span class="chip chip-accent">Read the guide</span></div>
+            <div class="meta"><span class="chip chip-accent" data-i18n="card.read_guide">Read the guide</span></div>
           </a>
 
           <a class="card reveal" href="docs/gomoku.html" style="color:inherit">
             <span class="card-icon"><img src="assets/img/gomoku-icon.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
             <h3>Gomoku-NUSV — the game</h3>
             <p class="tagline">Architecture, the AI engine, LAN battle &amp; platform matrix — deep technical documentation.</p>
-            <div class="meta"><span class="chip chip-accent">Read the guide</span></div>
+            <div class="meta"><span class="chip chip-accent" data-i18n="card.read_guide">Read the guide</span></div>
           </a>
 
         </div>
@@ -68,25 +68,25 @@
 
     <section class="section">
       <div class="wrap">
-        <p class="section-kicker">Mirrored documents</p>
-        <h2>Project documents, readable without GitHub</h2>
-        <p class="sub">Tutorials, security notes and changelogs are mirrored and rendered here, so they stay readable even where GitHub is slow or blocked. The originals are always linked on each page.</p>
+        <p class="section-kicker" data-i18n="docs.mirror.kicker">Mirrored documents</p>
+        <h2 data-i18n="docs.mirror.h2">Project documents, readable without GitHub</h2>
+        <p class="sub" data-i18n="docs.mirror.sub">Tutorials, security notes and changelogs are mirrored and rendered here, so they stay readable even where GitHub is slow or blocked. The originals are always linked on each page.</p>
         <div class="grid">
 <!-- MIRRORED-DOCS:start -->
 <div class="card reveal">
           <span class="card-icon"><img src="/assets/mirror/Gomoku-NUSV/logo2.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
           <h3>Gomoku-NUSV</h3>
-          <div class="doc-group-title">Release notes</div><ul class="doc-list"><li><a href="/mirror/gomoku/changelog.html">Changelog</a></li></ul><div class="doc-group-title">Documents</div><ul class="doc-list"><li><a href="/mirror/gomoku/harmonyos-porting.html">HarmonyOS NEXT Porting Guide</a></li><li><a href="/mirror/gomoku/ios-installation.html">iOS Installation Guide (No Paid Developer Account)</a></li></ul>
+          <div class="doc-group-title" data-i18n="cat.release_notes">Release notes</div><ul class="doc-list"><li><a href="/mirror/gomoku/changelog.html">Changelog</a></li></ul><div class="doc-group-title" data-i18n="cat.documents">Documents</div><ul class="doc-list"><li><a href="/mirror/gomoku/harmonyos-porting.html">HarmonyOS NEXT Porting Guide</a></li><li><a href="/mirror/gomoku/ios-installation.html">iOS Installation Guide (No Paid Developer Account)</a></li></ul>
         </div>
 <div class="card reveal">
           <span class="card-icon"><img src="/assets/mirror/NUSV-lite/logo.png" alt="NUSV LITE icon" loading="lazy"></span>
           <h3>NUSV LITE</h3>
-          <div class="doc-group-title">Release notes</div><ul class="doc-list"><li><a href="/mirror/nusv-lite/changelog.html">Changelog</a></li></ul>
+          <div class="doc-group-title" data-i18n="cat.release_notes">Release notes</div><ul class="doc-list"><li><a href="/mirror/nusv-lite/changelog.html">Changelog</a></li></ul>
         </div>
 <div class="card reveal">
           <span class="card-icon"><img src="/assets/mirror/Syna-NUSV/assets/icons/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
           <h3>Syna</h3>
-          <div class="doc-group-title">Security</div><ul class="doc-list"><li><a href="/mirror/syna/shield-design.html">◇ Mirtazapine Shield</a></li></ul><div class="doc-group-title">Audits</div><ul class="doc-list"><li><a href="/mirror/syna/revision-license-audit.html">Syna v1.0.0 — Code Review &amp; License Audit Report</a></li><li><a href="/mirror/syna/security-audit.html">Syna Security &amp; License Audit Report</a></li></ul><div class="doc-group-title">Release notes</div><ul class="doc-list"><li><a href="/mirror/syna/changelog.html">Changelog</a></li></ul><div class="doc-group-title">Documents</div><ul class="doc-list"><li><a href="/mirror/syna/faq-zh.html">Syna 常见问题（FAQ）</a></li><li><a href="/mirror/syna/tutorials-en.html">Syna Tutorial (English)</a></li><li><a href="/mirror/syna/tutorials.html">Syna Tutorial / Syna 使用教程</a></li><li><a href="/mirror/syna/tutorials-zh.html">Syna 使用教程（中文）</a></li></ul>
+          <div class="doc-group-title" data-i18n="cat.tutorials">Tutorials</div><ul class="doc-list"><li><a href="/mirror/syna/tutorials-en.html">Syna Tutorial (English)</a></li><li><a href="/mirror/syna/tutorials.html">Syna Tutorial / Syna 使用教程</a></li><li><a href="/mirror/syna/tutorials-zh.html">Syna 使用教程（中文）</a></li></ul><div class="doc-group-title" data-i18n="cat.faq">FAQ</div><ul class="doc-list"><li><a href="/mirror/syna/faq-zh.html">Syna 常见问题（FAQ）</a></li></ul><div class="doc-group-title" data-i18n="cat.security">Security</div><ul class="doc-list"><li><a href="/mirror/syna/shield-design.html">◇ Mirtazapine Shield</a></li></ul><div class="doc-group-title" data-i18n="cat.audits">Audits</div><ul class="doc-list"><li><a href="/mirror/syna/revision-license-audit.html">Syna v1.0.0 — Code Review &amp; License Audit Report</a></li><li><a href="/mirror/syna/security-audit.html">Syna Security &amp; License Audit Report</a></li></ul><div class="doc-group-title" data-i18n="cat.release_notes">Release notes</div><ul class="doc-list"><li><a href="/mirror/syna/changelog.html">Changelog</a></li></ul>
         </div>
 <!-- MIRRORED-DOCS:end -->
         </div>
@@ -95,20 +95,21 @@
 
     <section class="section">
       <div class="wrap">
-        <p class="section-kicker">The whole picture</p>
-        <h2>How the pieces fit together</h2>
-        <p class="sub">NUSV LITE is the front door to the ecosystem; the sync repository keeps its content fresh; Syna is our answer to privacy-first messaging; Gomoku is a standalone showcase of the stack we build with. All of them are built with Kotlin Multiplatform + Compose Multiplatform, so code and design patterns travel between projects.</p>
+        <p class="section-kicker" data-i18n="docs.picture.kicker">The whole picture</p>
+        <h2 data-i18n="docs.picture.h2">How the pieces fit together</h2>
+        <p class="sub" data-i18n="docs.picture.sub">NUSV LITE is the front door to the ecosystem; the sync repository keeps its content fresh; Syna is our answer to privacy-first messaging; Gomoku is a standalone showcase of the stack we build with. All of them are built with Kotlin Multiplatform + Compose Multiplatform, so code and design patterns travel between projects.</p>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="index.html">Home</a> &middot; <a href="warehouse.html">Warehouse</a></span>
+      <span>&copy; <span class="year"></span> <span data-i18n="footer.copyright">United Science Vaca (NUSV). Open source.</span></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a> &middot; <a href="index.html" data-i18n="nav.home">Home</a> &middot; <a href="warehouse.html" data-i18n="nav.warehouse">Warehouse</a></span>
     </div>
   </footer>
 
+  <script src="assets/js/i18n.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
