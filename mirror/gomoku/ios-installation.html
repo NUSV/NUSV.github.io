@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS Installation Guide (No Paid Developer Account) — Gomoku-NUSV | United Science Vaca (NUSV)</title>
+  <meta name="description" content="iOS Installation Guide (No Paid Developer Account) — mirrored from the Gomoku-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/gomoku.html">&#8249; Gomoku-NUSV</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Gomoku-NUSV/logo2.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
+        <h1>iOS Installation Guide (No Paid Developer Account)</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">NUSV/Gomoku-NUSV</a> &middot; <code>docs/ios-installation.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/docs/ios-installation.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p>iPhones normally only allow apps from the App Store. This project's iOS build is not on the App Store yet, but you can install it on your own iPhone using any of the methods below — <strong>none of them require the paid Apple Developer Program ($99/year)</strong>.</p>
+<blockquote><p>Version: <code>Gomoku-NUSV-1.4.6-compatibility.ipa</code> (unsigned, see "Getting the IPA" below) or build it yourself from source with Xcode.</p></blockquote>
+<hr>
+<h2>Option A: Xcode Free Personal Signing (Official, Recommended)</h2>
+<p>Sign and install with a free Apple ID directly in Xcode. Most reliable and fully controlled.</p>
+<h3>Prerequisites</h3>
+<ul><li>A Mac with Xcode installed (this guide targets Xcode 26)</li><li>A USB cable (a trustworthy one)</li><li>An iPhone (iOS 14+) and a free Apple ID</li></ul>
+<h3>Steps</h3>
+<ol><li><strong>Open the project</strong></li></ol>
+<p>``<code>bash open iosApp/iosApp.xcodeproj </code>``</p>
+<ol><li><strong>Sign in with your Apple ID</strong></li></ol>
+<p>Xcode menu → Settings → Accounts → click <code>+</code> at the bottom left → Apple ID → sign in. If asked to choose a team, pick <strong>Personal Team</strong> (free).</p>
+<ol><li><strong>Configure signing</strong></li></ol>
+<ul><li>Select the <code>iosApp</code> project → <code>iosApp</code> target in the left panel</li><li>Open the <strong>Signing & Capabilities</strong> tab</li><li>Tick <strong>Automatically manage signing</strong></li><li>Set <strong>Team</strong> to the Personal Team you just added</li></ul>
+<ol><li><strong>Connect your iPhone</strong></li></ol>
+<ul><li>Plug the iPhone into the Mac with the USB cable</li><li>Tap “Trust This Computer” on the iPhone when prompted</li><li>In Xcode, choose your iPhone as the run destination (if it does not</li></ul>
+<p>appear, check Window → Devices and Simulators)</p>
+<ol><li><strong>Run</strong></li></ol>
+<p>Press <code>Cmd + R</code>. The first build takes a few minutes (it compiles the Kotlin framework).</p>
+<ol><li><strong>Trust the developer certificate</strong></li></ol>
+<p>On first launch the iPhone warns about an untrusted developer. Go to <strong>Settings → General → VPN & Device Management</strong>, tap your Apple ID, and tap <strong>Trust</strong>.</p>
+<h3>Limitations</h3>
+<ul><li>Apps installed with free signing <strong>expire after 7 days</strong> (they refuse to open).</li><li>To renew: reconnect the iPhone and press <code>Cmd + R</code> in Xcode again.</li><li>Free signing allows up to 3 apps at a time (not an issue in practice).</li></ul>
+<hr>
+<h2>Option B: AltStore Sideloading (Wireless Renewal)</h2>
+<p>AltStore is an open-source sideloading tool. Its biggest advantage is <strong>automatic 7-day renewal</strong> while your computer's AltServer is online — no cable needed each time.</p>
+<h3>Prerequisites</h3>
+<ul><li>A computer (Windows or macOS) with <strong>AltServer</strong> installed:</li><li>Windows: <https://altstore.io> (AltServer for Windows)</li><li>macOS: AltServer for macOS (macOS 10.15+)</li><li>An Apple ID</li></ul>
+<h3>Steps</h3>
+<ol><li><strong>Install and run AltServer</strong> (on macOS, allow it in System Settings →</li></ol>
+<p>Privacy & Security; on Windows, iCloud / Apple Devices is required).</p>
+<ol><li><strong>Connect the iPhone via cable</strong>, open the AltServer menu, select your device →</li></ol>
+<p><strong>Install AltStore</strong>, and enter your Apple ID and password (an app-specific password is more secure).</p>
+<ol><li>The <strong>AltStore</strong> icon appears on the iPhone's home screen. On first open,</li></ol>
+<p>trust the developer certificate (Settings → General → VPN & Device Management).</p>
+<ol><li><strong>Install the game</strong>:</li></ol>
+<ul><li>Download <code>Gomoku-NUSV-1.4.6-compatibility.ipa</code> on your computer</li><li>Import the <code>.ipa</code> into the iPhone's <strong>Files</strong> app (iCloud Drive or</li></ul>
+<p>On My iPhone)</p>
+<ul><li>Open AltStore → <strong>My Apps</strong> tab → tap <code>+</code> in the top-left corner → select</li></ul>
+<p>the <code>.ipa</code> → <strong>Install</strong>. AltStore re-signs it with your Apple ID automatically.</p>
+<ol><li><strong>Renewal</strong>: AltStore attempts to refresh apps before they expire — as long</li></ol>
+<p>as your computer's AltServer is on the same network and online. You can also refresh manually in AltStore.</p>
+<h3>Notes</h3>
+<ul><li>The free AltStore plan allows up to 3 apps, which is enough.</li><li>AltServer must be online occasionally; otherwise you need to reconnect the</li></ul>
+<p>device to refresh before the 7-day expiry.</p>
+<ul><li>Sideloading is a permitted personal-use scenario (testing on your own device)</li></ul>
+<p>and does not affect warranty or system security — but only install IPAs from trusted sources.</p>
+<hr>
+<h2>Option C: 爱思助手 (i4.cn — common in mainland China)</h2>
+<p>i4 Assistant (<https://www.i4.cn>) supports “unsigned install”: it re-signs the IPA with your Apple ID automatically. Easiest option overall.</p>
+<h3>Steps</h3>
+<ol><li>Install and open <strong>爱思助手</strong> on your computer, connect the iPhone via cable</li></ol>
+<p>(trust the computer on the device first).</p>
+<ol><li>Go to the “Apps” section → “Import & Install” → choose</li></ol>
+<p><code>Gomoku-NUSV-1.4.6-compatibility.ipa</code>.</p>
+<ol><li>Follow the prompts to enter your Apple ID (the tool guides you through</li></ol>
+<p>creating an app-specific password), and wait for the automatic re-sign and install.</p>
+<ol><li>The app icon appears on the phone. On first open, trust the developer</li></ol>
+<p>certificate (Settings → General → VPN & Device Management).</p>
+<ol><li>When the 7-day expiry approaches, re-run the “repair / reinstall” in i4 to</li></ol>
+<p>renew.</p>
+<h3>Notes</h3>
+<ul><li>i4 Assistant is a third-party tool: download it from the official site and</li></ul>
+<p>watch out for bundled offers during installation.</p>
+<ul><li>If you prefer to avoid third-party tools, use Option A or B.</li></ul>
+<hr>
+<h2>FAQ</h2>
+<p><strong>Q: The app won't open — “Untrusted Developer”?</strong> Go to Settings → General → VPN & Device Management → find the developer certificate → tap <strong>Trust</strong>.</p>
+<p><strong>Q: The app crashes after 7 days?</strong> That is normal for free signing. Re-sign / renew using the method you chose. Your save data is not lost (it lives in the app sandbox and survives reinstall as long as you don't delete the app).</p>
+<p><strong>Q: Do I need to jailbreak?</strong> No. None of the three methods requires a jailbreak.</p>
+<p><strong>Q: Can it be published on the App Store?</strong> That requires the paid Apple Developer Program ($99/year) and App Review; the current build is not published.</p>
+<hr>
+<h2>Getting the IPA</h2>
+<ul><li>Download from the GitHub Releases page:</li></ul>
+<p><code>Gomoku-NUSV-1.4.6-compatibility.ipa</code> (https://github.com/NUSV/Gomoku-NUSV/releases)</p>
+<ul><li>Or build it yourself (macOS + Xcode):</li></ul>
+<p>```bash # 1. Build the unsigned device version xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \ -sdk iphoneos -configuration Debug ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \ CODE_SIGNING_ALLOWED=NO build</p>
+<p># 2. Package it as an IPA (Payload structure) cd iosApp/build/Debug-iphoneos mkdir -p /tmp/ipa/Payload cp -r Gomoku-NUSV.app /tmp/ipa/Payload/ cd /tmp/ipa && zip -r Gomoku-NUSV.ipa Payload ```</p>
+<blockquote><p>Disclaimer: sideloading is intended for testing on your own devices. Only download the IPA from this repository's official Releases, and avoid modified builds from unknown sources.</p></blockquote>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
