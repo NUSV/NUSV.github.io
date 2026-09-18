@@ -35,6 +35,7 @@ import datetime
 import html
 import json
 import os
+import posixpath
 import re
 import sys
 import time
@@ -249,6 +250,24 @@ def get_doc_paths(repo_name, branch, token):
     return out
 
 
+def doc_slug(path):
+    """Slug for a repo document path.
+
+    Generic basenames use the parent directory instead, so
+    docs/tutorial/en.md -> "tutorial-en" and docs/tutorial/index.md ->
+    "tutorial"; version suffixes are trimmed."""
+    parts = path.split("/")
+    base = re.sub(r"\.md$", "", parts[-1], flags=re.I).lower()
+    dirs = [p for p in parts[:-1] if p.lower() != "docs"]
+    if base in ("index", "readme") and dirs:
+        base = ""
+    elif base in ("en", "zh", "cn", "ja", "ko", "es", "fr", "de", "ru") and dirs:
+        base = "%s-%s" % (dirs[-1], base)
+        dirs = dirs[:-1]
+    slug = slugify("-".join(dirs + ([base] if base else [])))
+    return re.sub(r"-v\d+(-\d+)+$", "", slug) or slug
+
+
 def slugify(text):
     s = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
     return s or "doc"
@@ -412,15 +431,21 @@ def resolve_raw(repo_name, branch, raw):
     return "%s/%s/%s/%s/%s" % (RAW, ORG, repo_name, branch, raw)
 
 
-def md_inline(text, repo_name, branch, link_map=None):
+def md_inline(text, repo_name, branch, link_map=None, base_dir=""):
     img_tokens = {}
+
+    def repo_path(ref):
+        ref = ref.strip().lstrip("./")
+        if base_dir:
+            return posixpath.normpath(posixpath.join(base_dir, ref))
+        return ref
 
     def img_placeholder(m):
         alt, src = m.group(1), m.group(2)
         key = "IMGTOK%d" % len(img_tokens)
         img_tokens[key] = (
             '<img src="%s" alt="%s" loading="lazy" referrerpolicy="no-referrer">'
-            % (html.escape(resolve_raw(repo_name, branch, src), quote=True),
+            % (html.escape(resolve_raw(repo_name, branch, repo_path(src)), quote=True),
                html.escape(alt or "", quote=True))
         )
         return key
@@ -437,7 +462,7 @@ def md_inline(text, repo_name, branch, link_map=None):
                 am.group(3) if am.group(3) is not None else am.group(4)
             )
             if k == "src":
-                src = html.escape(resolve_raw(repo_name, branch, val), quote=True)
+                src = html.escape(resolve_raw(repo_name, branch, repo_path(val)), quote=True)
             else:
                 attrs.append('%s="%s"' % (k, html.escape(val, quote=True)))
         if src is None:
@@ -458,20 +483,19 @@ def md_inline(text, repo_name, branch, link_map=None):
 
     def link(m):
         lab, dst = m.group(1), m.group(2)
-        key = dst.lstrip("./")
-        if (
-            link_map
-            and not dst.startswith(("http", "#", "mailto:"))
-            and key in link_map
-        ):
+        if not dst.startswith(("http", "#", "mailto:")):
+            key = repo_path(dst)
+            if link_map and key in link_map:
+                return '<a href="%s">%s</a>' % (
+                    html.escape(link_map[key], quote=True),
+                    lab,
+                )
             return '<a href="%s">%s</a>' % (
-                html.escape(link_map[key], quote=True),
+                html.escape(resolve_ref(repo_name, branch, key), quote=True),
                 lab,
             )
-        target = ' target="_blank" rel="noopener"' if dst.startswith("http") else ""
-        return '<a href="%s"%s>%s</a>' % (
-            html.escape(resolve_ref(repo_name, branch, dst), quote=True),
-            target,
+        return '<a href="%s" target="_blank" rel="noopener">%s</a>' % (
+            html.escape(dst, quote=True),
             lab,
         )
 
@@ -486,7 +510,7 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]", "", (s or "").lower())
 
 
-def md_to_html(md, repo_name, branch, drop_h1_names=None, link_map=None):
+def md_to_html(md, repo_name, branch, drop_h1_names=None, link_map=None, base_dir=""):
     """Render a pragmatic README subset to HTML.
 
     If drop_h1_names is given (normalized repo/display names), a leading
@@ -501,7 +525,7 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None, link_map=None):
     )
 
     def inline(t):
-        return md_inline(t, repo_name, branch, link_map)
+        return md_inline(t, repo_name, branch, link_map, base_dir)
 
     while i < n:
         line = lines[i]
@@ -560,6 +584,7 @@ def md_to_html(md, repo_name, branch, drop_h1_names=None, link_map=None):
                 "\n".join(quote), repo_name, branch,
                 drop_h1_names=list(drop_set) if drop_set is not None else None,
                 link_map=link_map,
+                base_dir=base_dir,
             )[0]
             out.append("<blockquote>%s</blockquote>" % inner)
             continue
@@ -1149,23 +1174,35 @@ def main():
         doc_pages = []
         used_slugs = set()
         link_map = {}
+
+        # pass 1: decide slugs and build the link map up front, so documents
+        # that link to each other can be rewritten in either direction.
+        plan = []
         for path in proj.get("doc_files") or []:
-            raw = http_text(resolve_raw(proj["repo"], proj["branch"], path), token)
-            if raw is None:
-                print("  doc missing: %s/%s" % (proj["repo"], path))
-                continue
-            title = extract_h1(raw) or prettify_name(path)
-            base_slug = slugify(re.sub(r"\.md$", "", os.path.basename(path), flags=re.I))
-            base_slug = re.sub(r"-v\d+(-\d+)+$", "", base_slug) or base_slug
+            base_slug = doc_slug(path)
             slug = base_slug
             n = 2
             while slug in used_slugs:
                 slug = "%s-%d" % (base_slug, n)
                 n += 1
             used_slugs.add(slug)
-            body = md_to_html(raw, proj["repo"], proj["branch"], drop_h1_names=[title])[0]
             local = "/mirror/%s/%s.html" % (proj["slug"], slug)
             link_map[path] = local
+            plan.append((path, slug, local))
+
+        # pass 2: fetch and render
+        for path, slug, local in plan:
+            raw = http_text(resolve_raw(proj["repo"], proj["branch"], path), token)
+            if raw is None:
+                print("  doc missing: %s/%s" % (proj["repo"], path))
+                continue
+            title = extract_h1(raw) or prettify_name(path)
+            body = md_to_html(
+                raw, proj["repo"], proj["branch"],
+                drop_h1_names=[title],
+                link_map=link_map,
+                base_dir=posixpath.dirname(path),
+            )[0]
             doc = {"path": path, "title": title, "slug": slug, "local": local, "body": body}
             doc_pages.append(doc)
             rel = os.path.join("mirror", proj["slug"], slug + ".html")
