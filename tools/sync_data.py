@@ -724,28 +724,61 @@ def warehouse_section(projects):
 
 
 def mirrored_docs_section(projects):
-    """Cards for the docs.html hub: mirrored documents per project."""
+    """Cards for the docs.html hub: mirrored documents per project, grouped."""
     cards = []
     for p in projects:
         docs = p.get("doc_pages") or []
         if not docs:
             continue
-        items = "".join(
-            '<li><a href="%s">%s</a></li>'
-            % (html.escape(d["local"], quote=True), html.escape(d["title"]))
-            for d in docs
-        )
         icon = p["icon_url"] or p["fallback_icon"]
         cards.append(
             '<div class="card reveal">\n'
             '          <span class="card-icon"><img src="%s" alt="%s icon" loading="lazy"></span>\n'
             "          <h3>%s</h3>\n"
-            '          <ul class="doc-list">%s</ul>\n'
+            "          %s\n"
             "        </div>"
             % (html.escape(icon, quote=True), html.escape(p["name"]),
-               html.escape(p["name"]), items)
+               html.escape(p["name"]), grouped_doc_list(docs))
         )
     return "\n".join(cards)
+
+
+DOC_CATEGORY_ORDER = ["Tutorials", "FAQ", "Security", "Audits", "Release notes", "Documents"]
+
+
+def doc_category(path):
+    base = os.path.basename(path).lower()
+    if base.startswith("tutorial"):
+        return "Tutorials"
+    if base.startswith("faq"):
+        return "FAQ"
+    if "audit" in base:
+        return "Audits"
+    if "shield" in base or base.startswith("security"):
+        return "Security"
+    if "changelog" in base or "release" in base:
+        return "Release notes"
+    return "Documents"
+
+
+def grouped_doc_list(doc_pages):
+    groups = {}
+    for d in doc_pages:
+        groups.setdefault(doc_category(d["path"]), []).append(d)
+    parts = []
+    for name in DOC_CATEGORY_ORDER:
+        if name not in groups:
+            continue
+        items = "".join(
+            '<li><a href="%s">%s</a></li>'
+            % (html.escape(d["local"], quote=True), html.escape(d["title"]))
+            for d in groups[name]
+        )
+        parts.append(
+            '<div class="doc-group-title">%s</div><ul class="doc-list">%s</ul>'
+            % (html.escape(name), items)
+        )
+    return "".join(parts)
 
 
 def replace_markers(path, start_marker, end_marker, content):
@@ -856,14 +889,9 @@ def render_page(proj, readme_html, updated_utc):
                    % "".join(info))
     doc_pages = proj.get("doc_pages") or []
     if doc_pages:
-        links = "".join(
-            '<a class="rel-item" href="%s"><span class="rel-tag">%s</span></a>'
-            % (html.escape(d["local"], quote=True), html.escape(d["title"]))
-            for d in doc_pages
-        )
         sidebar.append(
             '<div class="card pg-side"><div class="side-title">Documents</div>%s</div>'
-            % links
+            % grouped_doc_list(doc_pages)
         )
 
     # Screenshot gallery (optional, convention-based).
@@ -1113,7 +1141,7 @@ def main():
     slugs = {p["slug"] for p in projects}
 
     # -- mirrored documents (important .md files rendered as site pages) --
-    docs_root = os.path.join(root, "docs")
+    docs_root = os.path.join(root, "mirror")
     os.makedirs(docs_root, exist_ok=True)
     generated_docs = set()
 
@@ -1128,6 +1156,7 @@ def main():
                 continue
             title = extract_h1(raw) or prettify_name(path)
             base_slug = slugify(re.sub(r"\.md$", "", os.path.basename(path), flags=re.I))
+            base_slug = re.sub(r"-v\d+(-\d+)+$", "", base_slug) or base_slug
             slug = base_slug
             n = 2
             while slug in used_slugs:
@@ -1135,11 +1164,11 @@ def main():
                 n += 1
             used_slugs.add(slug)
             body = md_to_html(raw, proj["repo"], proj["branch"], drop_h1_names=[title])[0]
-            local = "/docs/%s/%s.html" % (proj["slug"], slug)
+            local = "/mirror/%s/%s.html" % (proj["slug"], slug)
             link_map[path] = local
             doc = {"path": path, "title": title, "slug": slug, "local": local, "body": body}
             doc_pages.append(doc)
-            rel = os.path.join("docs", proj["slug"], slug + ".html")
+            rel = os.path.join("mirror", proj["slug"], slug + ".html")
             generated_docs.add(rel)
             page_html = localize_images(render_doc_page(proj, doc, now), token, root)
             dest = os.path.join(root, rel)
@@ -1190,19 +1219,31 @@ def main():
             changed.append("projects/%s (removed)" % stem)
             print("removed stale %s" % f)
 
-    # -- remove stale mirrored doc pages (docs/<slug>/ directories) --
+    # -- remove stale mirrored doc pages (mirror/<slug>/ directories) --
     for entry in os.listdir(docs_root):
         d = os.path.join(docs_root, entry)
         if not os.path.isdir(d):
             continue
         for f in os.listdir(d):
-            rel = os.path.join("docs", entry, f)
+            rel = os.path.relpath(os.path.join(d, f), root)
             if rel not in generated_docs:
                 os.remove(os.path.join(d, f))
                 changed.append(rel + " (removed)")
                 print("removed stale %s" % rel)
         if not os.listdir(d):
             os.rmdir(d)
+
+    # -- legacy location: mirrored docs used to live under docs/<slug>/ --
+    legacy_root = os.path.join(root, "docs")
+    for entry in os.listdir(legacy_root):
+        d = os.path.join(legacy_root, entry)
+        if not os.path.isdir(d):
+            continue
+        for f in os.listdir(d):
+            os.remove(os.path.join(d, f))
+            changed.append("docs/%s/%s (removed)" % (entry, f))
+            print("removed legacy docs/%s/%s" % (entry, f))
+        os.rmdir(d)
 
     # -- listing pages (marker regions) --
     def patch_file(path, start, end, section):
