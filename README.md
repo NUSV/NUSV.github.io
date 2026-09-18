@@ -49,7 +49,7 @@ Removing the topic removes the project from the website on the next sync. Infras
 
 Besides release binaries, the important **documents** of every project are mirrored as site pages too, so they stay readable where GitHub is slow or blocked:
 
-- Root-level `*.md` files (except `README.md`, which is already the project page) and everything under `docs/**/*.md` are rendered to `/docs/<project>/<doc>.html` with the site's own styling, plus a link to the original on GitHub.
+- Root-level `*.md` files (except `README.md`, which is already the project page) and everything under `docs/**/*.md` are rendered to `/mirror/<project>/<doc>.html` with the site's own styling, plus a link to the original on GitHub. (The `/docs/` section stays reserved for the hand-written technical documentation.)
 - Links inside rendered READMEs to mirrored documents are rewritten to the local pages.
 - Images referenced by mirrored content are downloaded to `assets/mirror/<repo>/…` and served from the site (only the header icons today, but the pipeline handles any image).
 - `docs.html` gains a generated "Mirrored documents" index; project pages gain a "Documents" sidebar card.
