@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="title.warehouse">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="warehouse.html">Warehouse</a>
-        <a href="docs.html">Docs</a>
-        <a href="about.html">About</a>
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="warehouse.html" data-i18n="nav.warehouse">Warehouse</a>
+        <a href="docs.html" data-i18n="nav.docs">Docs</a>
+        <a href="about.html" data-i18n="nav.about">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -31,9 +31,9 @@
   <main>
     <section class="pagehead">
       <div class="wrap">
-        <p class="section-kicker">The Warehouse</p>
-        <h1>Everything we ship</h1>
-        <p>Every NUSV project, with its downloads, source code and documentation. Pick a project card to get started.</p>
+        <p class="section-kicker" data-i18n="wh.kicker">The Warehouse</p>
+        <h1 data-i18n="wh.h1">Everything we ship</h1>
+        <p data-i18n="wh.lead">Every NUSV project, with its downloads, source code and documentation. Pick a project card to get started.</p>
       </div>
     </section>
 
@@ -48,9 +48,9 @@
           <p class="tagline">A polished cross-platform Five-in-a-Row game with on-device AI opponents across three difficulty levels — no network needed.</p>
           <div class="meta"><span class="chip chip-accent">macOS</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">iOS</span><span class="chip chip-accent">Android</span><span class="chip">MIT</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/gomoku.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/gomoku.html">Technical docs</a>
-            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/Gomoku-NUSV/releases" target="_blank" rel="noopener">Releases</a>
+            <a class="linkbtn" href="projects/gomoku.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/gomoku.html" data-i18n="card.tech_docs">Technical docs</a>
+            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/Gomoku-NUSV/releases" target="_blank" rel="noopener" data-i18n="card.releases">Releases</a>
           </div>
         </div>
 <div class="card reveal">
@@ -60,27 +60,27 @@
           <p class="tagline">The official NUSV Android client: content hub, 11 built-in games, 60+ tools, widgets, theme store and daily check-in points.</p>
           <div class="meta"><span class="chip chip-accent">Android</span><span class="chip">MIT</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/nusv-lite.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/nusv-lite.html">Technical docs</a>
-            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener">Releases</a>
+            <a class="linkbtn" href="projects/nusv-lite.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/nusv-lite.html" data-i18n="card.tech_docs">Technical docs</a>
+            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/NUSV-lite/releases" target="_blank" rel="noopener" data-i18n="card.releases">Releases</a>
           </div>
         </div>
 <div class="card reveal">
-          <span class="card-icon"><img src="/assets/mirror/Syna-NUSV/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
+          <span class="card-icon"><img src="/assets/mirror/Syna-NUSV/assets/icons/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
             
           <h3>Syna</h3>
           <p class="tagline">Offline-first LAN messenger with end-to-end encryption, group chat, self-hosted servers and a built-in anti-tamper shield.</p>
           <div class="meta"><span class="chip chip-accent">Android</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">macOS</span><span class="chip">GPL-3.0</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/syna.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/syna.html">Technical docs</a>
-            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">Releases</a>
+            <a class="linkbtn" href="projects/syna.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/syna.html" data-i18n="card.tech_docs">Technical docs</a>
+            <a class="linkbtn linkbtn-ghost" href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener" data-i18n="card.releases">Releases</a>
           </div>
         </div>
 <!-- WAREHOUSE-GRID:end -->
         </div>
 
-        <p class="sub" style="margin-top:34px;font-size:13.5px;color:var(--faint)">This list is generated automatically from the <a href="https://github.com/NUSV?tab=repositories" target="_blank" rel="noopener">NUSV repositories</a> — any repository tagged with the <code>nusv-project</code> topic appears here and gets its own project page. Infrastructure (e.g. the <a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> content backend) intentionally stays off the list.</p>
+        <p class="sub" style="margin-top:34px;font-size:13.5px;color:var(--faint)" data-i18n="wh.note">This list is generated automatically from the <a href="https://github.com/NUSV?tab=repositories" target="_blank" rel="noopener">NUSV repositories</a> — any repository tagged with the <code>nusv-project</code> topic appears here and gets its own project page. Infrastructure (e.g. the <a href="https://github.com/NUSV/nusv-lite-sync" target="_blank" rel="noopener">nusv-lite-sync</a> content backend) intentionally stays off the list.</p>
 
       </div>
     </section>
@@ -88,11 +88,12 @@
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="index.html">Home</a> &middot; <a href="docs.html">Docs</a></span>
+      <span>&copy; <span class="year"></span> <span data-i18n="footer.copyright">United Science Vaca (NUSV). Open source.</span></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a> &middot; <a href="index.html" data-i18n="nav.home">Home</a> &middot; <a href="docs.html" data-i18n="nav.docs">Docs</a></span>
     </div>
   </footer>
 
+  <script src="assets/js/i18n.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
