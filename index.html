@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="title.home">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="warehouse.html">Warehouse</a>
-        <a href="docs.html">Docs</a>
-        <a href="about.html">About</a>
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="warehouse.html" data-i18n="nav.warehouse">Warehouse</a>
+        <a href="docs.html" data-i18n="nav.docs">Docs</a>
+        <a href="about.html" data-i18n="nav.about">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -31,27 +31,27 @@
   <main>
     <section class="hero">
       <div class="wrap">
-        <span class="eyebrow">United Science Vaca &middot; 2026</span>
-        <h1>The NUSV universe,<br><span class="grad">open source.</span></h1>
-        <p class="lead">We build Android apps, cross-platform tools and games — privacy-first, offline-capable, and released under permissive open-source licenses.</p>
+        <span class="eyebrow" data-i18n="home.eyebrow">United Science Vaca &middot; 2026</span>
+        <h1 data-i18n="home.h1">The NUSV universe,<br><span class="grad">open source.</span></h1>
+        <p class="lead" data-i18n="home.lead">We build Android apps, cross-platform tools and games — privacy-first, offline-capable, and released under permissive open-source licenses.</p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="warehouse.html">Browse projects</a>
-          <a class="btn btn-ghost" href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub organization</a>
+          <a class="btn btn-primary" href="warehouse.html" data-i18n="home.cta.browse">Browse projects</a>
+          <a class="btn btn-ghost" href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="home.cta.github">GitHub organization</a>
         </div>
         <div class="hero-stats">
-          <div class="stat"><b>4</b><span>public repositories</span></div>
-          <div class="stat"><b>3</b><span>shipped releases</span></div>
-          <div class="stat"><b>6+</b><span>supported platforms</span></div>
-          <div class="stat"><b>100%</b><span>Kotlin / open source</span></div>
+          <div class="stat"><b>4</b><span data-i18n="home.stat.repos">public repositories</span></div>
+          <div class="stat"><b>3</b><span data-i18n="home.stat.releases">shipped releases</span></div>
+          <div class="stat"><b>6+</b><span data-i18n="home.stat.platforms">supported platforms</span></div>
+          <div class="stat"><b>100%</b><span data-i18n="home.stat.oss">Kotlin / open source</span></div>
         </div>
       </div>
     </section>
 
     <section class="section">
       <div class="wrap">
-        <p class="section-kicker">Featured projects</p>
-        <h2>What we're building</h2>
-        <p class="sub">Every project is open source and fully documented. Pick one up and take a look — contributions are welcome.</p>
+        <p class="section-kicker" data-i18n="home.featured.kicker">Featured projects</p>
+        <h2 data-i18n="home.featured.h2">What we're building</h2>
+        <p class="sub" data-i18n="home.featured.sub">Every project is open source and fully documented. Pick one up and take a look — contributions are welcome.</p>
 
         <div class="grid">
 <!-- FEATURED-GRID:start -->
@@ -62,8 +62,8 @@
           <p class="tagline">A polished cross-platform Five-in-a-Row game with on-device AI opponents across three difficulty levels — no network needed.</p>
           <div class="meta"><span class="chip chip-accent">macOS</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">iOS</span><span class="chip chip-accent">Android</span><span class="chip">MIT</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/gomoku.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/gomoku.html">Technical docs</a>
+            <a class="linkbtn" href="projects/gomoku.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/gomoku.html" data-i18n="card.tech_docs">Technical docs</a>
           </div>
         </div>
 <div class="card reveal">
@@ -73,19 +73,19 @@
           <p class="tagline">The official NUSV Android client: content hub, 11 built-in games, 60+ tools, widgets, theme store and daily check-in points.</p>
           <div class="meta"><span class="chip chip-accent">Android</span><span class="chip">MIT</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/nusv-lite.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/nusv-lite.html">Technical docs</a>
+            <a class="linkbtn" href="projects/nusv-lite.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/nusv-lite.html" data-i18n="card.tech_docs">Technical docs</a>
           </div>
         </div>
 <div class="card reveal">
-          <span class="card-icon"><img src="/assets/mirror/Syna-NUSV/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
+          <span class="card-icon"><img src="/assets/mirror/Syna-NUSV/assets/icons/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
             
           <h3>Syna</h3>
           <p class="tagline">Offline-first LAN messenger with end-to-end encryption, group chat, self-hosted servers and a built-in anti-tamper shield.</p>
           <div class="meta"><span class="chip chip-accent">Android</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">macOS</span><span class="chip">GPL-3.0</span></div>
           <div class="card-links">
-            <a class="linkbtn" href="projects/syna.html">Project page</a>
-            <a class="linkbtn linkbtn-ghost" href="/docs/syna.html">Technical docs</a>
+            <a class="linkbtn" href="projects/syna.html" data-i18n="card.project_page">Project page</a>
+            <a class="linkbtn linkbtn-ghost" href="/docs/syna.html" data-i18n="card.tech_docs">Technical docs</a>
           </div>
         </div>
 <!-- FEATURED-GRID:end -->
@@ -95,12 +95,12 @@
 
     <section class="section">
       <div class="wrap">
-        <p class="section-kicker">Why open source</p>
-        <h2>Built in the open, by humans and AI</h2>
-        <p class="sub">All NUSV code is reviewed and released in public. Our source is predominantly written with AI assistance and then reviewed, tested and audited by humans — read about the process in each repository.</p>
+        <p class="section-kicker" data-i18n="home.why.kicker">Why open source</p>
+        <h2 data-i18n="home.why.h2">Built in the open, by humans and AI</h2>
+        <p class="sub" data-i18n="home.why.sub">All NUSV code is reviewed and released in public. Our source is predominantly written with AI assistance and then reviewed, tested and audited by humans — read about the process in each repository.</p>
         <div class="btn-row" style="justify-content:flex-start">
-          <a class="btn btn-ghost" href="docs.html">Explore the docs</a>
-          <a class="btn btn-ghost" href="about.html">About USV</a>
+          <a class="btn btn-ghost" href="docs.html" data-i18n="home.why.cta.docs">Explore the docs</a>
+          <a class="btn btn-ghost" href="about.html" data-i18n="home.why.cta.about">About USV</a>
         </div>
       </div>
     </section>
@@ -108,11 +108,12 @@
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="warehouse.html">Warehouse</a> &middot; <a href="docs.html">Docs</a></span>
+      <span>&copy; <span class="year"></span> <span data-i18n="footer.copyright">United Science Vaca (NUSV). Open source.</span></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a> &middot; <a href="warehouse.html" data-i18n="nav.warehouse">Warehouse</a> &middot; <a href="docs.html" data-i18n="nav.docs">Docs</a></span>
     </div>
   </footer>
 
+  <script src="assets/js/i18n.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
