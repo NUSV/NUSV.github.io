@@ -253,18 +253,20 @@ def get_doc_paths(repo_name, branch, token):
 def doc_slug(path):
     """Slug for a repo document path.
 
-    Generic basenames use the parent directory instead, so
-    docs/tutorial/en.md -> "tutorial-en" and docs/tutorial/index.md ->
-    "tutorial"; version suffixes are trimmed."""
+    Generic basenames borrow the parent directory, so
+    docs/tutorials/en.md -> "tutorials-en" and docs/tutorials/index.md ->
+    "tutorials"; normal names stand alone (docs/security/shield-design.md ->
+    "shield-design"). Version suffixes are trimmed."""
     parts = path.split("/")
     base = re.sub(r"\.md$", "", parts[-1], flags=re.I).lower()
     dirs = [p for p in parts[:-1] if p.lower() != "docs"]
     if base in ("index", "readme") and dirs:
-        base = ""
+        source = dirs[-1]
     elif base in ("en", "zh", "cn", "ja", "ko", "es", "fr", "de", "ru") and dirs:
-        base = "%s-%s" % (dirs[-1], base)
-        dirs = dirs[:-1]
-    slug = slugify("-".join(dirs + ([base] if base else [])))
+        source = "%s-%s" % (dirs[-1], base)
+    else:
+        source = base
+    slug = slugify(source)
     return re.sub(r"-v\d+(-\d+)+$", "", slug) or slug
 
 
