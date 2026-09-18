@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syna Security &amp; License Audit Report — Syna | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Syna Security &amp; License Audit Report — mirrored from the Syna-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/syna.html">&#8249; Syna</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Syna-NUSV/assets/icons/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
+        <h1>Syna Security &amp; License Audit Report</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">NUSV/Syna-NUSV</a> &middot; <code>docs/security/security-audit-v1.0.0.md</code> &middot; synced 2026-09-18 16:32 UTC &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/docs/security/security-audit-v1.0.0.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p><strong>Version audited:</strong> v0.9.1 (candidate) <strong>Date:</strong> 2026-08-10 <strong>Scope:</strong> full codebase (common / Android / desktop / server / native NDK / tests)</p>
+<hr>
+<h2>1. Code review & bug-fix summary</h2>
+<p>Three independent review passes (network/protocol, storage/UI/voice, Shield/server) plus verification against the full test suite. <strong>~60 confirmed issues found; all fixed.</strong></p>
+<h3>Critical fixes (data safety & lockout)</h3>
+<table><thead><tr><th>#</th><th>Issue</th><th>Fix</th></tr></thead><tbody><tr><td>1</td><td>TOTP seed / key pins / audit / fail-counter encrypted with the <strong>session key</strong> — after lock-out (no session key) 2FA verification, TOFU checks and audit loading could never decrypt → <strong>permanent 2FA lockout</strong></td><td>New <code>encryptWithMaster</code>/<code>decryptWithMaster</code> channel; all metadata now uses the master key (Keystore) — data files keep session-key gating</td></tr><tr><td>2</td><td>Honeypot decoy write did <code>rewriteNow()</code> with empty memory → <strong>overwrote real chat history permanently</strong></td><td>Decoy only rewrites disk when real messages exist in memory (<code>hasMessagesInMemory</code>), else memory-only</td></tr><tr><td>3</td><td><code>burnSweepMarks</code> was never written → the 60 s burn TTL fallback was dead code (unviewed burn messages never destroyed)</td><td>Marks written on enqueue</td></tr><tr><td>4</td><td>Server-history replay was killed by the replay guard (join → old history invisible)</td><td><code>routeServerFrame(..., fromHistory = true)</code> bypasses replay for persisted history</td></tr><tr><td>5</td><td>Mesh group file transfer misdetected as "server group disconnected" → <strong>group files never sent</strong></td><td>Server-group detection now uses explicit <code>serverGroupId</code></td></tr><tr><td>6</td><td>ACK retransmission counter was reset to 0 on every recursion → <strong>infinite retransmission</strong>; ACK race could resurrect the entry; TEXT never used ACK at all</td><td>Insert-once + recheck-before-resend + TEXT wired into ACK/retry</td></tr><tr><td>7</td><td>UDP key exchange sent to a dead default port (45878) → encryption could never establish in UDP mode</td><td>Key frames carry the announcement's real UDP port</td></tr><tr><td>8</td><td>64 KB file chunks exceed the 65 KB UDP payload → UDP file transfer unusable</td><td>Chunk size 40 KB in UDP mode</td></tr><tr><td>9</td><td>Debounced rewrite could overwrite disk with empty memory during the 500 ms window (lock/memory-wipe) → <strong>history wipe</strong></td><td><code>rewriteJob</code> cancelled in <code>releaseMemory</code></td></tr><tr><td>10</td><td>Burn-purge path never persisted → destroyed messages resurrected on restart</td><td><code>scheduleRewrite</code> added to remove/purge paths</td></tr></tbody></table>
+<h3>Shield & state machine</h3>
+<table><thead><tr><th>#</th><th>Issue</th><th>Fix</th></tr></thead><tbody><tr><td>11</td><td>Devices without biometrics: every unlock tap counted as brute-force → <strong>5 taps = self-destruct</strong></td><td><code>ERROR_NO_BIOMETRICS/HW_UNAVAILABLE/NO_DEVICE_CREDENTIAL</code> no longer counted</td></tr><tr><td>12</td><td><code>disablePending</code> residue: unlock after an interrupted disable flow <strong>silently turned the Shield off</strong></td><td>Any new LOCKED transition clears the disable flow</td></tr><tr><td>13</td><td><code>WATCHDOG_TRIP</code> never cleared → permanent 30 s re-lock loop</td><td>Auto-cleared when the heartbeat recovers (3 s)</td></tr><tr><td>14</td><td>Self-destruct order: audit event written <em>after</em> the file wipe → audit "resurrected" with a recreated key</td><td>Shield disabled at the end of full destruct; key pins & voice cache added to wipe list</td></tr><tr><td>15</td><td>Screen-capture callback unregister was a no-op (activity nulled first)</td><td>Order fixed</td></tr><tr><td>16</td><td>Group admins could promote/demote admins & kick the creator (privilege escalation)</td><td>SET_ADMIN/REMOVE_ADMIN creator-only on both ends; creator protected</td></tr><tr><td>17</td><td><code>verifyIdentity</code> no-op when Shield disabled → burn messages un-sendable</td><td>Null-safe fallthrough</td></tr><tr><td>18</td><td>Burn send verification failure still cleared the input</td><td>Input cleared only inside <code>doSend</code></td></tr><tr><td>19</td><td>Voice recording: no cleanup path (microphone leak, unbounded WAV buffer on desktop)</td><td><code>DisposableEffect</code> cancels recording; start-failure handled; AMR-on-desktop play gives explicit notice</td></tr></tbody></table>
+<h3>Server</h3>
+<table><thead><tr><th>#</th><th>Issue</th><th>Fix</th></tr></thead><tbody><tr><td>20</td><td>Zombie sessions (no read timeout) could exhaust the connection cap</td><td>180 s read timeout</td></tr><tr><td>21</td><td>Kick only closed the first session of a multi-session user</td><td>All sessions kicked</td></tr><tr><td>22</td><td>Any member could forge <code>from = groupId</code> (server impersonation)</td><td>Relay requires <code>from == authenticated userId</code></td></tr><tr><td>23</td><td>BURN_ACK could purge any message; RECALL could recall anyone's message</td><td>Ownership + burn-type checks</td></tr><tr><td>24</td><td><code>SRV_AUTH_OK</code> history read unsynchronized → CME crashed joins</td><td>Locked snapshot</td></tr><tr><td>25</td><td>Expired burn history visible for the first hour after start</td><td>Immediate sweep on boot</td></tr></tbody></table>
+<h3>Robustness</h3>
+<ul><li><code>fileAssemblers</code> → concurrent map; watchdog cascade trip fixed; <code>ShieldGate.beat</code> atomic; persistence writes mutexed (random tmp suffix) + <code>fd.sync</code>; <code>MAGIC</code> boundary; <code>open</code> flag volatile; outbox flush semantics; UDP send exception guard; <code>removeMessageById</code> CAS; purge paths persist.</li></ul>
+<hr>
+<h2>2. License (contamination) audit</h2>
+<h3>Result: <strong>CLEAN — no license contamination</strong></h3>
+<table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td>Direct & transitive runtime dependencies</td><td><strong>100% Apache-2.0</strong> (JetBrains Kotlin/Compose, androidx, <code>com.russhwolf:multiplatform-settings</code>, <code>com.google.guava:listenablefuture</code>, <code>org.jspecify:jspecify</code>)</td></tr><tr><td>Copyleft (AGPL/GPL/LGPL) dependencies</td><td><strong>None</strong></td></tr><tr><td>Native toolchain (NDK / CMake)</td><td>Apache-2.0 tooling, no runtime linkage</td></tr><tr><td>In-tree third-party code</td><td><strong>None</strong> — SHA-256, base32, TOTP, native anti-hook layer, voice recorders all original</td></tr><tr><td>Icon assets</td><td><code>assets/icons/Syna_logo_2.png</code> (user-provided project asset)</td></tr><tr><td>License file</td><td><code>LICENSE</code> — GPL-3.0 full text present</td></tr><tr><td>SPDX headers</td><td>All source files carry <code>SPDX-License-Identifier: GPL-3.0-only</code> (3 test files were missing headers — fixed)</td></tr><tr><td>AI-generated-code notice</td><td>README notice present</td></tr></tbody></table>
+<p><strong>GPL-3.0 compatibility note:</strong> Apache-2.0 dependencies are compatible with a GPL-3.0 project (GPL-3.0 may link Apache-2.0 code; the reverse direction would be the concern, which does not apply here).</p>
+<hr>
+<h2>3. Test status</h2>
+<ul><li><strong>76/76 automated tests passing</strong> (serial execution; multicast flakiness eliminated)</li><li>Coverage includes: ACK flow, group admin (kick/mute/admins), TOFU pin/reject/retrust,</li></ul>
+<p>TOTP vectors + 2FA flow, hash-chain tamper, gate fail-closed, honeypot, brute-force, watchdog, burn/temp chat, server join/kick/ban, file transfer, offline outbox.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
