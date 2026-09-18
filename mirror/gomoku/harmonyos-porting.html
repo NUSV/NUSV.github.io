@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarmonyOS NEXT Porting Guide — Gomoku-NUSV | United Science Vaca (NUSV)</title>
+  <meta name="description" content="HarmonyOS NEXT Porting Guide — mirrored from the Gomoku-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/gomoku.html">&#8249; Gomoku-NUSV</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Gomoku-NUSV/logo2.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
+        <h1>HarmonyOS NEXT Porting Guide</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">NUSV/Gomoku-NUSV</a> &middot; <code>docs/harmonyos-porting.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/docs/harmonyos-porting.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p>This project can be ported to <strong>HarmonyOS NEXT (pure HarmonyOS, API 12+)</strong>. The approach is the officially supported one: <strong>share Kotlin business logic with KMP and build the UI with ArkUI (ArkTS)</strong>. Compose Multiplatform has no HarmonyOS target, so the UI layer is re-implemented in ArkUI while all game logic, AI, persistence and economy code is reused as-is.</p>
+<h2>What can be reused (zero changes)</h2>
+<p>The following code is pure Kotlin with <strong>no Compose / no platform dependencies</strong> and can be compiled into a HarmonyOS library (<code>.har</code>) via the Kotlin Multiplatform → HarmonyOS toolchain:</p>
+<table><thead><tr><th>Module</th><th>Contents</th></tr></thead><tbody><tr><td><code>model/</code></td><td><code>Board</code>, stones, game configuration</td></tr><tr><td><code>logic/</code></td><td><code>WinChecker</code>, <code>GomokuAI</code> (threat-space search)</td></tr><tr><td><code>data/</code></td><td><code>SaveCrypto</code>, <code>ScoreService</code>, <code>DailySystem</code> (points / sign-in / tasks / decorations), <code>Powerups</code> (stock & shop logic), <code>Achievements</code>, <code>Titles</code>, <code>ProfileStore</code> (storage-abstracted, version-reset semantics)</td></tr><tr><td><code>i18n/Translations</code></td><td>All zh/en translation data + pure <code>t()</code> lookups (already decoupled from Compose state)</td></tr><tr><td><code>net/</code></td><td><code>LanProtocol</code> (message/JSON protocol, pure Kotlin)</td></tr></tbody></table>
+<p>Dependencies used by the shared code (<code>kotlinx.serialization</code>, <code>kotlin.random</code>, <code>kotlin.time</code>, coroutines) all have HarmonyOS support through the KMP toolchain.</p>
+<h2>What must be re-implemented (UI layer)</h2>
+<p>The entire <code>ui/</code> directory uses Compose Multiplatform and cannot run on HarmonyOS. Re-implement it in ArkUI (ArkTS):</p>
+<ul><li><strong>Pages</strong>: Home, Game (board + controls), LAN hub + lobby, Tic-Tac-Toe,</li></ul>
+<p>Achievements, Stats, Titles, Shop, Settings</p>
+<ul><li><strong>Board rendering</strong>: Canvas with grid, stones, effects (particles, ripple,</li></ul>
+<p>hologram sweep, neon win line)</p>
+<ul><li><strong>State</strong>: the <code>GameController</code> logic can be ported directly (it is plain</li></ul>
+<p>Kotlin + coroutines), wiring ArkUI state to it</p>
+<h2>Platform adapters needed (expect/actual)</h2>
+<table><thead><tr><th>expect</th><th>HarmonyOS actual</th></tr></thead><tbody><tr><td><code>createSettings()</code></td><td>HarmonyOS Preferences (via ArkTS interop or the KMP HarmonyOS preferences binding)</td></tr><tr><td><code>todayStr()</code></td><td>Date formatting through ArkTS interop</td></tr><tr><td><code>platformMaxAiDepth()</code> / <code>platformAiTimeLimitMs()</code></td><td><code>6</code> / <code>3000</code> (same as Android)</td></tr><tr><td><code>SoundPlayer</code></td><td>AudioKit / AudioRenderer (or no-op initially)</td></tr><tr><td><code>lanHost()</code> / <code>lanClient()</code> / <code>LanDiscovery</code></td><td>HarmonyOS TCP/UDP (currently iOS marks these unsupported; the same stubs can be used initially)</td></tr></tbody></table>
+<p><strong>Save versioning</strong>: the app stores a save with an <code>appVersion</code> tag; when the version differs, the save is reset to a new-player state (by design, to avoid mixed-version data). The HarmonyOS port must keep this semantics — export before updating, import after.</p>
+<h2>Suggested repository layout</h2>
+<pre class="doc-code">shared/                 # new KMP module (targets: android, jvm, ios, harmonyos)
+  model/ logic/ data/ i18n/
+harmonyos-app/          # DevEco Studio project (ArkTS UI)
+  entry/src/main/ets/   # ArkUI pages calling shared logic</pre>
+<h2>Required tooling</h2>
+<ul><li><strong>DevEco Studio 5.x</strong> (HarmonyOS IDE, macOS version available) — download</li></ul>
+<p>from the Huawei developer site; includes the HarmonyOS SDK and the KMP support.</p>
+<ul><li>A <strong>HarmonyOS NEXT device</strong> (API 12+) for on-device debugging, or the</li></ul>
+<p>HarmonyOS emulator.</p>
+<ul><li>A free Huawei developer account for device deployment.</li></ul>
+<h2>Milestones</h2>
+<ol><li>Extract <code>shared/</code> module from <code>composeApp</code> (pure Kotlin; verified to compile</li></ol>
+<p>for android/jvm/ios targets).</p>
+<ol><li>Configure the KMP → HarmonyOS target in DevEco Studio and produce the <code>.har</code>.</li><li>Write the ArkUI shell: navigation + Home page + Game page with Canvas board.</li><li>Wire <code>GameController</code> + AI + persistence adapters (settings/date/sound).</li><li>Port the remaining pages (Stats / Titles / Achievements / Shop / Settings /</li></ol>
+<p>Tic-Tac-Toe), then the daily sign-in & task screens.</p>
+<ol><li>LAN battle: reuse <code>LanProtocol</code>; implement TCP/UDP adapters or start with</li></ol>
+<p>the "unsupported" stubs like iOS.</p>
+<blockquote><p>Note: this guide assumes the official KMP-for-HarmonyOS support in DevEco Studio 5.x. If Huawei's KMP toolchain is unavailable in your SDK version, the shared logic can alternatively be exposed via C ABI / OHOS FFI.</p></blockquote>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
