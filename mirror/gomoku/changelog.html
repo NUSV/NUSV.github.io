@@ -35,11 +35,34 @@
       <div class="doc-top">
         <span class="pg-icon"><img src="/assets/mirror/Gomoku-NUSV/logo2.png" alt="Gomoku-NUSV icon" loading="lazy"></span>
         <h1>Changelog</h1>
-        <p class="mdoc-meta"><span data-i18n="doc.mirrored_from">Mirrored from</span> <a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">NUSV/Gomoku-NUSV</a> &middot; <code>CHANGELOG.md</code> &middot; <span data-i18n="doc.synced">synced</span> 2026-09-18 16:52 UTC &middot; <a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/CHANGELOG.md" target="_blank" rel="noopener" data-i18n="doc.original">original on GitHub</a></p>
+        <p class="mdoc-meta"><span data-i18n="doc.mirrored_from">Mirrored from</span> <a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">NUSV/Gomoku-NUSV</a> &middot; <code>CHANGELOG.md</code> &middot; <span data-i18n="doc.synced">synced</span> 2026-09-18 20:56 UTC &middot; <a href="https://github.com/NUSV/Gomoku-NUSV/blob/main/CHANGELOG.md" target="_blank" rel="noopener" data-i18n="doc.original">original on GitHub</a></p>
       </div>
       <section class="pg-about mdoc-body">
         <p>All notable changes to Gomoku-NUSV are documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/" target="_blank" rel="noopener">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" target="_blank" rel="noopener">Semantic Versioning</a>.</p>
+<h2>[1.7.0-M] - 2026-08-04</h2>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
 <h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
@@ -179,7 +202,30 @@
 <p>Builder** workflow (<code>.github/workflows/linux-build.yml</code>, built on an Ubuntu runner). All game logic, AI, saves and UI are shared with the other platforms.</p>
 <ul><li>Desktop window opens with an OS-aware startup log; layout adapts from 700 px</li></ul>
 <p>wide up to large screens (responsive columns, wrapping chip groups, compact headers) for consistent experience across macOS / Windows / Android at any DPI.</p>
-<h3>[1.6.4] - 2026-08-04</h3>
+<h3>[1.7.0-M] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
 <p>warning.</p>
@@ -310,7 +356,30 @@
 <h3>Added</h3>
 <ul><li><strong>Reset Save button in Settings</strong> with a two-step confirmation dialog:</li></ul>
 <p>first confirmation, then a second "cannot be undone" confirmation. It restores the game to a fresh state (stats, points, power-ups, sign-in, tasks).</p>
-<h3>[1.6.4] - 2026-08-04</h3>
+<h3>[1.7.0-M] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
 <p>warning.</p>
@@ -445,7 +514,30 @@
 <ul><li><strong>Effects master switch was not persisted</strong> — the toggle now survives restarts.</li><li>The shop no longer shows a decoration as "in use" when the imported save</li></ul>
 <p>references an unowned item.</p>
 <ul><li>Removed dead per-effect toggle code.</li></ul>
-<h3>[1.6.4] - 2026-08-04</h3>
+<h3>[1.7.0-M] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
 <p>warning.</p>
@@ -575,7 +667,30 @@
 <ul><li>Saves now record the app version they belong to; imported saves are tagged with</li></ul>
 <p>the current version so they are never reset again.</p>
 <ul><li>Legacy plain-text profile keys from 1.3.x are cleaned up after loading.</li></ul>
-<h3>[1.6.4] - 2026-08-04</h3>
+<h3>[1.7.0-M] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
 <p>warning.</p>
@@ -706,7 +821,30 @@
 <p>stock and disable when empty.</p>
 <ul><li>The shop sells hints (100 pts each) and time boosts (80 pts each) in packs</li></ul>
 <p>of 1 / 5 / 10, giving points a direct gameplay use.</p>
-<h3>[1.6.4] - 2026-08-04</h3>
+<h3>[1.7.0-M] - 2026-08-04</h3>
+<h3>Added</h3>
+<ul><li><strong>Android mobile edition</strong> (<code>com.gomoku.nusv.mobile</code>, portrait-locked) with a</li></ul>
+<p><strong>rebuilt phone game UI</strong>:</p>
+<ul><li>Compact top bar: back, turn indicator, move count, large countdown timer,</li></ul>
+<p>settings entry</p>
+<ul><li><strong>Maximized board</strong> — the board now takes the full available space (no more</li></ul>
+<p>side panel eating half the screen)</p>
+<ul><li>Bottom action bar: Undo / Hint / +30s / More</li><li>Settings, game info and all configuration moved into a full-screen "More"</li></ul>
+<p>panel, keeping the play area clean</p>
+<ul><li>The same responsive phone layout also applies to the regular phone build</li></ul>
+<p>(narrow screens < 600 dp)</p>
+<ul><li>Saves migrate via the existing export/import (clipboard or text box), so</li></ul>
+<p>progress can move between the standard and mobile editions.</p>
+<h3>Fixed (LAN battle)</h3>
+<ul><li>Starting a LAN game now navigates to the board from <strong>any</strong> page (a global</li></ul>
+<p>listener), so the joiner can never miss the game start.</p>
+<ul><li>After a LAN disconnect the result dialog no longer offers "Play Again" (which</li></ul>
+<p>would silently continue offline); it only closes.</p>
+<h3>升级须知 / Upgrade Notes</h3>
+<ul><li><strong>EN</strong>: Updating to 1.7.0-M resets the local save (new-player state). To keep</li></ul>
+<p>progress: export your save before updating and import it after.</p>
+<ul><li><strong>中文</strong>: 本次更新会重置存档（新玩家状态）。想保留进度：更新前 设置 → 存档备份 → 导出存档；更新后导入恢复。</li></ul>
+<h2>[1.6.4] - 2026-08-04</h2>
 <h3>Added</h3>
 <ul><li><strong>Hint toggles in Settings</strong> — two new persisted switches:</li><li><strong>AI thinking notice</strong>: show or hide the "AI thinking..." bubble.</li><li><strong>Performance notice</strong>: show or hide the low-performance (search-truncation)</li></ul>
 <p>warning.</p>
