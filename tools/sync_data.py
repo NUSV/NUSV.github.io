@@ -76,10 +76,10 @@ NAV_TMPL = """  <header class="nav">
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="{p}index.html">Home</a>
-        <a href="{p}warehouse.html">Warehouse</a>
-        <a href="{p}docs.html">Docs</a>
-        <a href="{p}about.html">About</a>
+        <a href="{p}index.html" data-i18n="nav.home">Home</a>
+        <a href="{p}warehouse.html" data-i18n="nav.warehouse">Warehouse</a>
+        <a href="{p}docs.html" data-i18n="nav.docs">Docs</a>
+        <a href="{p}about.html" data-i18n="nav.about">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -89,8 +89,8 @@ NAV_TMPL = """  <header class="nav">
 
 FOOTER_TMPL = """  <footer class="footer">
     <div class="wrap footer-inner">
-      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="{p}warehouse.html">Warehouse</a> &middot; <a href="{p}docs.html">Docs</a></span>
+      <span>&copy; <span class="year"></span> <span data-i18n="footer.copyright">United Science Vaca (NUSV). Open source.</span></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a> &middot; <a href="{p}warehouse.html" data-i18n="footer.warehouse">Warehouse</a> &middot; <a href="{p}docs.html" data-i18n="footer.docs">Docs</a></span>
     </div>
   </footer>"""
 
@@ -724,24 +724,24 @@ def card_markup(proj, kind="featured"):
     chips += '<span class="chip">%s</span>' % html.escape(proj["license"] or "Open source")
     links = []
     if kind == "featured":
-        links.append('<a class="linkbtn" href="projects/%s.html">Project page</a>'
+        links.append('<a class="linkbtn" href="projects/%s.html" data-i18n="card.project_page">Project page</a>'
                      % proj["slug"])
         if proj["docs"]:
-            links.append('<a class="linkbtn linkbtn-ghost" href="%s">Technical docs</a>'
+            links.append('<a class="linkbtn linkbtn-ghost" href="%s" data-i18n="card.tech_docs">Technical docs</a>'
                          % html.escape(proj["docs"], quote=True))
         else:
-            links.append('<a class="linkbtn linkbtn-ghost" href="%s" target="_blank" rel="noopener">Repository</a>'
+            links.append('<a class="linkbtn linkbtn-ghost" href="%s" target="_blank" rel="noopener" data-i18n="card.repository">Repository</a>'
                          % html.escape(proj["repo_url"], quote=True))
     else:
-        links.append('<a class="linkbtn" href="projects/%s.html">Project page</a>' % proj["slug"])
+        links.append('<a class="linkbtn" href="projects/%s.html" data-i18n="card.project_page">Project page</a>' % proj["slug"])
         if proj["docs"]:
-            links.append('<a class="linkbtn linkbtn-ghost" href="%s">Technical docs</a>'
+            links.append('<a class="linkbtn linkbtn-ghost" href="%s" data-i18n="card.tech_docs">Technical docs</a>'
                          % html.escape(proj["docs"], quote=True))
         if proj["releases"]:
-            links.append('<a class="linkbtn linkbtn-ghost" href="%s/releases" target="_blank" rel="noopener">Releases</a>'
+            links.append('<a class="linkbtn linkbtn-ghost" href="%s/releases" target="_blank" rel="noopener" data-i18n="card.releases">Releases</a>'
                          % proj["repo_url"])
         else:
-            links.append('<a class="linkbtn linkbtn-ghost" href="%s" target="_blank" rel="noopener">Source</a>'
+            links.append('<a class="linkbtn linkbtn-ghost" href="%s" target="_blank" rel="noopener" data-i18n="card.source">Source</a>'
                          % proj["repo_url"])
     return (
         '<div class="card reveal">\n'
@@ -788,16 +788,26 @@ def mirrored_docs_section(projects):
 
 DOC_CATEGORY_ORDER = ["Tutorials", "FAQ", "Security", "Audits", "Release notes", "Documents"]
 
+DOC_CATEGORY_KEYS = {
+    "Tutorials": "cat.tutorials",
+    "FAQ": "cat.faq",
+    "Security": "cat.security",
+    "Audits": "cat.audits",
+    "Release notes": "cat.release_notes",
+    "Documents": "cat.documents",
+}
+
 
 def doc_category(path):
-    base = os.path.basename(path).lower()
-    if base.startswith("tutorial"):
+    low = path.lower()
+    base = os.path.basename(low)
+    if base.startswith("tutorial") or "/tutorials/" in low or "/tutorial/" in low:
         return "Tutorials"
-    if base.startswith("faq"):
+    if base.startswith("faq") or "/faq/" in low:
         return "FAQ"
     if "audit" in base:
         return "Audits"
-    if "shield" in base or base.startswith("security"):
+    if "shield" in base or base.startswith("security") or "/security/" in low:
         return "Security"
     if "changelog" in base or "release" in base:
         return "Release notes"
@@ -818,8 +828,8 @@ def grouped_doc_list(doc_pages):
             for d in groups[name]
         )
         parts.append(
-            '<div class="doc-group-title">%s</div><ul class="doc-list">%s</ul>'
-            % (html.escape(name), items)
+            '<div class="doc-group-title" data-i18n="%s">%s</div><ul class="doc-list">%s</ul>'
+            % (DOC_CATEGORY_KEYS.get(name, "cat.documents"), html.escape(name), items)
         )
     return "".join(parts)
 
@@ -856,7 +866,10 @@ def render_page(proj, readme_html, updated_utc):
         label, kind = PLATFORM_BY_EXT.get(
             os.path.splitext(asset["name"].lower())[1], ("Download", "muted")
         )
-        dl = ("%d downloads" % asset["count"]) if asset.get("count") else human_size(asset["size"])
+        dl = (
+            '<span data-i18n="pg.downloads" data-i18n-args="%d">%d downloads</span>'
+            % (asset["count"], asset["count"])
+        ) if asset.get("count") else human_size(asset["size"])
         href = mirrored.get(asset["name"]) or asset["url"]
         return (
             '<a class="dl-btn%s %s" href="%s" target="_blank" rel="noopener">'
@@ -873,16 +886,16 @@ def render_page(proj, readme_html, updated_utc):
         if alln == 0:
             dl_latest = (
                 '<a class="dl-btn muted" href="%s" target="_blank" rel="noopener">'
-                '<span class="dl-label">No downloadable assets</span>'
-                '<span class="dl-sub">open the release page</span></a>'
+                '<span class="dl-label" data-i18n="pg.no_assets">No downloadable assets</span>'
+                '<span class="dl-sub" data-i18n="pg.open_release">open the release page</span></a>'
                 % html.escape(latest["html_url"], quote=True)
             )
         elif alln > len(top):
             dl_latest += (
                 '<a class="dl-btn muted" href="%s" target="_blank" rel="noopener">'
-                '<span class="dl-label">All %d assets</span>'
-                '<span class="dl-sub">open the release page</span></a>'
-                % (html.escape(latest["html_url"], quote=True), alln)
+                '<span class="dl-label" data-i18n="pg.all_assets" data-i18n-args="%d">All %d assets</span>'
+                '<span class="dl-sub" data-i18n="pg.open_release">open the release page</span></a>'
+                % (html.escape(latest["html_url"], quote=True), alln, alln)
             )
         head_sub = (
             '<span class="rel-tag">%s</span><span class="rel-date">%s</span>'
@@ -890,7 +903,7 @@ def render_page(proj, readme_html, updated_utc):
         )
     else:
         dl_latest = ""
-        head_sub = '<span class="rel-tag">no releases yet</span>'
+        head_sub = '<span class="rel-tag" data-i18n="pg.no_releases">no releases yet</span>'
 
     rel_items = []
     for rel in proj["releases"][1:]:
@@ -907,33 +920,34 @@ def render_page(proj, readme_html, updated_utc):
     mirror_note = ""
     if mirrored:
         mirror_note = (
-            '<div class="mirror-note"><a href="/downloads/">Mirrored on nusv.github.io</a> '
+            '<div class="mirror-note" data-i18n="pg.mirror_note">'
+            '<a href="/downloads/">Mirrored on nusv.github.io</a> '
             "&mdash; no VPN required.</div>"
         )
     sidebar.append(
         '<div class="card pg-side">'
-        '<div class="side-title">Latest release</div>'
+        '<div class="side-title" data-i18n="pg.latest_release">Latest release</div>'
         '%s<div class="dl-group">%s%s</div></div>'
         % (head_sub, dl_latest, mirror_note)
     )
     if rel_items:
         sidebar.append(
-            '<div class="card pg-side"><div class="side-title">Recent versions</div>%s</div>'
+            '<div class="card pg-side"><div class="side-title" data-i18n="pg.recent_versions">Recent versions</div>%s</div>'
             % "".join(rel_items)
         )
     info = []
-    info.append('<div class="pg-info"><span>License</span><b>%s</b></div>' % html.escape(license_txt or "—"))
-    info.append('<div class="pg-info"><span>Stars</span><b>%d</b></div>' % stars)
-    info.append('<div class="pg-info"><span>Repository updated</span><b>%s</b></div>'
+    info.append('<div class="pg-info"><span data-i18n="pg.license">License</span><b>%s</b></div>' % html.escape(license_txt or "—"))
+    info.append('<div class="pg-info"><span data-i18n="pg.stars">Stars</span><b>%d</b></div>' % stars)
+    info.append('<div class="pg-info"><span data-i18n="pg.updated">Repository updated</span><b>%s</b></div>'
                 % html.escape((proj.get("pushed_at") or "")[:10]))
-    info.append('<div class="pg-info"><span>Source</span><a href="%s" target="_blank" rel="noopener">%s</a></div>'
+    info.append('<div class="pg-info"><span data-i18n="pg.source">Source</span><a href="%s" target="_blank" rel="noopener">%s</a></div>'
                 % (html.escape(repo_url, quote=True), html.escape(proj["repo"])))
-    sidebar.append('<div class="card pg-side"><div class="side-title">Project info</div>%s</div>'
+    sidebar.append('<div class="card pg-side"><div class="side-title" data-i18n="pg.project_info">Project info</div>%s</div>'
                    % "".join(info))
     doc_pages = proj.get("doc_pages") or []
     if doc_pages:
         sidebar.append(
-            '<div class="card pg-side"><div class="side-title">Documents</div>%s</div>'
+            '<div class="card pg-side"><div class="side-title" data-i18n="pg.documents">Documents</div>%s</div>'
             % grouped_doc_list(doc_pages)
         )
 
@@ -947,15 +961,15 @@ def render_page(proj, readme_html, updated_utc):
                html.escape(resolve_raw(proj["repo"], proj["branch"], p), quote=True))
             for p in proj["screenshots"][:8]
         )
-        gal = '<h2 class="gal-title">Screenshots</h2><div class="gal">%s</div>' % imgs
+        gal = '<h2 class="gal-title" data-i18n="pg.screenshots">Screenshots</h2><div class="gal">%s</div>' % imgs
 
-    actions = ['<a class="btn btn-primary" href="#downloads">Download latest</a>']
-    actions.append('<a class="btn btn-ghost" href="%s" target="_blank" rel="noopener">GitHub repository</a>' % html.escape(repo_url, quote=True))
+    actions = ['<a class="btn btn-primary" href="#downloads" data-i18n="pg.download_latest">Download latest</a>']
+    actions.append('<a class="btn btn-ghost" href="%s" target="_blank" rel="noopener" data-i18n="pg.github_repo">GitHub repository</a>' % html.escape(repo_url, quote=True))
     if docs:
-        actions.append('<a class="btn btn-ghost" href="%s">Technical docs</a>' % html.escape(docs, quote=True))
+        actions.append('<a class="btn btn-ghost" href="%s" data-i18n="pg.tech_docs">Technical docs</a>' % html.escape(docs, quote=True))
 
-    return """<!DOCTYPE html>
-<html lang="en">
+    page = """<!DOCTYPE html>
+<html lang="en" data-i18n-title="title.project" data-i18n-args="{name}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -973,7 +987,7 @@ def render_page(proj, readme_html, updated_utc):
 %s
 
   <main class="wrap">
-    <nav class="pg-back"><a href="../warehouse.html">&#8249; All projects</a></nav>
+    <nav class="pg-back"><a href="../warehouse.html" data-i18n="pg.back">&#8249; All projects</a></nav>
 
     <article class="pg">
 
@@ -991,7 +1005,7 @@ def render_page(proj, readme_html, updated_utc):
 
       <div class="pg-grid">
         <section class="pg-about">
-          <div class="pg-updated">README auto-synced from the repository &middot; %s UTC</div>
+          <div class="pg-updated"><span data-i18n="pg.readme_synced">README auto-synced from the repository</span> &middot; %s UTC</div>
           %s
           %s
         </section>
@@ -1005,6 +1019,7 @@ def render_page(proj, readme_html, updated_utc):
 
 %s
 
+  <script src="../assets/js/i18n.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>
 </html>
@@ -1025,14 +1040,15 @@ def render_page(proj, readme_html, updated_utc):
         "".join(sidebar),
         footer("../"),
     )
+    return page.replace('data-i18n-args="{name}"', 'data-i18n-args="%s"' % html.escape(name, quote=True))
 
 
 def render_doc_page(proj, doc, updated_utc):
     """A mirrored markdown document rendered as a site page."""
     icon = proj["icon_url"] or proj["fallback_icon"]
     original = "%s/blob/%s/%s" % (proj["repo_url"], proj["branch"], doc["path"])
-    return """<!DOCTYPE html>
-<html lang="en">
+    page = """<!DOCTYPE html>
+<html lang="en" data-i18n-title="title.doc" data-i18n-args="{doc}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1052,7 +1068,7 @@ def render_doc_page(proj, doc, updated_utc):
       <div class="doc-top">
         <span class="pg-icon"><img src="%s" alt="%s icon" loading="lazy"></span>
         <h1>%s</h1>
-        <p class="mdoc-meta">Mirrored from <a href="%s" target="_blank" rel="noopener">%s/%s</a> &middot; <code>%s</code> &middot; synced %s UTC &middot; <a href="%s" target="_blank" rel="noopener">original on GitHub</a></p>
+        <p class="mdoc-meta"><span data-i18n="doc.mirrored_from">Mirrored from</span> <a href="%s" target="_blank" rel="noopener">%s/%s</a> &middot; <code>%s</code> &middot; <span data-i18n="doc.synced">synced</span> %s UTC &middot; <a href="%s" target="_blank" rel="noopener" data-i18n="doc.original">original on GitHub</a></p>
       </div>
       <section class="pg-about mdoc-body">
         %s
@@ -1062,6 +1078,7 @@ def render_doc_page(proj, doc, updated_utc):
 
 %s
 
+  <script src="../../assets/js/i18n.js"></script>
   <script src="../../assets/js/main.js"></script>
 </body>
 </html>
@@ -1079,6 +1096,7 @@ def render_doc_page(proj, doc, updated_utc):
         doc["body"],
         footer("../../"),
     )
+    return page.replace('data-i18n-args="{doc}"', 'data-i18n-args="%s"' % html.escape(doc["title"], quote=True))
 
 
 
