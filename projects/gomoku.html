@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="title.project" data-i18n-args="Gomoku-NUSV">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,10 +21,10 @@
         NUSV <small>United Science Vaca</small>
       </a>
       <nav class="nav-links">
-        <a href="../index.html">Home</a>
-        <a href="../warehouse.html">Warehouse</a>
-        <a href="../docs.html">Docs</a>
-        <a href="../about.html">About</a>
+        <a href="../index.html" data-i18n="nav.home">Home</a>
+        <a href="../warehouse.html" data-i18n="nav.warehouse">Warehouse</a>
+        <a href="../docs.html" data-i18n="nav.docs">Docs</a>
+        <a href="../about.html" data-i18n="nav.about">About</a>
       </nav>
       <span class="nav-cta">
         <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
@@ -33,7 +33,7 @@
   </header>
 
   <main class="wrap">
-    <nav class="pg-back"><a href="../warehouse.html">&#8249; All projects</a></nav>
+    <nav class="pg-back"><a href="../warehouse.html" data-i18n="pg.back">&#8249; All projects</a></nav>
 
     <article class="pg">
 
@@ -44,16 +44,16 @@
           <p class="lede">A polished cross-platform Five-in-a-Row game with on-device AI opponents across three difficulty levels — no network needed.</p>
           <div class="meta pg-chips"><span class="chip chip-accent">macOS</span><span class="chip chip-accent">Windows</span><span class="chip chip-accent">iOS</span><span class="chip chip-accent">Android</span><span class="chip">MIT</span></div>
           <div class="btn-row pg-actions">
-            <a class="btn btn-primary" href="#downloads">Download latest</a>
-            <a class="btn btn-ghost" href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">GitHub repository</a>
-            <a class="btn btn-ghost" href="/docs/gomoku.html">Technical docs</a>
+            <a class="btn btn-primary" href="#downloads" data-i18n="pg.download_latest">Download latest</a>
+            <a class="btn btn-ghost" href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener" data-i18n="pg.github_repo">GitHub repository</a>
+            <a class="btn btn-ghost" href="/docs/gomoku.html" data-i18n="pg.tech_docs">Technical docs</a>
           </div>
         </div>
       </div>
 
       <div class="pg-grid">
         <section class="pg-about">
-          <div class="pg-updated">README auto-synced from the repository &middot; 2026-09-18 16:17 UTC</div>
+          <div class="pg-updated"><span data-i18n="pg.readme_synced">README auto-synced from the repository</span> &middot; 2026-09-18 16:52 UTC</div>
           <p>A cross-platform Gomoku (Five in a Row) game for <strong>macOS, Windows, iOS and Android</strong>, built with <a href="https://kotlinlang.org/docs/multiplatform.html" target="_blank" rel="noopener">Kotlin Multiplatform</a> and <a href="https://www.jetbrains.com/compose-multiplatform/" target="_blank" rel="noopener">Compose Multiplatform</a>.</p>
 <p>Play against a local friend on the same screen, or challenge the built-in AI across three difficulty levels. The AI is a self-contained on-device engine with no network dependencies.</p>
 <h2>Features</h2>
@@ -203,7 +203,7 @@ xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
           
         </section>
         <aside class="pg-sidecol" id="downloads">
-          <div class="card pg-side"><div class="side-title">Latest release</div><span class="rel-tag">v1.6.4</span><span class="rel-date">2026-08-08</span><div class="dl-group"><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4-automotive.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">Gomoku-NUSV-1.6.4-automotive.apk &middot; 18 downloads</span></a><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">Gomoku-NUSV-1.6.4.apk &middot; 27 downloads</span></a><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4.dmg" target="_blank" rel="noopener"><span class="dl-label">macOS (.dmg)</span><span class="dl-sub">Gomoku-NUSV-1.6.4.dmg &middot; 18 downloads</span></a><a class="dl-btn muted" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.4" target="_blank" rel="noopener"><span class="dl-label">All 4 assets</span><span class="dl-sub">open the release page</span></a><div class="mirror-note"><a href="/downloads/">Mirrored on nusv.github.io</a> &mdash; no VPN required.</div></div></div><div class="card pg-side"><div class="side-title">Recent versions</div><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.3" target="_blank" rel="noopener"><span class="rel-tag">v1.6.3</span><span class="rel-date">2026-08-08</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.2" target="_blank" rel="noopener"><span class="rel-tag">v1.6.2</span><span class="rel-date">2026-08-04</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.1" target="_blank" rel="noopener"><span class="rel-tag">v1.6.1</span><span class="rel-date">2026-08-04</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.0-S" target="_blank" rel="noopener"><span class="rel-tag">v1.6.0-S</span><span class="rel-date">2026-08-04</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.3-super" target="_blank" rel="noopener"><span class="rel-tag">v1.5.3-super</span><span class="rel-date">2026-08-03</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.2" target="_blank" rel="noopener"><span class="rel-tag">v1.5.2</span><span class="rel-date">2026-08-03</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.1" target="_blank" rel="noopener"><span class="rel-tag">v1.5.1</span><span class="rel-date">2026-08-03</span><span class="rel-assets">4 assets</span></a></div><div class="card pg-side"><div class="side-title">Project info</div><div class="pg-info"><span>License</span><b>MIT</b></div><div class="pg-info"><span>Stars</span><b>1</b></div><div class="pg-info"><span>Repository updated</span><b>2026-09-09</b></div><div class="pg-info"><span>Source</span><a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">Gomoku-NUSV</a></div></div><div class="card pg-side"><div class="side-title">Documents</div><div class="doc-group-title">Release notes</div><ul class="doc-list"><li><a href="/mirror/gomoku/changelog.html">Changelog</a></li></ul><div class="doc-group-title">Documents</div><ul class="doc-list"><li><a href="/mirror/gomoku/harmonyos-porting.html">HarmonyOS NEXT Porting Guide</a></li><li><a href="/mirror/gomoku/ios-installation.html">iOS Installation Guide (No Paid Developer Account)</a></li></ul></div>
+          <div class="card pg-side"><div class="side-title" data-i18n="pg.latest_release">Latest release</div><span class="rel-tag">v1.6.4</span><span class="rel-date">2026-08-08</span><div class="dl-group"><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4-automotive.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">Gomoku-NUSV-1.6.4-automotive.apk &middot; <span data-i18n="pg.downloads" data-i18n-args="19">19 downloads</span></span></a><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4.apk" target="_blank" rel="noopener"><span class="dl-label">Android APK</span><span class="dl-sub">Gomoku-NUSV-1.6.4.apk &middot; <span data-i18n="pg.downloads" data-i18n-args="28">28 downloads</span></span></a><a class="dl-btn big " href="https://nusv.github.io/downloads/gomoku-nusv/Gomoku-NUSV-1.6.4.dmg" target="_blank" rel="noopener"><span class="dl-label">macOS (.dmg)</span><span class="dl-sub">Gomoku-NUSV-1.6.4.dmg &middot; <span data-i18n="pg.downloads" data-i18n-args="19">19 downloads</span></span></a><a class="dl-btn muted" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.4" target="_blank" rel="noopener"><span class="dl-label" data-i18n="pg.all_assets" data-i18n-args="4">All 4 assets</span><span class="dl-sub" data-i18n="pg.open_release">open the release page</span></a><div class="mirror-note" data-i18n="pg.mirror_note"><a href="/downloads/">Mirrored on nusv.github.io</a> &mdash; no VPN required.</div></div></div><div class="card pg-side"><div class="side-title" data-i18n="pg.recent_versions">Recent versions</div><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.3" target="_blank" rel="noopener"><span class="rel-tag">v1.6.3</span><span class="rel-date">2026-08-08</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.2" target="_blank" rel="noopener"><span class="rel-tag">v1.6.2</span><span class="rel-date">2026-08-04</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.1" target="_blank" rel="noopener"><span class="rel-tag">v1.6.1</span><span class="rel-date">2026-08-04</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.6.0-S" target="_blank" rel="noopener"><span class="rel-tag">v1.6.0-S</span><span class="rel-date">2026-08-04</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.3-super" target="_blank" rel="noopener"><span class="rel-tag">v1.5.3-super</span><span class="rel-date">2026-08-03</span><span class="rel-assets">6 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.2" target="_blank" rel="noopener"><span class="rel-tag">v1.5.2</span><span class="rel-date">2026-08-03</span><span class="rel-assets">4 assets</span></a><a class="rel-item" href="https://github.com/NUSV/Gomoku-NUSV/releases/tag/v1.5.1" target="_blank" rel="noopener"><span class="rel-tag">v1.5.1</span><span class="rel-date">2026-08-03</span><span class="rel-assets">4 assets</span></a></div><div class="card pg-side"><div class="side-title" data-i18n="pg.project_info">Project info</div><div class="pg-info"><span data-i18n="pg.license">License</span><b>MIT</b></div><div class="pg-info"><span data-i18n="pg.stars">Stars</span><b>1</b></div><div class="pg-info"><span data-i18n="pg.updated">Repository updated</span><b>2026-09-09</b></div><div class="pg-info"><span data-i18n="pg.source">Source</span><a href="https://github.com/NUSV/Gomoku-NUSV" target="_blank" rel="noopener">Gomoku-NUSV</a></div></div><div class="card pg-side"><div class="side-title" data-i18n="pg.documents">Documents</div><div class="doc-group-title" data-i18n="cat.release_notes">Release notes</div><ul class="doc-list"><li><a href="/mirror/gomoku/changelog.html">Changelog</a></li></ul><div class="doc-group-title" data-i18n="cat.documents">Documents</div><ul class="doc-list"><li><a href="/mirror/gomoku/harmonyos-porting.html">HarmonyOS NEXT Porting Guide</a></li><li><a href="/mirror/gomoku/ios-installation.html">iOS Installation Guide (No Paid Developer Account)</a></li></ul></div>
         </aside>
       </div>
 
@@ -212,11 +212,12 @@ xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
-      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../warehouse.html">Warehouse</a> &middot; <a href="../docs.html">Docs</a></span>
+      <span>&copy; <span class="year"></span> <span data-i18n="footer.copyright">United Science Vaca (NUSV). Open source.</span></span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a> &middot; <a href="../warehouse.html" data-i18n="footer.warehouse">Warehouse</a> &middot; <a href="../docs.html" data-i18n="footer.docs">Docs</a></span>
     </div>
   </footer>
 
+  <script src="../assets/js/i18n.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>
 </html>
