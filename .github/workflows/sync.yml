@@ -25,7 +25,9 @@ jobs:
         run: |
           git config user.name "NUSV Sync Bot"
           git config user.email "nusv-sync@users.noreply.github.com"
-          git add projects tools
+          # -A: the generator may create files anywhere (projects/, mirror/,
+          # docs/, assets/mirror/ images, listing pages, tools/).
+          git add -A
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
