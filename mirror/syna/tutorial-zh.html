@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syna 使用教程（中文） — Syna | United Science Vaca (NUSV)</title>
+  <meta name="description" content="Syna 使用教程（中文） — mirrored from the Syna-NUSV repository.">
+  <link rel="icon" type="image/png" href="../../assets/img/nusv-logo.png">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark"><img src="../../assets/img/nusv-logo.png" alt="NUSV" loading="lazy"></span>
+        NUSV <small>United Science Vaca</small>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Home</a>
+        <a href="../../warehouse.html">Warehouse</a>
+        <a href="../../docs.html">Docs</a>
+        <a href="../../about.html">About</a>
+      </nav>
+      <span class="nav-cta">
+        <button class="lang-toggle" id="lang-toggle" data-lang="en" title="中文版即将推出">EN</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="pg-back"><a href="../../projects/syna.html">&#8249; Syna</a></nav>
+
+    <article class="doc mdoc">
+      <div class="doc-top">
+        <span class="pg-icon"><img src="/assets/mirror/Syna-NUSV/Syna_logo_2.png" alt="Syna icon" loading="lazy"></span>
+        <h1>Syna 使用教程（中文）</h1>
+        <p class="mdoc-meta">Mirrored from <a href="https://github.com/NUSV/Syna-NUSV" target="_blank" rel="noopener">NUSV/Syna-NUSV</a> &middot; <code>TUTORIAL_ZH.md</code> &middot; synced 2026-09-18 16:19 UTC &middot; <a href="https://github.com/NUSV/Syna-NUSV/blob/main/TUTORIAL_ZH.md" target="_blank" rel="noopener">original on GitHub</a></p>
+      </div>
+      <section class="pg-about mdoc-body">
+        <p>分步指南：局域网聊天、私人服务器、远程接入（内网穿透）、安全模型与故障排查。</p>
+<p><strong>English version?</strong> → <a href="https://github.com/NUSV/Syna-NUSV/main/TUTORIAL_EN.md">English Tutorial</a></p>
+<hr>
+<h2>目录</h2>
+<ul><li><a href="#1-快速开始">快速开始</a></li><li><a href="#2-局域网功能">局域网功能</a></li><li><a href="#3-私人服务器">私人服务器</a></li><li><a href="#4-实体机搭建教程">实体机搭建教程</a></li><li><a href="#5-远程接入内网穿透">远程接入（内网穿透）</a></li><li><a href="#6-安全模型">安全模型</a></li><li><a href="#7-故障排查">故障排查</a></li><li><a href="#8-构建与分发">构建与分发</a></li><li><a href="#更多资源">更多资源</a></li></ul>
+<hr>
+<h2>1. 快速开始</h2>
+<p><strong>环境要求</strong></p>
+<ul><li>桌面端需要 JVM 17+（可从 <a href="https://adoptium.net" target="_blank" rel="noopener">Adoptium</a> 下载）</li><li>Android 端需要 Android 9（API 28）及以上</li><li>桌面应用与服务器支持 Windows / macOS / Linux</li></ul>
+<p><strong>1. 运行桌面应用</strong></p>
+<pre class="doc-code">git clone https://github.com/NUSV/Syna-NUSV.git
+cd Syna-NUSV
+./gradlew :composeApp:run</pre>
+<p>会打开标题为 <strong>Syna</strong> 的窗口，底部有三个标签：<strong>会话</strong>、<strong>联系人</strong>、<strong>设置</strong>。</p>
+<p><strong>2. 运行 Android 应用</strong></p>
+<pre class="doc-code">./gradlew :composeApp:assembleDebug
+adb install composeApp/build/outputs/apk/debug/composeApp-debug.apk</pre>
+<p><strong>3. 与同一局域网的人聊天</strong></p>
+<ol><li>两台设备连接<strong>同一个 Wi-Fi / 局域网</strong>。</li><li>双方打开 Syna，应用会自动互相发现（约 3 秒），对方会出现在<strong>联系人</strong>列表，带绿点表示在线。</li><li>点击用户进入聊天页，输入消息发送，对方即时收到（✓✓ 表示已读）。</li><li>无需服务器、无需联网即可使用。</li></ol>
+<hr>
+<h2>2. 局域网功能</h2>
+<table><thead><tr><th>功能</th><th>使用方法</th></tr></thead><tbody><tr><td><strong>自动发现</strong></td><td>自动。每台设备每 3 秒通过 UDP（广播 + 多播）宣告在线；15 秒无心跳判定离线。</td></tr><tr><td><strong>手动刷新</strong></td><td>联系人页右上角 ⟳ 刷新：立即重播你的存在广播并重算在线状态——排障利器。</td></tr><tr><td><strong>自定义用户名</strong></td><td>设置 → 自定义用户名 → 输入后稍等 1 秒，新名字会实时广播给局域网。</td></tr><tr><td><strong>单聊</strong></td><td>联系人 → 点击用户。支持已读回执 ✓✓、加密 🔒、阅后即焚 🔥。</td></tr><tr><td><strong>图片与文件</strong></td><td>聊天输入行点 📎 → 系统文件选择器选文件。分块传输带实时进度百分比，图片直接在气泡内渲染。</td></tr><tr><td><strong>正在输入</strong></td><td>对方输入时聊天页头部自动显示"xxx 正在输入…"。</td></tr><tr><td><strong>消息撤回</strong></td><td>长按自己发送的消息 → 2 分钟内可撤回，双方都显示"[消息已撤回]"。</td></tr><tr><td><strong>引用回复</strong></td><td>长按任意消息 → 回复，输入框上方与气泡内都会显示被引用内容的预览。</td></tr><tr><td><strong>@提及</strong></td><td>群聊输入行点 @ 按钮 → 选择成员 → 自动插入 "@名字 " 并随消息传递。</td></tr><tr><td><strong>群聊（P2P 网格）</strong></td><td>联系人 → 发起群聊 → 勾选成员 → 命名 → 创建。消息直连每个成员，逐对加密。</td></tr><tr><td><strong>解散/退出群聊</strong></td><td>群聊页头部：群主显示"解散"（通知全员并清除群），成员显示"退出"。</td></tr><tr><td><strong>删除联系人</strong></td><td>联系人页点行尾 ✕：移除联系人与会话并屏蔽其广播；可在 设置 → 已屏蔽的联系人 → 解除屏蔽 随时恢复。</td></tr><tr><td><strong>连接方式</strong></td><td>设置 → 连接方式：自动（默认，TCP 可靠）/ TCP / UDP（快速）/ 主机热点。每实例独立 UDP 端口，同机多开也没问题。</td></tr><tr><td><strong>明暗主题</strong></td><td>设置 → 外观：跟随系统 / 明亮 / 暗黑。</td></tr><tr><td><strong>阅后即焚</strong></td><td>输入框旁 🔥 开关（也可在 设置 → 增强防护 设为默认）。消息在接收方显示 8 秒后，<strong>双方</strong>设备同时销毁。</td></tr><tr><td><strong>临时聊天</strong></td><td>设置 → 增强防护 → 临时聊天 开启，选择 TTL（1小时/24小时/7天）。会话超过无活动时间自动清除。</td></tr><tr><td><strong>系统通知</strong></td><td>未打开的会话来消息时，Android 通知栏 / 桌面托盘弹窗提醒（阅后即焚内容不泄露）。</td></tr><tr><td><strong>聊天记录持久化</strong></td><td>局域网聊天重启不丢——静态加密存储，撤回/文件/引用/@ 状态完整恢复。</td></tr><tr><td><strong>清除本地记录</strong></td><td>设置 → 存储：显示聊天/文件占用，一键清除本地数据（不影响对方）。</td></tr><tr><td><strong>消息转发</strong></td><td>长按消息 → 转发到任意会话/群。</td></tr><tr><td><strong>聊天细节</strong></td><td>日期分隔线（今天/昨天/日期）+ 会话页总未读角标。</td></tr><tr><td><strong>托盘常驻（桌面）</strong></td><td>关窗最小化到系统托盘，双击恢复、菜单退出。</td></tr><tr><td><strong>离线消息</strong></td><td>对方离线时消息进入本地队列，对方上线后自动补发。</td></tr><tr><td><strong>◇Mirtazapine Shield</strong></td><td>设置 → ◇Mirtazapine Shield → 一键开启实时监测 + 应用锁（见 2.5 节）：威胁检测、生物识别 + 可选 TOTP 双重解锁、数据级密钥门禁、自毁协议、实时状态面板。</td></tr></tbody></table>
+<p><strong>小技巧：</strong> 聊天页顶部可看到连接方式、加密状态和待发送消息数（<code>N 条待发送</code>）。</p>
+<hr>
+<h2>2.5 ◇Mirtazapine Shield</h2>
+<h3>中文</h3>
+<p>内置的实时安全监测与应用锁（旗舰功能 ◇Mirtazapine Shield）。详细介绍见 <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md">MIRTAZAPINE_SHIELD.md</a>（含检测矩阵、响应链、开源下仍有效的安全设计）。</p>
+<ul><li><strong>开启</strong>：设置 → ◇Mirtazapine Shield → 打开（关闭需生物识别验证）。开启即一键全开全部防护。</li><li><strong>检测范围</strong>：Root（含 Magisk 隐藏 root、Xposed、Zygisk/Shamiko/LSPosed/Riru/EdXposed/TaiChi）、Frida 注入（路径/端口 27042+27043/内存映射/线程/TracerPid，<strong>JVM 与 native（NDK）双通道</strong>）、模拟器（含 test-keys）、USB 调试/ADB、SELinux、设备管理接管（MDM）、凭据变更、VPN/代理变更、<strong>用户 CA 证书新增与 ARP 欺骗（局域网中间人）</strong>、网络指纹（SSID 变化）、系统代理、设备身份变化、后台快速切换、无障碍滥用、监控类应用（安装+前台，<strong>签名学习黑名单——改名/换包依然命中</strong>）、<strong>屏幕录制/截屏事件（Android 14+）</strong>、投屏变化、时钟跳变、弱锁屏、输入法/USB 变化、<strong>可疑可执行模块（分区白名单 + 非 JIT memfd，不依赖名字）</strong>、降级安装、JVM agent、远程控制进程。</li><li><strong>检测到威胁时</strong>：应用锁定到全屏护盾页并列出威胁（含具体模块/代理等明细）；需<strong>生物识别（仅强生物识别，设备凭据窗口无效）+ （可选）TOTP 动态码第二因子</strong>解锁。解锁 5 分钟后自动再锁；严重级威胁 30 秒内未消除将再次锁定；注入类威胁进入假锁模式（密钥真实释放，需连续多次验证）。<strong>关闭护盾同样需要生物识别 + TOTP 双因子</strong>——攻击者无法关闭已开启的护盾。</li><li><strong>数据级密钥门禁</strong>：聊天数据由"会话密钥"加密，会话密钥经<strong>生物识别认证绑定</strong>的 Keystore 密钥包裹——<strong>没有生物识别认证，新写入的数据不可解</strong>（设备丢失/被攻陷时数据级防护，不依赖检测）；锁定即释放内存会话密钥；<strong>每次解锁轮换会话密钥</strong>（前向安全：旧内存 dump 快速失效）。</li><li><strong>自毁协议（可选）</strong>：设置中开启后，严重级破解信号（Root/调试/凭据/设备管理/暴力尝试）会立即销毁本地聊天记录与接收文件，并清除剪贴板与通知。</li><li><strong>自保护</strong>：APK 签名指纹校验（重打包触发锁定）；dex 哈希自校验；版本降级防护；设置 HMAC 签名（篡改/清除即强制恢复）；内存状态 HMAC；<strong>心跳门禁（fail-closed：检测线程停滞 → 拒绝解密）</strong>；<strong>看门狗环形哨兵</strong>（3 线程互盯）；<strong>native 反 hook 层（NDK）</strong>：检测 I/O 全部 syscall 直通（GOT/PLT/LD_PRELOAD hook 失效）、自身代码段内存-磁盘哈希比对 + 导出函数入口自校验（inline hook 检测函数本身也命中）、libc 关键函数入口校验（JVM+native 双通道）；防截屏与截屏事件检测；剪贴板/通知保护；哈希链 + AES-GCM 加密审计日志；暴力防护（失败上限+指数冷却）；后台 60 秒自动擦除内存明文。</li><li><strong>实时状态面板</strong>：设置页展示门禁新鲜度、看门狗状态、假锁模式、生物识别失败计数与最近审计事件。</li><li><strong>能力边界</strong>：设备所有者级监控（系统预装/企业 MDM）与内核级 rootkit（伪造 /proc 数据）无法被应用层检测；补偿控制为 fail-closed 门禁、数据级密钥门禁、native 反 hook 与自毁协议——详见 <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md#16-honest-boundary-again-plainly">MIRTAZAPINE_SHIELD.md §16</a>。全开源（GPL-3.0）下防护依然有效。</li></ul>
+<h3>English</h3>
+<p>A real-time security monitor and app lock built into the client. Full design & detection matrix: <a href="https://github.com/NUSV/Syna-NUSV/main/MIRTAZAPINE_SHIELD.md">MIRTAZAPINE_SHIELD.md</a>.</p>
+<ul><li><strong>Enable</strong>: Settings → ◇Mirtazapine Shield → toggle on (disabling requires biometric verification). One switch enables every protection.</li><li><strong>What it detects</strong>: Root (incl. Magisk hidden root, Xposed, Zygisk/Shamiko/LSPosed), Frida injection (paths, ports 27042+27043, memory maps, threads, TracerPid — <strong>JVM + native (NDK) dual-channel</strong>), emulator (incl. test-keys), USB debugging/ADB, SELinux, device-admin takeover (MDM), credential changes, VPN/proxy changes, <strong>user CA additions & ARP spoofing (LAN MITM)</strong>, network fingerprint (SSID change), rapid background switching, accessibility abuse, monitoring apps (installed + foreground), <strong>screen capture/recording events (Android 14+)</strong>, mirroring changes, clock tampering, weak lock screen, downgrade attempts, JVM agents, remote-control processes.</li><li><strong>When a threat is detected</strong>: full-screen shield page listing the threat(s); unlock requires <strong>biometrics + (optional) TOTP second factor</strong>. Unlock expires after 5 minutes; critical threats re-lock after 30s; injection threats engage a honeypot fake-lock (real key release, repeated verification).</li><li><strong>Data-level key gate</strong>: chat data is encrypted with a session key wrapped by a <strong>biometric-authenticated Keystore key</strong> — without an authentication event, newly written data is unreadable (data-level protection on device loss/compromise, independent of detection); locking releases the in-memory session key.</li><li><strong>Self-destruct protocol (optional)</strong>: a critical compromise signal wipes local chats & received files immediately and clears clipboard & notifications.</li><li><strong>Self-protection</strong>: APK signature verification (anti-repackaging), dex hash self-verification, downgrade defense, HMAC-signed settings, in-memory state HMAC, <strong>fail-closed heartbeat gate</strong>, <strong>watchdog ring</strong> (3 threads), screen-capture protection & capture-event detection, clipboard/notification protection, hash-chained + AES-GCM audit log, brute-force protection (fail limit + exponential cooldown), 60s background memory wipe.</li><li><strong>Live status panel</strong>: gate freshness, watchdog trips, honeypot state, biometric fail counter, latest audit events.</li><li><strong>Honest boundary</strong>: system-level pre-installed monitoring / MDM (device-owner privileges) cannot be detected by an app — the Shield provides the strongest app-layer protection, and it stays effective under full disclosure (GPL-3.0).</li></ul>
+<h2>3. 私人服务器</h2>
+<p>私人服务器就是由你自己架设的持久化群聊——类似 Minecraft 服务器。知道 <code>IP:端口 + 密码</code> 的人都能加入，即使所有人离线，历史也保存在服务器上。</p>
+<p><strong>1. 启动服务器（两种模式）</strong></p>
+<pre class="doc-code"># 命令行模式（无头）—— 适合服务器 / 远程机器
+java -jar syna-server.jar -p 45880 -w 你的密码 -g &quot;群名称&quot;
+
+# 启动器（图形界面）—— 有显示环境时无参数运行自动进入；服务器上自动回退无头 CLI
+java -jar syna-server.jar            # 自动进入启动器
+java -jar syna-server.jar --launcher # 强制启动器模式</pre>
+<p>启动器配置持久化于 <code>~/.syna-server/launcher.json</code>，提供一键启停、实时状态（端口/局域网地址/成员/历史条数/滚动日志）、<strong>崩溃自动重启</strong>（3 秒）、<strong>开机自启</strong>（macOS / Linux / Windows）、打开数据目录，以及服务器管理（踢人 / 封禁 / 公告）。</p>
+<p><strong>2. 所有参数</strong></p>
+<table><thead><tr><th>参数</th><th>说明</th><th>默认值</th></tr></thead><tbody><tr><td><code>-p, --port</code></td><td>监听端口</td><td>45880</td></tr><tr><td><code>-w, --password</code></td><td>连接密码</td><td><code>syna</code>（请务必修改！）</td></tr><tr><td><code>-g, --group</code></td><td>群名称</td><td><code>Syna 私服</code></td></tr><tr><td><code>-d, --data-dir</code></td><td>数据目录（历史持久化于此）</td><td><code>./syna-server-data</code></td></tr><tr><td><code>--history</code></td><td>历史消息条数上限</td><td>200</td></tr><tr><td><code>--ui</code></td><td>启动图形界面</td><td>—</td></tr></tbody></table>
+<p><strong>3. 客户端加入服务器</strong></p>
+<ol><li>应用中：<strong>联系人 → 加入服务器</strong>。</li><li>输入服务器地址（<code>IP:端口</code>——局域网 IP、公网 IP 或穿透域名均可）、密码，点击<strong>加入服务器</strong>。</li><li>自动进入服务器群聊，并拉取完整历史记录。标题栏显示 🖥 与连接状态。</li><li>服务器在路由器后面时，参考<a href="#5-远程接入内网穿透">第 5 节</a>远程接入。</li></ol>
+<p><strong>4. 数据与持久化</strong></p>
+<ul><li>历史以群密钥加密后存储在数据目录的 <code>history.jsonl</code> 中。</li><li>服务器重启后身份（<code>server-id</code>）与全部历史均保留。</li><li>阅后即焚消息焚毁时，服务器历史中的记录也会同步清除。</li><li>撤回的消息在历史中保持"已撤回"标记，后加入者看到的会话状态一致。</li></ul>
+<p><strong>5. 服务器管理（图形界面模式）</strong></p>
+<p>运行 <code>java -jar syna-server.jar --ui</code> 并启动服务器即可看到管理面板：</p>
+<ul><li><strong>踢人与封禁</strong>：每个成员行有"踢出"按钮——成员会被断开连接、收到通知（<code>GROUP_KICK</code>），其用户 ID 被加入<strong>持久化黑名单</strong>（<code>bans.json</code>）。被封禁者无法重新加入，直到你在封禁列表点击"解除"。</li><li><strong>群公告</strong>：在"群公告"输入框输入内容并点"发布"——立即广播给所有在线成员，客户端聊天顶部显示 📢 公告条（可点 ✕ 关闭），新加入的成员也会自动收到当前公告。</li><li><strong>实时状态</strong>：成员列表（在线绿点）、历史消息条数、运行端口、局域网地址、滚动日志控制台。</li></ul>
+<hr>
+<h2>4. 实体机搭建教程</h2>
+<p><strong>这个教程给谁？</strong> 家里有闲置电脑、旧笔记本、NAS 或树莓派，想搞一台<strong>专门长期在线</strong>的聊天服务器的人。Syna 服务器非常轻量——只占约 30–60 MB 内存，10 年前的机器都能轻松跑。</p>
+<p><strong>需要准备什么</strong></p>
+<ul><li>一台实体机（Windows / macOS / Linux 均可，下面分系统讲）。树莓派 3B+ 及以上也行。</li><li>Java 17（只要 JRE 运行时即可，不需要完整 JDK）。</li><li>服务器程序：到 <a href="https://github.com/NUSV/Syna-NUSV/releases" target="_blank" rel="noopener">GitHub Releases</a> 下载 <code>Syna-server-v0.3.0.jar</code>。</li><li>（可选）路由器管理员密码——用于端口转发，见下文"路由器端口转发"。</li></ul>
+<p><strong>每个系统通用的四步公式</strong></p>
+<ol><li>安装 Java 17</li><li>把 <code>syna-server.jar</code> 放到固定文件夹</li><li>用你的密码和群名启动它</li><li>放行防火墙端口（可选：配置开机自启）</li></ol>
+<p>之后，局域网内任何人用 <code>你的内网IP:45880</code> + 密码 即可加入。外面的朋友要连，请看<a href="#5-远程接入内网穿透">第 5 节</a>。</p>
+<hr>
+<h4>Windows（最主流，跟着点鼠标即可）</h4>
+<p><strong>第 1 步 — 安装 Java 17</strong></p>
+<ol><li>浏览器打开 <a href="https://adoptium.net" target="_blank" rel="noopener">adoptium.net</a>。</li><li>选 <strong>Windows x64</strong> → 下载 <code>.msi</code> 安装包 → 运行 → 一路<strong>下一步</strong>（保持默认）。</li><li>验证：按 <code>Win+R</code>，输入 <code>cmd</code> 回车，然后输入：</li></ol>
+<p>``<code> java -version </code>`<code> 看到 </code>openjdk version "17..."` 就成功了。</p>
+<p><strong>第 2 步 — 放置服务器程序</strong></p>
+<ol><li>建一个文件夹：<code>D:\SynaServer</code>（路径别带中文）。</li><li>把 <code>syna-server.jar</code> 移进去。</li></ol>
+<p><strong>第 3 步 — 启动服务器</strong></p>
+<p>按 <code>Win+R</code> → <code>cmd</code> → 运行：</p>
+<pre class="doc-code">java -jar D:\SynaServer\syna-server.jar -p 45880 -w 你的密码 -g 你的群名</pre>
+<p>看到 <code>端口: 45880</code> 的横幅就成功了。<strong>这个窗口别关</strong>——关了服务器就停了。</p>
+<blockquote><p>想用图形界面？运行 <code>java -jar D:\SynaServer\syna-server.jar --ui</code>，在窗口里点"启动服务器"即可。</p></blockquote>
+<p><strong>第 4 步 — 防火墙放行（新手最容易卡在这里！）</strong></p>
+<ol><li>按 <code>Win</code> 键，输入 <strong>Windows Defender 防火墙</strong>，打开。</li><li>左侧点 <strong>高级设置</strong>（需要管理员）。</li><li>左侧点 <strong>入站规则</strong> → 右侧 <strong>新建规则…</strong></li><li>选 <strong>端口</strong> → 下一步 → <strong>TCP</strong> + 特定本地端口 <code>45880</code> → 下一步 → <strong>允许连接</strong> → 下一步 → 三个（域/专用/公用）都勾上 → 下一步 → 命名 <code>Syna Server</code> → <strong>完成</strong>。</li><li>这样别人就能连了（如果你用 <code>-p</code> 改了端口，就填那个端口）。</li></ol>
+<p><strong>可选 — 开机自启（重启电脑后自动运行）</strong></p>
+<ol><li>按 <code>Win+R</code>，输入 <code>shell:startup</code> 回车，会打开一个文件夹。</li><li>在里面新建文件 <code>SynaServer.bat</code>，内容：</li></ol>
+<p>``<code>bat @echo off java -jar D:\SynaServer\syna-server.jar -p 45880 -w 你的密码 -g 你的群名 </code>``</p>
+<ol><li>完成——每次登录自动启动服务器。</li></ol>
+<p><strong>找到你的内网 IP（告诉别人用）</strong></p>
+<p>CMD 输入 <code>ipconfig</code>，找 <strong>IPv4 地址</strong>（形如 <code>192.168.1.100</code>）。局域网内别人用 <code>192.168.1.100:45880</code> 加入。</p>
+<hr>
+<h4>macOS（同样很简单）</h4>
+<p><strong>第 1 步 — 安装 Java 17</strong></p>
+<ul><li>方式 A（新手推荐）：到 <a href="https://adoptium.net" target="_blank" rel="noopener">adoptium.net</a> 下载 <strong>macOS .dmg</strong>（M 系列芯片选 <code>Apple Silicon</code>，Intel 选 <code>x64</code>），打开 dmg 双击安装。</li><li>方式 B（装了 Homebrew 的话）：<code>brew install --cask temurin@17</code></li></ul>
+<p>终端验证（<code>Cmd+空格</code> → <code>终端</code>）：</p>
+<pre class="doc-code">java -version</pre>
+<p><strong>第 2 步 — 放置与启动</strong></p>
+<pre class="doc-code">mkdir -p ~/SynaServer
+# 把下载的 syna-server.jar 移进去，然后：
+java -jar ~/SynaServer/syna-server.jar -p 45880 -w 你的密码 -g 你的群名</pre>
+<p>喜欢点鼠标就用图形界面：<code>java -jar ~/SynaServer/syna-server.jar --ui</code></p>
+<p><strong>第 3 步 — 防火墙（如果开过防火墙）</strong></p>
+<ol><li>系统设置 → 网络 → 防火墙。</li><li>如果防火墙开着且 java 不在允许列表，点"选项"把 <code>java</code> 添加为允许接收传入连接。</li><li>（没开过防火墙的话通常不用管。）</li></ol>
+<p><strong>可选 — 开机自启（launchd）</strong></p>
+<p>创建 <code>/Library/LaunchDaemons/com.syna.server.plist</code>（需要管理员权限）：</p>
+<pre class="doc-code">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;com.syna.server&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/usr/bin/java&lt;/string&gt;
+        &lt;string&gt;-jar&lt;/string&gt;
+        &lt;string&gt;/Users/你的用户名/SynaServer/syna-server.jar&lt;/string&gt;
+        &lt;string&gt;-p&lt;/string&gt;
+        &lt;string&gt;45880&lt;/string&gt;
+        &lt;string&gt;-w&lt;/string&gt;
+        &lt;string&gt;你的密码&lt;/string&gt;
+        &lt;string&gt;-g&lt;/string&gt;
+        &lt;string&gt;你的群名&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;KeepAlive&lt;/key&gt;
+    &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</pre>
+<p>然后：</p>
+<pre class="doc-code">sudo launchctl load /Library/LaunchDaemons/com.syna.server.plist</pre>
+<p><strong>找到你的内网 IP</strong>：系统设置 → Wi-Fi → 详细信息 → IP 地址（如 <code>192.168.1.100</code>）。</p>
+<hr>
+<h4>Linux（Ubuntu / Debian / 树莓派，适合常年开机）</h4>
+<blockquote><p>树莓派同样适用：装 64 位 Ubuntu 或 Raspberry Pi OS 后，下面命令完全一样。</p></blockquote>
+<p><strong>第 1 步 — 安装 Java 17</strong></p>
+<pre class="doc-code"># Ubuntu / Debian / 树莓派（64 位系统）
+sudo apt update
+sudo apt install -y openjdk-17-jre-headless
+
+# CentOS / RHEL / Rocky / AlmaLinux
+sudo dnf install -y java-17-openjdk-headless</pre>
+<p>验证：<code>java -version</code></p>
+<p><strong>第 2 步 — 创建专用用户与目录（推荐，更安全）</strong></p>
+<pre class="doc-code">sudo useradd -r -m -d /opt/syna syna          # 创建只跑服务器的系统用户
+sudo mkdir -p /opt/syna
+sudo cp ~/下载/syna-server.jar /opt/syna/      # 把 jar 复制过去
+sudo chown -R syna:syna /opt/syna</pre>
+<p><strong>第 3 步 — 防火墙放行（UFW 默认开启时需要）</strong></p>
+<pre class="doc-code"># Ubuntu 的 UFW
+sudo ufw allow 45880/tcp
+sudo ufw status          # 确认 45880 是 ALLOW
+
+# CentOS 的 firewalld
+sudo firewall-cmd --permanent --add-port=45880/tcp
+sudo firewall-cmd --reload</pre>
+<p><strong>第 4 步 — 注册 systemd 服务（开机自启 + 崩溃自动重启，一劳永逸）</strong></p>
+<p>创建 <code>/etc/systemd/system/syna-server.service</code>：</p>
+<pre class="doc-code">[Unit]
+Description=Syna Private Chat Server
+After=network.target
+
+[Service]
+Type=simple
+User=syna
+WorkingDirectory=/opt/syna
+ExecStart=/usr/bin/java -jar /opt/syna/syna-server.jar -p 45880 -w 你的密码 -g 你的群名
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</pre>
+<p>然后：</p>
+<pre class="doc-code">sudo systemctl daemon-reload
+sudo systemctl enable --now syna-server          # 立即启动 + 开机自启
+systemctl status syna-server                     # 绿色 active 即成功</pre>
+<p><strong>第 5 步 — 验证端口在听</strong></p>
+<pre class="doc-code">ss -tlnp | grep 45880</pre>
+<p>看到 <code>LISTEN</code> 即成功。内网 IP 用 <code>hostname -I</code> 查看（第一个类似 <code>192.168.1.100</code> 的就是）。</p>
+<blockquote><p>日常管理：<code>sudo systemctl restart syna-server</code> 重启 / <code>stop</code> 停止 / <code>journalctl -u syna-server -f</code> 实时看日志。</p></blockquote>
+<hr>
+<h4>路由器端口转发（想公网直连时）</h4>
+<blockquote><p>用 frp/ngrok/Tailscale（见<a href="#5-远程接入内网穿透">第 5 节</a>）的话<strong>跳过这里</strong>。只有想让别人直接连你家公网 IP 才需要。</p></blockquote>
+<ol><li>浏览器打开路由器管理页（通常是 <code>192.168.1.1</code> 或 <code>192.168.0.1</code>，路由器背面标签上有），登录。</li><li>找 <strong>端口转发 / 虚拟服务器 / Port Forwarding / NAT 设置</strong>（不同品牌叫法不同，一般在"高级设置"里）。</li><li>添加规则：</li></ol>
+<ul><li>外部端口: <code>45880</code></li><li>内部 IP: 服务器的内网 IP（如 <code>192.168.1.100</code>）</li><li>内部端口: <code>45880</code></li><li>协议: <code>TCP</code></li><li>保存，部分路由器需要重启才生效。</li></ul>
+<ol><li>公网访问：打开 <a href="https://ip.sb" target="_blank" rel="noopener">ip.sb</a> 查你家的<strong>公网 IP</strong>，别人用 <code>公网IP:45880</code> + 密码 加入。</li></ol>
+<p><strong>两个常见坑：</strong></p>
+<ul><li><strong>运营商大内网（NAT444）</strong>：查到的 IP 以 <code>100.64.x.x</code> 开头就不是真公网，端口转发无效 → 直接用 frp/ngrok/Tailscale。</li><li><strong>公网 IP 会变</strong>：重启路由器可能换 IP。想固定用 DDNS（花生壳、阿里云、no-ip 等），或者干脆用 Tailscale/frp。</li></ul>
+<h4>搭建完成后的验证清单</h4>
+<ol><li><strong>本机测</strong>：Syna 应用 → 联系人 → 加入服务器 → <code>127.0.0.1:45880</code> → 应能加入。</li><li><strong>局域网测</strong>：手机连同一 WiFi → 加入服务器 → 填服务器内网 IP:45880 → 应能加入。</li><li><strong>公网测（如配置了）</strong>：关掉 WiFi 用手机流量 → 加入服务器 → 填公网 IP:45880 → 应能加入。</li><li><strong>重启测</strong>：重启实体机 → 服务器自动起来（如配置了自启）→ 手机重新加入 → 历史消息还在。</li></ol>
+<hr>
+<h2>5. 远程接入（内网穿透）</h2>
+<p>家里的服务器通常在路由器（NAT）后面，局域网外无法直接访问。最简单的办法：用第三方隧道客户端把服务器端口映射到公网，大家通过公网 <code>地址:端口</code> 加入。</p>
+<p><strong>方案 A — frp（自建、免费、最流行）</strong></p>
+<ol><li>租一台小公网服务器（任意云厂商），在上面安装并运行 <code>frps</code>：</li></ol>
+<p>``<code>bash # frps.toml bindPort = 7000 # 运行 ./frps -c frps.toml </code>``</p>
+<ol><li>在运行 Syna 服务器的机器上运行 <code>frpc</code> 客户端：</li></ol>
+<p>```ini # frpc.toml serverAddr = "你的公网服务器IP" serverPort = 7000</p>
+<p>[[proxies]] name = "synaserver" type = "tcp" localIP = "127.0.0.1" localPort = 45880 remotePort = 45880 ``<code> </code>`<code>bash ./frpc -c frpc.toml </code>``</p>
+<ol><li>朋友用 <code>你的公网服务器IP:45880</code> + 密码 即可加入。</li></ol>
+<p><strong>方案 B — ngrok（无需服务器，有免费额度）</strong></p>
+<pre class="doc-code">ngrok tcp 45880</pre>
+<p>ngrok 会输出一个公网地址（如 <code>0.tcp.jp.ngrok.io:12345</code>），连同密码分享给朋友即可。</p>
+<p><strong>方案 C — Tailscale（组网最简单，适合家人朋友）</strong></p>
+<ol><li>在服务器机器和朋友设备上安装 Tailscale，登录同一账号（同一 Tailnet）。</li><li>大家用服务器的 Tailscale IP：<code>100.x.x.x:45880</code> + 密码 加入——跨网络也能通，且全程加密。</li></ol>
+<p><strong>客户端操作</strong></p>
+<p>应用中：<strong>联系人 → 加入服务器</strong> → 填公网 <code>地址:端口</code> + 密码 → 加入，其余全自动。</p>
+<blockquote><p><strong>注意：</strong> Syna 服务器本身只是一个普通的 TCP 监听器。我们刻意不在应用内内置穿透——用哪个隧道工具由你按习惯选择。</p></blockquote>
+<hr>
+<h2>6. 安全模型</h2>
+<p><strong>局域网点对点（单聊与网格群聊）</strong></p>
+<ul><li>每台设备首次启动生成 X25519 密钥对（只存本地，永不上传）。</li><li>会话密钥按对端派生（HKDF-SHA256），消息用 <strong>AES-256-GCM</strong> 加密——真正的端到端加密，不经过任何服务器。</li><li>公钥通过 HELLO/KEY 握手帧交换。</li></ul>
+<p><strong>私人服务器</strong></p>
+<ul><li>服务器在 <code>SRV_HELLO</code> 中下发随机盐；双方用加入密码派生 <strong>AES-GCM 通道密钥</strong>（HKDF-SHA256）——所有流量（含密码本身）均加密且防篡改。</li><li>群消息使用<strong>密码派生的群密钥</strong>加密，任何知道密码的成员都能解密历史——这就是"私服信任模型"（服务器管理员可信，类似 Minecraft 白名单）。</li><li>局域网点对点聊天仍是完整 E2E。</li><li>本机侧：聊天记录额外做了<strong>静态加密</strong>（AES-GCM），◇Mirtazapine Shield 保护运行中的应用（见 2.5 节）。</li></ul>
+<p><strong>阅后即焚</strong></p>
+<ul><li>接收方显示消息 8 秒后本地销毁，并回发 <code>BURN_ACK</code>。</li><li>发送方收到 ACK 后删除本地副本（另有 60 秒兜底定时器）。</li><li>私人服务器也会从持久化历史中清除该消息。</li></ul>
+<p><strong>未覆盖的边界</strong></p>
+<ul><li>服务器管理员可以阅读服务器群聊消息（他们知道密码）。如需经服务器实现完整 E2E，群密钥分发协议在路线图中。</li><li>元数据（发送者 ID、消息大小、时间）对服务器管理员可见。</li></ul>
+<hr>
+<h2>7. 故障排查</h2>
+<table><thead><tr><th>问题</th><th>原因与解决</th></tr></thead><tbody><tr><td><strong>找不到局域网用户</strong></td><td>1) 两台设备必须在<strong>同一个</strong> Wi-Fi/子网。2) 部分路由器拦截 UDP 广播——应用有广播+多播双通道兜底，但极严格网络两者都拦；可改用"主机热点"模式。3) Windows/macOS 防火墙可能拦截应用，需放行。</td></tr><tr><td><strong>Windows 防火墙弹窗</strong></td><td>请点击<strong>允许</strong>（专用和公用网络都要）——客户端和服务器都需要。</td></tr><tr><td><strong>其他设备连不上服务器</strong></td><td>1) 确认服务器已启动且显示端口。2) 在另一台设备执行 <code>telnet &lt;IP&gt; &lt;端口&gt;</code>，失败说明路由器端口转发或防火墙在拦。3) 服务器机器上执行 <code>lsof -iTCP:&lt;端口&gt; -sTCP:LISTEN</code>（macOS/Linux）或 `netstat -ano</td><td>findstr <端口>`（Windows）。</td></tr><tr><td><strong>加入服务器提示认证失败</strong></td><td>密码错误，或管理员改过密码。注意：不允许空密码。</td></tr><tr><td><strong>历史没加载</strong></td><td>服务器历史有上限（默认 200 条），阅后即焚消息会被刻意清除；最早的消息最先被挤出。</td></tr><tr><td><strong>消息显示🔒但解不开</strong></td><td>正常情况下不可能（密钥自动交换）。若出现，清除应用数据重新加入即可——身份密钥会重新生成。</td></tr><tr><td><strong>Android 无法发现设备</strong></td><td>确认同一子网；Android 14+ 本地网络权限更严格；部分系统的"私人 DNS"会干扰多播。</td></tr><tr><td><strong>端口被占用</strong></td><td>用 <code>-p</code> 换端口，如 <code>-p 45900</code>。</td></tr><tr><td><strong>同机多实例共享身份</strong></td><td>桌面端设置存于用户级 Java 偏好，不同系统账号身份不同。这是设计使然。</td></tr></tbody></table>
+<hr>
+<h2>8. 构建与分发</h2>
+<pre class="doc-code"># 桌面应用（开发运行）
+./gradlew :composeApp:run
+
+# 服务器打包（跨平台 fat jar）
+./gradlew :composeApp:serverFatJar
+# → composeApp/build/server/syna-server.jar
+
+# Android 安装包
+./gradlew :composeApp:assembleDebug            # 调试版
+./gradlew :composeApp:assembleRelease          # 发布版（需在 local.properties 配置签名）
+
+# 测试（21 项）
+./gradlew :composeApp:desktopTest</pre>
+<p><strong>桌面原生包</strong></p>
+<pre class="doc-code">./gradlew :composeApp:createDistributable
+# macOS: .app 应用包；Windows MSI 需 Windows 机器 + WiX；Linux: 用 packageDistributable 生成 Deb/Rpm</pre>
+<p><strong>Linux 服务化示例（systemd）</strong></p>
+<pre class="doc-code"># /etc/systemd/system/syna-server.service
+[Unit]
+Description=Syna 私人聊天服务器
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /opt/syna/syna-server.jar -p 45880 -w 你的密码 -g &quot;群名称&quot;
+Restart=on-failure
+User=syna
+
+[Install]
+WantedBy=multi-user.target</pre>
+<pre class="doc-code">sudo systemctl enable --now syna-server</pre>
+<hr>
+<h2>更多资源</h2>
+<ul><li>README：架构、协议、平台注意点</li><li>GitHub Releases：预编译 APK、macOS DMG、服务器 jar</li><li>Issues：欢迎提交 Issue 与功能建议</li></ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; <span class="year"></span> United Science Vaca (NUSV). Open source.</span>
+      <span><a href="https://github.com/NUSV" target="_blank" rel="noopener">GitHub</a> &middot; <a href="../../warehouse.html">Warehouse</a> &middot; <a href="../../docs.html">Docs</a></span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
