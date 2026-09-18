@@ -1087,6 +1087,19 @@ a:hover {
   padding: 8px 0 0;
 }
 
+.doc-group-title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 600;
+  margin: 14px 0 2px;
+}
+
+.doc-group-title:first-child {
+  margin-top: 4px;
+}
+
 .doc-list {
   list-style: none;
   padding: 0;
